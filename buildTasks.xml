@@ -30,6 +30,7 @@
 				<include name="*.tar.gz" />
 			</fileset>
 		</delete>
+		<delete dir="${build.path}/test" />
 	</target>
 	
 	<target name="clean-classes" if="dir.classes.present">
