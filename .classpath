@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v6.0"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="lib" path="toolslib/antlr-2.7.2.jar"/>
+	<classpathentry kind="lib" path="toolslib/postgresql-8.3-603.jdbc4.jar"/>
+	<classpathentry kind="lib" path="toolslib/jsp-api-2.0.jar"/>
+	<classpathentry kind="lib" path="toolslib/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="toolslib/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="toolslib/org.springframework.test-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

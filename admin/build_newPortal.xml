@@ -1,0 +1,97 @@
+<project name="jAPS 2.0 src - Extract New Portal" default="Create New Portal" basedir="..">
+	<description>jAPS 2.0 - New Portal build file</description>
+
+	<!-- Configure base properties -->
+	<property name="newportal.name" value="myPortalName" />
+	<property name="newportal.source.name" value="jAPS2" />	
+	
+	<!-- You shouldn't never need to edit anything below this line -->
+	<property name="newportal.source" location="." />
+	<property name="newportal.temp" location="../temp/${newportal.name}" />
+	
+	<!-- Clean temp area -->
+	<target name="clean" description="clean up directories">
+		<delete dir="${newportal.temp}" />
+	</target>	
+
+	<!-- copia in temp/newportal/ di tutto il malloppo -->
+	<target name="init" depends="clean">
+		<copy todir="${newportal.temp}">
+			<fileset dir="${newportal.source}" excludes="admin/*.xml" />
+		</copy>
+		<copy todir="${newportal.temp}">
+			<fileset dir="${newportal.source}" includes=".project" />
+		</copy>
+	</target>
+
+	<!-- Rinominare:
+   * "db/apsPort.backup" in "db/portalePort.backup"
+   * "db/apsServ.backup" in "db/portaleServ.backup" -->
+	<target name="rename misc">
+		
+		<move file="${newportal.temp}/db/export/${newportal.source.name}Port_data.sql" tofile="${newportal.temp}/db/export/${newportal.name}Port_data.sql" />
+		<move file="${newportal.temp}/db/export/${newportal.source.name}Port_schema.sql" tofile="${newportal.temp}/db/export/${newportal.name}Port_schema.sql" />
+		<move file="${newportal.temp}/db/export/${newportal.source.name}Serv_data.sql" tofile="${newportal.temp}/db/export/${newportal.name}Serv_data.sql" />
+		<move file="${newportal.temp}/db/export/${newportal.source.name}Serv_schema.sql" tofile="${newportal.temp}/db/export/${newportal.name}Serv_schema.sql"  />
+
+		<move file="${newportal.temp}/db/export/test/${newportal.source.name}testPort_data.sql" tofile="${newportal.temp}/db/export/test/${newportal.name}testPort_data.sql" />
+		<move file="${newportal.temp}/db/export/test/${newportal.source.name}testPort_schema.sql" tofile="${newportal.temp}/db/export/test/${newportal.name}testPort_schema.sql" />
+		<move file="${newportal.temp}/db/export/test/${newportal.source.name}testServ_data.sql" tofile="${newportal.temp}/db/export/test/${newportal.name}testServ_data.sql" />
+		<move file="${newportal.temp}/db/export/test/${newportal.source.name}testServ_schema.sql" tofile="${newportal.temp}/db/export/test/${newportal.name}testServ_schema.sql"  />
+		
+		<move file="${newportal.temp}/db/mysql/${newportal.source.name}Port.sql" tofile="${newportal.temp}/db/mysql/${newportal.name}Port.sql" />
+		<move file="${newportal.temp}/db/mysql/${newportal.source.name}Serv.sql" tofile="${newportal.temp}/db/mysql/${newportal.name}Serv.sql" />
+		<move file="${newportal.temp}/db/mysql/test/${newportal.source.name}testPort.sql" tofile="${newportal.temp}/db/mysql/test/${newportal.name}testPort.sql" />
+		<move file="${newportal.temp}/db/mysql/test/${newportal.source.name}testServ.sql" tofile="${newportal.temp}/db/mysql/test/${newportal.name}testServ.sql" />
+				
+		<move file="${newportal.temp}/db/tar/${newportal.source.name}Port.backup.bz2" tofile="${newportal.temp}/db/tar/${newportal.name}Port.backup.bz2" />
+		<move file="${newportal.temp}/db/tar/${newportal.source.name}Serv.backup.bz2" tofile="${newportal.temp}/db/tar/${newportal.name}Serv.backup.bz2" />
+		<move file="${newportal.temp}/db/tar/test/${newportal.source.name}testPort.backup.bz2" tofile="${newportal.temp}/db/tar/test/${newportal.name}testPort.backup.bz2" />
+		<move file="${newportal.temp}/db/tar/test/${newportal.source.name}testServ.backup.bz2" tofile="${newportal.temp}/db/tar/test/${newportal.name}testServ.backup.bz2" />
+		
+		<move file="${newportal.temp}/build/${newportal.source.name}" tofile="${newportal.temp}/build/${newportal.name}" />
+		<replace file="${newportal.temp}/build.xml">
+			<replacefilter token="${newportal.source.name}" value="${newportal.name}"/>
+		</replace>
+		<replace file="${newportal.temp}/buildProperties.xml">
+			<replacefilter token="${newportal.source.name}" value="${newportal.name}"/>
+		</replace>
+		<replace file="${newportal.temp}/WebContent/WEB-INF/conf/systemParams.properties">
+			<replacefilter token="${newportal.source.name}" value="${newportal.name}"/>
+		</replace>
+		<replace file="${newportal.temp}/admin/test/systemParams.properties">
+			<replacefilter token="${newportal.source.name}" value="${newportal.name}"/>
+		</replace>
+		<replace file="${newportal.temp}/admin/test/contextTestParams.properties">
+			<replacefilter token="${newportal.source.name}" value="${newportal.name}"/>
+		</replace>		
+		<replace file="${newportal.temp}/WebContent/META-INF/context.xml">
+			<replacefilter token="${newportal.source.name}" value="${newportal.name}"/>
+		</replace>
+		<replace file="${newportal.temp}/.project">
+			<replacefilter token="${newportal.source.name}" value="${newportal.name}"/>
+		</replace>
+		<replace file="${newportal.temp}/.settings/org.eclipse.wst.common.component">
+			<replacefilter token="${newportal.source.name}" value="${newportal.name}"/>
+		</replace>		
+	</target>
+	
+	<target name="copy to workspace">
+		<echo message="Copying project ${newportal.name} into the current workspace" />
+		<copy todir="../${newportal.name}">
+			<fileset dir="${newportal.temp}" />
+		</copy>
+	</target>
+	
+	<!-- REM tutto fatto, ora fatti il nuovo progetto con questo nome e poi configurati e usati il build.xml -->
+	<target name="info">
+		<echo message="#### IMPORTANT #####################" />
+		<echo message="A new project - ${newportal.name} - has been created under the current workspace" />
+		<echo message="Please use File --> New Project --> Web --> Dynamic Web Project and set - ${newportal.name} - as the name of the project" />
+		<echo message="Eclipse should find the new directory and with a click on Finish the job shoud be done" />		
+	</target>
+		
+	<target name="Create New Portal" description="Creates a New Void Portal" depends="init, rename misc, copy to workspace, clean, info">
+		<echo message="Create New Portal [done]" />
+	</target>		
+</project>

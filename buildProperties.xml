@@ -1,0 +1,70 @@
+<project>
+	
+	<property name="aps.base.dir" location="." />
+	<!-- 
+	# Note: comment out the previous line and use the following
+	# if you're going to use another project - e.g. jAPS core - as
+	# a source for your aps.jar
+	#
+	# <property name="aps.base.dir" location="../jAPS2" /> 
+	-->
+	
+	<property name="webappname" value="jAPS2" />
+	<property name="postgres.hostname" value="localhost" />
+	<property name="postgres.port" value="5432" />
+	<property name="postgres.username" value="agile" />
+	<property name="postgres.password" value="agile" />
+	
+	<property name="applicationBaseURL" value="http://localhost:8080/${webappname}/" />
+	
+	<!-- ##### Properties definitions for Windows machines ##### START -->
+	<!--
+	<property name="tomcat.home.path" value="C:\\tomcat6" />
+	<property name="logPrefixPath" value="${tomcat.home.path}\\logs\\${webappname}_log" />	
+	<property name="cacheDiskRootFolder" value="${tomcat.home.path}\\webapps\\${webappname}\\cache" />	
+	<property name="resourceDiskRootFolder" value="${tomcat.home.path}\\webapps\\${webappname}\\resources" />
+	<property name="protectedResourceDiskRootFolder" value="${tomcat.home.path}\\webapps\\${webappname}\\protected" />
+	<property name="indexDiskRootFolder" value="${tomcat.home.path}\\webapps\\${webappname}\\indexdir" />
+	<property name="cacheDiskRootFolder" value="${tomcat.home.path}\\webapps\\${webappname}\\cache" />
+	
+	<property name="postgres.bin.path" location="C:\Programmi\PostgreSQL\8.3\bin" />	
+	<property name="postgres.bin.psql" value="psql.exe" />	
+	<property name="postgres.bin.dump" value="pg_dump.exe" />	
+	<property name="postgres.bin.restore" value="pg_restore.exe" />	
+	<property name="postgres.bin.drop" value="dropdb.exe" />		
+	<property name="postgres.bin.create" value="createdb.exe" />
+	-->
+	<!-- ##### Properties definitions for Windows machines ##### END -->
+	
+	<!-- ##### Properties definitions for *nix machines ##### START -->
+	<property name="tomcat.home.path" value="/opt/tomcat6" />
+	<property name="logPrefixPath" value="${tomcat.home.path}/logs/${webappname}_log" />	
+	<property name="resourceDiskRootFolder" value="${tomcat.home.path}/webapps/${webappname}/resources/" />
+	<property name="protectedResourceDiskRootFolder" value="${tomcat.home.path}/webapps/${webappname}/protected/" />
+	<property name="indexDiskRootFolder" value="${tomcat.home.path}/webapps/${webappname}/indexdir" />
+	<property name="cacheDiskRootFolder" value="${tomcat.home.path}/webapps/${webappname}/cache" />
+	
+	<property name="postgres.bin.path" location="/usr/bin" />	
+	<property name="postgres.bin.dump" value="pg_dump" />	
+	<property name="postgres.bin.psql" value="psql" />
+	<property name="postgres.bin.restore" value="pg_restore" />	
+	<property name="postgres.bin.drop" value="dropdb" />		
+	<property name="postgres.bin.create" value="createdb" />
+	<!-- ##### Properties definitions for *nix machines ##### END -->
+	
+	<!-- You should never need to configure the properties below this line -->
+	<property name="resourceRootURL" value="/${webappname}/resources/" />
+	<property name="protectedResourceRootURL" value="/${webappname}/protected/" />
+	<property name="src.path" location="src" />
+	<property name="build.path" location="build" />
+	<property name="dist.path" location="dist" />
+	<property name="workdir.path" location="WebContent" />
+	<property name="test.marker" value="" />	
+	<property name="test.path" value="${build.path}/test" />
+	<property name="test-results.path" location="${dist.path}/test-results" />
+	<property name="tomcat.deploy.path" location="${tomcat.home.path}/webapps" />
+	
+	<!-- Please do not touch this if you are not in the mantainer team :-) -->
+	<property name="version.jAPS" value="2.2.0"/>
+	
+</project>

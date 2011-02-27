@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context path="/jAPS2" docBase="./jAPS2" debug="1" reloadable="true">
+	
+	<Environment name="logName" value="japs" type="java.lang.String" override="false" />
+	<Environment name="logFilePrefix" value="/home/eu/workspace/jAPS2/build/temp/japs_log" type="java.lang.String" override="false" />
+	<Environment name="logLevel" value="ALL" type="java.lang.String" override="false" />
+	<Environment name="logFileSize" value="200000" type="java.lang.String" override="false" />
+	<Environment name="logFilesCount" value="10" type="java.lang.String" override="false" />
+	
+	<Environment name="configVersion" value="production" type="java.lang.String" override="false" />
+	
+	<Environment name="applicationBaseURL" value="http://localhost:8080/jAPS2/" type="java.lang.String" override="false" />
+	<Environment name="resourceRootURL" value="/jAPS2/resources/" type="java.lang.String" override="false" />
+	<Environment name="protectedResourceRootURL" value="/jAPS2/protected/" type="java.lang.String" override="false" />
+	
+	<Environment name="resourceDiskRootFolder" value="/home/eu/workspace/jAPS2/WebContent/resources/" type="java.lang.String" override="false" />
+	<Environment name="protectedResourceDiskRootFolder" value="/home/eu/workspace/jAPS2/WebContent/protected/" type="java.lang.String" override="false" />
+	
+	<Environment name="indexDiskRootFolder" value="/home/eu/workspace/jAPS2/build/temp/indexdir" type="java.lang.String" override="false" />
+	
+	<Environment name="cacheDiskRootFolder" value="/home/eu/workspace/jAPS2/build/temp/cache" type="java.lang.String" override="false" />
+	
+	<Resource name="jdbc/portDataSource" auth="Container"
+		type="javax.sql.DataSource" driverClassName="org.postgresql.Driver" 
+		maxActive="8" maxIdle="4" 
+		username="agile" password="agile" 
+		url="jdbc:postgresql://localhost:5432/jAPS2Port" />
+	
+	<Resource name="jdbc/servDataSource" auth="Container" 
+		type="javax.sql.DataSource" driverClassName="org.postgresql.Driver" 
+		maxActive="8" maxIdle="4" 
+		username="agile" password="agile" 
+		url="jdbc:postgresql://localhost:5432/jAPS2Serv" />
+	
+</Context>

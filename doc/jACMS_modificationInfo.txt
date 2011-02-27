@@ -1,0 +1,5 @@
+- Override Bean "PageManager"
+Bean Definition on file /WEB-INF/plugins/jacms/conf/managers/baseManagersConfig.xml
+
+- Override Bean "PageAction"
+Bean Definition on file /WEB-INF/plugins/jacms/apsadmin/conf/portal/pageActionsConfig.xml

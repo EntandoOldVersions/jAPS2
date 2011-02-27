@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context path="/@webapp@" docBase="./@webapp@" debug="1" reloadable="true">
+	
+	<Environment name="logName" value="@webapp@" type="java.lang.String" override="false" />
+	<Environment name="logFilePrefix" value="@logPrefixPath@" type="java.lang.String" override="false" />
+	<Environment name="logLevel" value="ALL" type="java.lang.String" override="false" />
+	<Environment name="logFileSize" value="200000" type="java.lang.String" override="false" />
+	<Environment name="logFilesCount" value="10" type="java.lang.String" override="false" />
+	
+	<Environment name="configVersion" value="production" type="java.lang.String" override="false" />
+	
+	<Environment name="applicationBaseURL" value="@applicationBaseURL@" type="java.lang.String" override="false" />
+	<Environment name="resourceRootURL" value="@resourceRootURL@" type="java.lang.String" override="false" />
+	<Environment name="protectedResourceRootURL" value="@protectedResourceRootURL@" type="java.lang.String" override="false" />
+	
+	<Environment name="resourceDiskRootFolder" value="@resourceDiskRootFolder@" type="java.lang.String" override="false" />
+	<Environment name="protectedResourceDiskRootFolder" value="@protectedResourceDiskRootFolder@" type="java.lang.String" override="false" />
+	
+	<Environment name="indexDiskRootFolder" value="@indexDiskRootFolder@" type="java.lang.String" override="false" />
+	
+	<Environment name="cacheDiskRootFolder" value="@cacheDiskRootFolder@" type="java.lang.String" override="false" />
+	
+	<Resource name="jdbc/portDataSource" auth="Container" 
+		type="javax.sql.DataSource" driverClassName="org.postgresql.Driver" 
+		maxActive="8" maxIdle="4" 
+		username="@pg_username@" password="@pg_password@" 
+		url="jdbc:postgresql://@pg_host@:@pg_port@/@webapp@Port" />
+	
+	<Resource name="jdbc/servDataSource" auth="Container" 
+		type="javax.sql.DataSource" driverClassName="org.postgresql.Driver" 
+		maxActive="8" maxIdle="4" 
+		username="@pg_username@" password="@pg_password@" 
+		url="jdbc:postgresql://@pg_host@:@pg_port@/@webapp@Serv" />
+	
+</Context>

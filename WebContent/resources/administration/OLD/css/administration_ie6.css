@@ -1,0 +1,24 @@
+h1 a:link, h1 a:visited {
+	border-bottom: none;
+	text-decoration: none;
+}
+
+h1 a:hover, h1 a:active, h1 a:focus {
+	border-bottom: none;
+	text-decoration: underline;
+}
+
+a:link, a:visited {
+	color: #aa4400;
+	border-bottom: none;
+	text-decoration: underline;
+}
+
+a:hover, a:active, a:focus {
+	border-bottom: none;
+	text-decoration: none; 
+}
+
+a, a span {
+	display: inline;
+}

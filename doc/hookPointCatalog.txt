@@ -1,0 +1,65 @@
+*******************************************  CORE  *******************************************
+
+------------------
+
+Config system parameter interface - configuration of extra params
+/WEB-INF/apsadmin/jsp/admin/configSystemParams.jsp
+key="core.configSystemParams"
+
+------------------
+
+Show category references - show extra references
+/WEB-INF/apsadmin/jsp/category/categoryReferences.jsp
+key="core.categoryReferences"
+
+------------------
+
+Page details
+/WEB-INF/apsadmin/jsp/portal/detailPage.jsp
+key="core.detailPage"
+
+------------------
+
+Show page references - show extra references
+/WEB-INF/apsadmin/jsp/portal/pageReferences.jsp
+key="core.pageReferences"
+
+------------------
+
+Show group references - show extra references
+/WEB-INF/apsadmin/jsp/user/group/groupReferences.jsp
+key="core.groupReferences"
+
+------------------
+
+******************************************* JACMS *******************************************
+
+Show content references - show extra references
+/WEB-INF/plugins/jacms/apsadmin/jsp/content/contentReferences.jsp
+key="jacms.contentReferences"
+
+------------------
+
+Entry content - Info tab after category section
+/WEB-INF/plugins/jacms/apsadmin/jsp/content/entryContent.jsp
+key="jacms.entryContent.tabGeneral"
+
+------------------
+
+Entry content - Extra attribute
+/WEB-INF/plugins/jacms/apsadmin/jsp/content/entryContent.jsp
+key="jacms.entryContent.attributeExtra"
+
+------------------
+
+Entry content - actions
+/WEB-INF/plugins/jacms/apsadmin/jsp/content/entryContent.jsp
+key="jacms.entryContent.actions"
+
+------------------
+
+Entry content - extra resources
+/WEB-INF/plugins/jacms/apsadmin/jsp/common/template/extraresources/content.jsp
+key="jacms.entryContent.extraResources"
+
+------------------

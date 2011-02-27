@@ -1,0 +1,27 @@
+#header, #corpo, #footer {
+	width: 100%;
+	float: left;
+}
+
+#header {
+	border-bottom: 0.2em solid #dedede;
+}
+
+#corpo {
+	background-color: #f1f2f1;
+	padding-bottom: 0.5em;
+}
+
+#colonna1 {
+	width: 20%;
+	float: left;
+}
+
+#colonna2 {
+	margin-left: 21%;
+}
+
+#footer {
+	border-top: 0.2em solid #aa3300;
+	clear: both;
+}

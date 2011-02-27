@@ -1,0 +1,56 @@
+<project name="jAPS 2.0 src - Package" default="package" basedir="..">
+	<description>jAPS 2.0 - Package build file</description>
+
+	<property name="version.jAPS" value="2.2.0"/>
+	<property name="version.package" value="0.1"/>
+	
+	<property name="package.name.prefix" value="jAPS2.0_entando" />
+	<property name="package.name.base.main" value="src" />
+	<property name="package.name.separator" value="-" />
+	<property name="package.name.base.full" value="${package.name.prefix}${package.name.separator}${version.jAPS}${package.name.separator}${package.name.base.main}${package.name.separator}${version.package}" />
+
+	<available file="dist/${package.name.base.full}" type="dir" property="dir.temp.present" />
+	
+	<target name="do-package-zip">
+		<zip destfile="dist/${package.name.base.full}.zip">
+			<zipfileset dir="dist" >
+				<include name="${package.name.base.full}/**" />
+			</zipfileset>
+		</zip>
+	</target>
+	
+	<target name="do-package-tar.gz">
+		<tar destfile="dist/${package.name.base.full}.tar.gz" longfile="gnu" compression="gzip">
+			<tarfileset dir="dist">
+				<include name="${package.name.base.full}/**"/>
+			</tarfileset>
+		</tar>
+	</target>
+	
+	<target name="do-package-init">
+		<antcall target="clean-temp-dir" />
+		<copy todir="dist/${package.name.base.full}">
+			<fileset dir="${basedir}">
+				<include name="**/*"/>
+				<exclude name="build/classes/**" />
+				<exclude name="**/*.tar.gz"/>
+				<exclude name="**/*.zip"/>
+			</fileset>
+		</copy>		
+	</target>	
+
+	<target name="clean-temp-dir" if="dir.temp.present">
+		<delete includeemptydirs="true" dir="dist/${package.name.base.full}" />	
+	</target>
+	
+	<!-- ================================= 
+          target: package
+         ================================= -->
+    <target name="package" description="Prepares the release">
+    	<antcall target="do-package-init" />
+		<antcall target="do-package-zip" />
+		<antcall target="do-package-tar.gz" />
+    	<antcall target="clean-temp-dir" />
+	</target>
+
+</project>

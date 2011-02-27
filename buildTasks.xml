@@ -1,0 +1,367 @@
+<project>
+	<description>Tasks file</description>
+	
+	<!-- Define aps classpath -->
+	<path id="classpath">
+		<pathelement location="${build.path}/classes" />
+		<pathelement location="${workdir.path}" />		
+		<fileset dir="${workdir.path}/WEB-INF/lib">
+			<include name="*.jar" />
+			<exclude name="jAPS2-${version.jAPS}.jar" />			
+		</fileset>
+		<fileset dir="toolslib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Clean build area -->
+	<target name="clean" description="clean up build and dist directories">
+		<available file="${build.path}/classes" type="dir" property="dir.classes.present" />
+		<antcall target="clean-classes" />
+		<delete includeemptydirs="true">
+			<fileset dir="${build.path}/${webappname}" includes="**/*" excludes="segnaposto.txt" />
+			<fileset dir="${build.path}/temp" includes="**/*" excludes="segnaposto.txt" />
+		</delete>
+		<delete file="${workdir.path}/WEB-INF/lib/jAPS2-${version.jAPS}.jar" />
+		<delete>
+			<fileset dir="${dist.path}">
+				<include name="${webappname}.war" />
+				<include name="*.zip" />
+				<include name="*.tar.gz" />
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="clean-classes" if="dir.classes.present">
+		<delete includeemptydirs="true">
+			<fileset dir="${build.path}/classes" includes="**/*" />
+		</delete>
+	</target>
+
+	<!-- Init build area -->
+	<target name="init" depends="clean">
+		<copy todir="${build.path}/${webappname}">
+			<fileset dir="${workdir.path}" />
+		</copy>
+		<!-- <copy todir="${build.path}/${webappname}/WEB-INF/lib">
+			<fileset dir="${workdir.path}/WEB-INF/lib" />
+		</copy> 
+		<mkdir dir="${build.path}/${webappname}/WEB-INF/classes" />
+		<mkdir dir="${build.path}/${webappname}/META-INF" /> -->
+	</target>
+
+	<!-- 
+		Compile the source and add property files 
+		Used mostly by CruiseControl
+	--> 
+	<target name="compile" depends="clean" description="compile the source ">
+		<copy todir="${build.path}/classes">
+			<fileset dir="${src.path}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>		
+		<javac srcdir="${src.path}" destdir="${build.path}/classes" >
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+	
+	<target name="WAR build" depends="Generate and include aps jar, init">
+		<replace file="${build.path}/${webappname}/META-INF/ANTcontext.xml">
+			<replacefilter token="@webapp@" value="${webappname}"/>
+			<replacefilter token="@logPrefixPath@" value="${logPrefixPath}"/>
+			<replacefilter token="@applicationBaseURL@" value="${applicationBaseURL}" />
+			<replacefilter token="@resourceRootURL@" value="${resourceRootURL}"/>
+			<replacefilter token="@protectedResourceRootURL@" value="${protectedResourceRootURL}"/>
+			<replacefilter token="@resourceDiskRootFolder@" value="${resourceDiskRootFolder}"/>
+			<replacefilter token="@protectedResourceDiskRootFolder@" value="${protectedResourceDiskRootFolder}"/>
+			<replacefilter token="@indexDiskRootFolder@" value="${indexDiskRootFolder}"/>	
+			<replacefilter token="@cacheDiskRootFolder@" value="${cacheDiskRootFolder}"/>
+			<replacefilter token="@pg_host@" value="${postgres.hostname}"/>
+			<replacefilter token="@pg_port@" value="${postgres.port}"/>
+			<replacefilter token="@pg_username@" value="${postgres.username}"/>
+			<replacefilter token="@pg_password@" value="${postgres.password}"/>
+		</replace>
+		<replace file="${build.path}/${webappname}/WEB-INF/web.xml">
+			<replacefilter token="@webapp@" value="${webappname}"/>	
+		</replace>
+		<delete file="${build.path}/${webappname}/META-INF/context.xml" />
+		<move file="${build.path}/${webappname}/META-INF/ANTcontext.xml" tofile="${build.path}/${webappname}/META-INF/context.xml" />
+		<echo message="Packaging the WAR...." />
+		<delete file="${dist.path}/${webappname}.war" />
+		<jar jarfile="${dist.path}/${webappname}.war">
+			<fileset dir="${build.path}/${webappname}" excludes="segnaposto.txt" />
+		</jar>
+		<delete file="${workdir.path}/WEB-INF/lib/jAPS2-${version.jAPS}.jar" />		
+	</target>
+
+	<target name="WAR and WEBAPP undeploy" depends="undeploy">
+		<delete file="${tomcat.deploy.path}/${webappname}.war" />
+	</target>
+	
+	<!-- deploy the distribution -->
+	<target name="WAR deploy">
+		<copy file="${dist.path}/${webappname}.war" todir="${tomcat.deploy.path}" />
+	</target>
+	
+	<!-- WARNING! Use this task with caution -->
+	<!-- Undeploy the application. Delete web app from container -->
+	<target name="undeploy">
+		<delete dir="${tomcat.deploy.path}/${webappname}" includeEmptyDirs="true"/>
+	</target>
+	
+	<target name="Generate and include aps jar" depends="compile" description="Include">
+		<jar destfile="${workdir.path}/WEB-INF/lib/jAPS2-${version.jAPS}.jar" basedir="${build.path}/classes">
+			<manifest>
+				<attribute name="Main-Class" value="aps"/>
+			</manifest>
+			<include name="**" />
+			<include name="com/**" />
+			<include name="resources/**" />
+			<exclude name="test/**"/>
+		</jar>
+	</target>
+
+	<target name="PG db backup" description="PostgreSQL db backup in TAR format">
+		<echo message="Dumping ${webappname}${test.marker}Port...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.dump}" dir="${basedir}/db/tar/${test.marker}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>
+			<arg value="-i"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg line="-F t"/>
+			<arg value="-b"/>			
+			<arg value="-v"/>			
+			<arg line="-f ${webappname}${test.marker}Port.backup"/>
+			<arg value="${webappname}${test.marker}Port"/>		
+		</exec>
+		<echo message="${webappname}${test.marker}Port dumped. Compressing...." />
+		<bzip2 destfile="${basedir}/db/tar/${test.marker}/${webappname}${test.marker}Port.backup.bz2">
+			<fileset dir="${basedir}/db/tar/${test.marker}">
+			    <include name="${webappname}${test.marker}Port.backup"/>
+			</fileset>
+		</bzip2>
+		<delete file="${basedir}/db/tar/${test.marker}/${webappname}${test.marker}Port.backup" />
+		
+		<echo message="Dumping ${webappname}${test.marker}Serv...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.dump}" dir="${basedir}/db/tar/${test.marker}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>			
+			<arg value="-i"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg line="-F t"/>
+			<arg value="-b"/>			
+			<arg value="-v"/>			
+			<arg line="-f ${webappname}${test.marker}Serv.backup"/>
+			<arg value="${webappname}${test.marker}Serv"/>	
+		</exec>
+		<echo message="${webappname}${test.marker}Serv dumped. Compressing...." />
+		<bzip2 destfile="${basedir}/db/tar/${test.marker}/${webappname}${test.marker}Serv.backup.bz2" >
+			<fileset dir="${basedir}/db/tar/${test.marker}">
+			    <include name="${webappname}${test.marker}Serv.backup"/>
+			</fileset>
+		</bzip2>
+		<delete file="${basedir}/db/tar/${test.marker}/${webappname}${test.marker}Serv.backup" />
+	
+	</target>
+
+	<target name="PG db export SQL">
+		<echo message="Dumping ${webappname}${test.marker}Port...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.dump}" dir="${basedir}/db/export/${test.marker}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>
+			<arg value="-i"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg line="-F p"/>
+			<arg value="-s"/>			
+			<arg value="-s"/>			
+			<arg value="-O"/>
+			<arg value="-D"/>
+			<arg value="-v"/>
+			<arg line="-f ${webappname}${test.marker}Port_schema.sql"/>
+			<arg value="${webappname}${test.marker}Port"/>		
+		</exec>
+		<echo message="Dumping ${webappname}${test.marker}Serv...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.dump}" dir="${basedir}/db/export/${test.marker}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>	
+			<arg value="-i"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg line="-F p"/>
+			<arg value="-s"/>			
+			<arg value="-s"/>			
+			<arg value="-O"/>
+			<arg value="-v"/>
+			<arg line="-f ${webappname}${test.marker}Serv_schema.sql"/>
+			<arg value="${webappname}${test.marker}Serv"/>
+		</exec>		
+		<echo message="Dumping ${webappname}${test.marker}Port...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.dump}" dir="${basedir}/db/export/${test.marker}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>
+			<arg value="-i"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg line="-F p"/>
+			<arg line="-a"/>
+			<arg line="-D" />	
+			<arg line="-v" />	
+			<arg line="-f ${webappname}${test.marker}Port_data.sql"/>
+			<arg value="${webappname}${test.marker}Port"/>		
+		</exec>
+		<echo message="Dumping ${webappname}${test.marker}Serv...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.dump}" dir="${basedir}/db/export/${test.marker}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>			
+			<arg value="-i"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg line="-F p"/>
+			<arg line="-a"/>
+			<arg line="-D" />	
+			<arg line="-v" />
+			<arg line="-f ${webappname}${test.marker}Serv_data.sql"/>
+			<arg value="${webappname}${test.marker}Serv"/>	
+		</exec>
+		<echo message="Database full backup in plain version done."/>
+	</target>
+	
+	<target name="PG db restore">
+		<echo message="Uncompressing ${webappname}${test.marker}Port...." />
+		<bunzip2 src="${basedir}/db/tar/${test.marker}/${webappname}${test.marker}Port.backup.bz2" />
+		
+		<echo message="Restoring ${webappname}${test.marker}Port...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.restore}" dir="${basedir}/db/tar/${test.marker}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>			
+			<arg value="-i"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg line="-d ${webappname}${test.marker}Port"/>				
+			<arg value="-v"/>	
+			<arg value="-O"/>	
+			<arg value="${webappname}${test.marker}Port.backup"/>
+		</exec>
+		<delete file="${basedir}/db/tar/${test.marker}/${webappname}${test.marker}Port.backup" />
+
+		<echo message="Uncompressing ${webappname}${test.marker}Serv...." />
+		<bunzip2 src="${basedir}/db/tar/${test.marker}/${webappname}${test.marker}Serv.backup.bz2" />		
+		
+		<echo message="Restoring ${webappname}${test.marker}Serv...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.restore}" dir="${basedir}/db/tar/${test.marker}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>
+			<arg value="-i"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg line="-d ${webappname}${test.marker}Serv"/>				
+			<arg value="-v"/>	
+			<arg value="-O"/>	
+			<arg value="${webappname}${test.marker}Serv.backup"/>
+		</exec>		
+		<delete file="${basedir}/db/tar/${test.marker}/${webappname}${test.marker}Serv.backup" />		
+	</target>
+
+	<target name="PG db drop">
+		<echo message="Dropping ${webappname}${test.marker}Port...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.drop}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg value="${webappname}${test.marker}Port"/>	
+		</exec>
+		<echo message="Dropping ${webappname}${test.marker}Serv...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.drop}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg value="${webappname}${test.marker}Serv"/>	
+		</exec>		
+	</target>	
+	
+	<target name="PG db create">
+		<echo message="Creating ${webappname}${test.marker}Port...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.create}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>
+			<arg line="-E UTF-8"/>
+			<arg line="-O ${postgres.username}"/>			
+			<arg value="-e"/>	
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg value="${webappname}${test.marker}Port"/>	
+		</exec>
+		<echo message="Creating ${webappname}${test.marker}Serv...." />
+		<exec executable="${postgres.bin.path}/${postgres.bin.create}">
+			<env key="PGPASSWORD" value="${postgres.password}"/>
+			<arg line="-E UTF-8"/>
+			<arg line="-O ${postgres.username}"/>			
+			<arg value="-e"/>	
+			<arg line="-h ${postgres.hostname}"/>
+			<arg line="-p ${postgres.port}"/>			
+			<arg line="-U ${postgres.username}"/>	
+			<arg value="${webappname}${test.marker}Serv"/>	
+		</exec>		
+	</target>	
+	
+	<target name="PG db full update" description="PostgreSQL db update from tar file" depends="PG db drop, PG db create, PG db restore">
+		<echo message="Databases full update [done]" />
+	</target>		
+	
+	<!-- Clean test area -->
+	<target name="Test - clean">
+		<delete dir="${test.path}" />
+		<delete dir="${build.path}/classes/test" />
+		<delete>
+			<fileset dir="${test-results.path}" excludes="segnaposto.txt" />
+		</delete>
+	</target>	
+
+	<target name="Test - init" depends="Test - clean, compile" description="initializes the test environment">
+		<mkdir dir="${test.path}" />
+		<mkdir dir="${test-results.path}" />
+		<antcall target="PG db full update">
+			<param name="test.marker" value="test" />		
+		</antcall>
+	</target>
+	
+	<target name="Test - PG db export SQL" >
+		<antcall target="PG db export SQL">
+			<param name="test.marker" value="test" />	
+		</antcall>		
+	</target>
+
+	<target name="Test - PG db backup" description="Test - PG db backup in TAR format">
+		<antcall target="PG db backup">
+			<param name="test.marker" value="test" />	
+		</antcall>		
+	</target>
+	
+	<property name="apsTestSuite.class.name" value="test.com.agiletec.aps.AllTests" />
+	<property name="apsAdminTestSuite.class.name" value="test.com.agiletec.apsadmin.AllTests" />
+	
+	<target name="Test">
+		<junit fork="yes" haltonfailure="yes" printsummary="yes">
+			<test name="${apsTestSuite.class.name}" todir="${test-results.path}" />
+			<test name="${apsAdminTestSuite.class.name}" todir="${test-results.path}" />
+			<formatter type="plain" usefile="false" />
+			<formatter type="xml" />
+			<classpath refid="classpath" />
+		</junit >
+	</target>
+	
+	<target name="all">
+		<echo message="###################################" />
+		<echo message=" jAPS - java Agile Portal System" />
+		<echo message="###################################" />
+		<sleep seconds="1" />
+		<antcall target="WAR build"></antcall>
+		<antcall target="Test - init"></antcall>
+		<antcall target="Test"></antcall>
+	</target>
+</project>
