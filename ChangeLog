@@ -16,14 +16,47 @@ Abbreviated Changelog from 2.0.10.1
 
 New Features
 
-- Added the extra groups collection to the page configurations.
-- TO COMPLETE
+Application engine
+- "view-only" extra page groups.
+- Extra page title (by additional parameter in the context of the request)
+- Management of initial language of navigation.
+- Added: values used to filter entities can be grouped (just like an enumeration)
+- Added: Roles attribute in entity
+- Load management roles and entity disabling codes (with validation xsd)
+- Function of controls forcing case sensitive / insensitive filter on entities
+- Added: Advanced attribute Validation; by value/range (on a fixed value or another attribute for attributes "Number" and "Data") and OGNL Validation
+- Added: new "Parameter" tag for setting parameter of other tags ("wp:url", "wp:action" and "wp:pageInfo")
+- Interceptors Stack for special features in "InternalServlet" based on Struts2
+- Added: a method ("release") to release a service at shutdown
+
+Administration Interface
+- Two clients for the backoffice (chose one at login): "Normal" or "Advanced"
+- Added: shortcuts for the start page.
+- Showlets placement details
+- Addition of functions to create new User Showlet
+- Advanced search contents
+- Advanced search resources
+- Content Inspect on work and public area
+- New tags in apsadmin-core.tld: "page", "showletType", "entity", "entityType"
+- New tags in jacms-apsadmin-core.tld: "content", "contentType"
+- Setting up ways of using tree pages - classic | request
+- Setting up ways of using tree categories - classic | request
+- Aid functions in the Content Models management interface
+- Added: hookpoints
 
 Improvements
 
-- Updated Spring to version 3.0.3
-- Updated Cache Manager libraries, from OsCache to EhCache
-- TO COMPLETE
+Application engine
+- Update: switched Cache engine from OsCache to EhCache
+- Update: Full-Text search engine Libraries (Lucene 3.0)
+- Update: Struts2 Libraries (2.2.1.1)
+- Update: Spring libraries (3.0.5)
+- Introduction of imagemagick
+
+Administration Interface
+- Update: Page Info
+- Function of normalization resource file name
+- Homogenization key error messages
 
 
 ------------------------------------------------------------------------------
