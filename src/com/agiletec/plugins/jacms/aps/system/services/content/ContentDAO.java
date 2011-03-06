@@ -138,6 +138,27 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	}
 	
 	@Override
+	public void addEntity(IApsEntity entity) {
+		Connection conn = null;
+		PreparedStatement stat = null;
+		try {
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+			stat = conn.prepareStatement(this.getAddEntityRecordQuery());
+			this.buildAddEntityStatement(entity, stat);
+			stat.executeUpdate();
+			this.addEntitySearchRecord(entity.getId(), entity, conn);
+			this.addWorkContentRelationsRecord((Content) entity, conn);
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Error adding new content", "addEntity");
+		} finally {
+			closeDaoResources(null, stat, conn);
+		}
+	}
+	
+	@Override
 	protected String getAddEntityRecordQuery() {
 		return ADD_CONTENT;
 	}
@@ -205,6 +226,29 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 					"updateContentRecord");
 		} finally {
 			closeDaoResources(null, stat);
+		}
+	}
+	
+	@Override
+	public void updateEntity(IApsEntity entity) {
+		Connection conn = null;
+		PreparedStatement stat = null;
+		try {
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+			this.deleteEntitySearchRecord(entity.getId(), conn);
+			this.deleteRecordsByEntityId(entity.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
+			stat = conn.prepareStatement(this.getUpdateEntityRecordQuery());
+			this.buildUpdateEntityStatement(entity, stat);
+			stat.executeUpdate();
+			this.addEntitySearchRecord(entity.getId(), entity, conn);
+			this.addWorkContentRelationsRecord((Content) entity, conn);
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Errore updating content " + entity.getId(), "updateEntity");
+		} finally {
+			closeDaoResources(null, stat, conn);
 		}
 	}
 	

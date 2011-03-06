@@ -26,6 +26,7 @@ import java.util.Map;
 
 import test.com.agiletec.aps.BaseTestCase;
 
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
@@ -34,6 +35,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -264,7 +266,7 @@ public class TestContentManager extends BaseTestCase {
     	assertEquals(order.length, contents.size());
     	this.verifyOrder(contents, order);
     }
-	
+
 	public void testSearchWorkContents_2_b() throws Throwable {
 		//forcing case insensitive search
     	WorkContentSearcherDAO searcherDao = (WorkContentSearcherDAO) this.getApplicationContext().getBean("jacmsWorkContentSearcherDAO");
@@ -279,11 +281,52 @@ public class TestContentManager extends BaseTestCase {
     	EntitySearchFilter descrFilter_1 = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "eScR", true);
     	EntitySearchFilter[] filters_1 = {creationOrder, descrFilter_1};
     	List<String> contents = this._contentManager.loadWorkContentsId(filters_1, groupCodes);
-    	contents = this._contentManager.loadWorkContentsId(filters_1, groupCodes);
     	String[] order = {"ART187", "ART180", "ART179"};
     	assertEquals(order.length, contents.size());
     	this.verifyOrder(contents, order);
     }
+	
+	public void testSearchWorkContents_3() throws Throwable {
+		List<String> groupCodes = new ArrayList<String>();
+		groupCodes.add(Group.ADMINS_GROUP_NAME);
+		EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
+		creationOrder.setOrder(EntitySearchFilter.DESC_ORDER);
+		EntitySearchFilter[] filters = { creationOrder };
+		String[] categories_1 = { "general_cat2" };
+		List<String> contents = this._contentManager.loadWorkContentsId(categories_1, filters, groupCodes);
+		String[] order_a = {"EVN193", "ART179"};
+		assertEquals(order_a.length, contents.size());
+		this.verifyOrder(contents, order_a);
+		
+		String[] categories_2 = { "general_cat1", "general_cat2" };
+		contents = this._contentManager.loadWorkContentsId(categories_2, filters, groupCodes);
+		String[] order_b = {"ART179"};
+		assertEquals(1, contents.size());
+		assertEquals(order_b[0], contents.get(0));
+		
+		Content newContent = this._contentManager.loadContent("EVN193", false);
+		newContent.setId(null);
+		try {
+			this._contentManager.saveContent(newContent);
+			contents = this._contentManager.loadWorkContentsId(categories_1, filters, groupCodes);
+			String[] order_c = {newContent.getId(), "EVN193", "ART179"};
+			assertEquals(order_c.length, contents.size());
+			this.verifyOrder(contents, order_c);
+			
+			ICategoryManager categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
+			newContent.addCategory(categoryManager.getCategory("general_cat1"));
+			this._contentManager.saveContent(newContent);
+			contents = this._contentManager.loadWorkContentsId(categories_2, filters, groupCodes);
+			String[] order_d = {newContent.getId(), "ART179"};
+			assertEquals(order_d.length, contents.size());
+			this.verifyOrder(contents, order_d);
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._contentManager.deleteContent(newContent);
+			assertNull(this._contentManager.loadContent(newContent.getId(), false));
+		}
+	}
 	
     private void verifyOrder(List<String> contents, String[] order) {
     	for (int i=0; i<contents.size(); i++) {
@@ -1130,28 +1173,18 @@ public class TestContentManager extends BaseTestCase {
 				assertEquals(expectedContentsId3[i], contents.get(i));
 			}
 			
-			/*
 			filter2.setNullOption(true);
-			EntitySearchFilter[] filters2 = {filter0, filter1, filter2};
+			EntitySearchFilter[] filters4 = {filter0, filter1, filter2};
 			
-			contents = this._contentManager.loadWorkContentsId(filters2, groups);
+			contents = this._contentManager.loadWorkContentsId(filters4, groups);
 			assertEquals(0, contents.size());
 			
-			filter2.setLangCode("it");
-			EntitySearchFilter[] filters3 = {filter0, filter1, filter2};
-			contents = this._contentManager.loadWorkContentsId(filters3, groups);
-			assertEquals(0, contents.size());
-			*/
 		} catch (Throwable t) {
 			throw t;
 		} finally {
 			this.deleteContents(newContentIds);
 		}
     }
-    
-    
-    
-    
     
 	protected String[] addDraftContentsForTest(String[] masterContentIds, boolean publish) throws Throwable {
 		String[] newContentIds = new String[masterContentIds.length];
