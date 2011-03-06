@@ -22,7 +22,6 @@
 </s:if>
 <s:else>
 	<p><s:text name="note.workingOn" />:&#32;<em class="important"><s:property value="content.descr"/></em> (<s:property value="content.typeDescr"/>)</p>  
-				
 	<h3 class="noscreen"><s:text name="title.quickMenu" /></h3>
 	<ul class="noscreen">
 		<li><a href="#jpcontentinspection_metadata"><abbr title="<s:text name="metadata.full" />"><s:text name="metadata" /></abbr></a></li>
@@ -34,27 +33,23 @@
 	</ul>
 	
 	<p class="noscreen" id="jpcontentinspection_metadata"><s:text name="title.metadata" /></p>
+	
+	<jacms:content contentId="%{content.id}" record="true" var="contentRecordVar"/>
 	<dl class="table-display">
 		<dt><s:text name="label.key" /></dt>
-			<dd><jacms:content contentId="%{content.id}" property="id"/></dd>
+			<dd><s:property value="content.id" /></dd>
 		<dt><s:text name="label.description" /></dt>
-			<dd><jacms:content contentId="%{content.id}" property="descr"/></dd>
+			<dd><s:property value="content.descr" /></dd>
 		<dt><s:text name="label.lastEdit" /></dt>
-			<dd>
-			<jacms:content contentId="%{content.id}" property="modify" record="true" var="modifyVar"/>
-			<s:date name="#modifyVar" format="dd/MM/yyyy HH:mm" />
-			</dd>
+			<dd><s:date name="#contentRecordVar.modify" format="dd/MM/yyyy HH:mm" /></dd>
 		<dt><s:text name="label.creationDate" /></dt>
-			<dd>
-			<jacms:content contentId="%{content.id}" property="create" record="true" var="createVar"/>
-			<s:date name="#createVar" format="dd/MM/yyyy HH:mm" />
-			</dd>
+			<dd><s:date name="#contentRecordVar.create" format="dd/MM/yyyy HH:mm" /></dd>
 		<dt><s:text name="label.editor" /></dt>
-			<dd><jacms:content contentId="%{content.id}" property="lastEditor"/></dd>
+			<dd><s:property value="content.lastEditor" /></dd>
 		<dt><s:text name="name.version" /></dt>
-			<dd><jacms:content contentId="%{content.id}" property="version"/></dd>
+			<dd><s:property value="content.version" /></dd>
 		<dt><s:text name="label.mainGroup" /></dt>
-			<dd><jacms:content contentId="%{content.id}" property="mainGroup"/></dd>
+			<dd><s:property value="content.mainGroup" /></dd>
 	</dl>
 	
 <fieldset><legend><s:text name="label.info" /></legend>

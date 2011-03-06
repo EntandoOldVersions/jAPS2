@@ -86,8 +86,7 @@
 				<s:property value="#currentContentVar.typeDescr"/>
 			</td>
 			<td class="icon">
-				<jacms:content contentId="%{#currentContentRecordVar.id}" record="true" property="modify" var="modifyDateVar"/>
-				<span class="monospace"><s:date name="#modifyDateVar" format="dd/MM/yyyy" /></span>
+				<span class="monospace"><s:date name="#currentContentRecordVar.modify" format="dd/MM/yyyy" /></span>
 			</td>
 		</tr>
 	</s:iterator>
