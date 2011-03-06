@@ -67,15 +67,25 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
 		if (null != this.getStaticItems() && this.getStaticItems().trim().length() > 0) {
 			this.setItems(this.getStaticItems().split(this.getCustomSeparator()));
 		}
-		if (null == this.getExtractorBeanName()) return;
-		try {
-			EnumeratorAttributeItemsExtractor extractor = (EnumeratorAttributeItemsExtractor) this.getBeanFactory().getBean(this.getExtractorBeanName(), EnumeratorAttributeItemsExtractor.class);
-			if (null != extractor) {
-				List<String> items = extractor.getItems();
-				if (items != null && items.size()>0) this.addExtractedItems(items);
+		if (null != this.getExtractorBeanName()) {
+			try {
+				EnumeratorAttributeItemsExtractor extractor = (EnumeratorAttributeItemsExtractor) this.getBeanFactory().getBean(this.getExtractorBeanName(), EnumeratorAttributeItemsExtractor.class);
+				if (null != extractor) {
+					List<String> items = extractor.getItems();
+					if (items != null && items.size()>0) this.addExtractedItems(items);
+				}
+			} catch (Throwable t) {
+				ApsSystemUtils.logThrowable(t, this, "initItems", "Error while extract items from bean extractor '" + this.getExtractorBeanName() + "'");
 			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "initItems", "Error while extract items from bean extractor '" + this.getExtractorBeanName() + "'");
+		}
+		if (null != this.getItems()) {
+			String[] items = new String[this.getItems().length];
+			for (int i = 0; i < this.getItems().length; i++) {
+				if (null != this.getItems()[i]) {
+					items[i] = this.getItems()[i].trim();
+				}
+			}
+			this.setItems(items);
 		}
 	}
 	
