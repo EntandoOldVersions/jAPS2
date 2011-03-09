@@ -254,6 +254,7 @@
 	opacity: 0.97;
 	height: 8.75em;
 	overflow: auto;
+	min-height: 1.4em; /* better height when showing messages */
 }
 
 .theme_japs_activeItem {
@@ -278,7 +279,7 @@
 	font-weight: normal;
 }
 
-.theme_japs_completedItem {
+.theme_japs_completedItem, .theme_japs_messages {
 	background-color: transparent;
 	color: #822D08;
 	margin-bottom: 0.125em;
@@ -291,6 +292,12 @@
 	margin-bottom: 0.125em;
 }
 
+.theme_japs_messages {
+	margin: 0 0 0 2%;
+	width: 98%;
+	padding: 0.125em 0 0 0;
+	margin-bottom: 0.125em;
+}
 .theme_japs_completedItem .theme_japs_occurence {
 	color: #822D08;
 	font-weight: bold;
