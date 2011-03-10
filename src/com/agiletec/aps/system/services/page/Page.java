@@ -181,6 +181,20 @@ public class Page extends TreeNode implements IPage {
 	public void setUseExtraTitles(boolean useExtraTitles) {
 		this._useExtraTitles = useExtraTitles;
 	}
+	
+	public boolean isVoid() {
+		boolean isVoid = true;
+		Showlet[] showlets = this.getShowlets();
+		if (null != showlets) {
+			for (int i = 0; i < showlets.length; i++) {
+				if (null != showlets[i]) {
+					isVoid = false;
+					break;
+				}
+			}
+		}
+		return isVoid;
+	}
 
 	@Override
 	public String toString() {
