@@ -254,7 +254,7 @@
 		<tag-class>com.agiletec.aps.tags.CurrentPageTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description><![CDATA[The wanted parameter: actually can be either "title" or "code".<br/>
+			<description><![CDATA[The wanted parameter: actually can be either "title", "owner" (group) or "code".<br/>
 				The default when none is given is "title".]]></description>
 			<name>param</name>
 			<required>false</required>
@@ -298,7 +298,7 @@
 		</attribute>
 		<attribute>
 			<description><![CDATA[Code of required page parameter.
-				Possible entries: "code" (default value) , "title" or "url".]]></description>
+				Possible entries: "code" (default value) , "title", "owner" (group) or "url".]]></description>
 			<name>info</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>

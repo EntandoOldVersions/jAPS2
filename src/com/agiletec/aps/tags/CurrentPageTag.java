@@ -49,6 +49,8 @@ public class CurrentPageTag extends PageInfoTag {
 				this.extractPageTitle(page, currentLang, reqCtx);
 			} else if (this.getParam().equals(CODE_INFO)) {
 				this.setValue(page.getCode());
+			} else if (this.getParam().equals(OWNER_INFO)) {
+				this.extractPageOwner(page, reqCtx);
 			}
 			this.evalValue();
 		} catch (Throwable t) {

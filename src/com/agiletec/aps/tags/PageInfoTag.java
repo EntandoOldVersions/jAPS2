@@ -67,6 +67,9 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 			} else if (this.getInfo().equals(URL_INFO)) {
 				this.extractPageUrl(page, currentLang, reqCtx);
 			}
+			else if (this.getInfo().equals(OWNER_INFO)) {
+				this.extractPageOwner(page, reqCtx);
+			}			
 			this.evalValue();
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "doStartTag");
@@ -112,6 +115,11 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 		}
 		this.setValue(pageUrl.getURL());
 	}
+	
+	protected void extractPageOwner(IPage page, RequestContext reqCtx) {
+		String value = page.getGroup();
+		this.setValue(value);
+	}	
 	
 	protected void evalValue() throws JspException {
 		if (this.getVar() != null) {
@@ -217,5 +225,6 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 	public static final String CODE_INFO = "code";
 	public static final String URL_INFO = "url";
 	public static final String TITLE_INFO = "title";
+	public static final String OWNER_INFO = "owner";
 	
 }
