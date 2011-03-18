@@ -10,9 +10,6 @@
 <div id="menubar_content"><div id="menubar_content-1"><div id="menubar_content-2">
 </s:if>
 
-<wp:ifauthorized permission="superuser" var="isSuperuser" />
-<wp:ifauthorized permission="manageCategories" var="isManageCategories" />
-<c:if test="${isSuperuser || isManageCategories}">
 <h3 id="menubar-components"><span><s:text name="menu.componentsAdmin" /></span></h3>
 <ul class="menu vertical">
 	<wp:ifauthorized permission="superuser">
@@ -41,9 +38,8 @@
 		</div></div></div>
 	</li>
 	</wp:ifauthorized>
-
 	<wpsa:pluginsSubMenu objectName="pluginsSubMenus" />
-	<li <s:if test="#pluginsSubMenus.size > 0">class="openmenu"</s:if>><a href="#" <s:if test="#pluginsSubMenus.size > 0">rel="fagiano_plugins" class="subMenuToggler"</s:if> id="menu_plugins"><s:text name="menu.plugins" /></a>
+	<li <s:if test="#pluginsSubMenus.size > 0">class="openmenu"</s:if> ><a href="#" <s:if test="#pluginsSubMenus.size > 0">rel="fagiano_plugins" class="subMenuToggler"</s:if> id="menu_plugins"><s:text name="menu.plugins" /></a>
 		<s:if test="#pluginsSubMenus.size > 0">
 			<div class="menuToggler" id="fagiano_plugins"><div class="menuToggler-1"><div class="menuToggler-2">
 			<ul>		
@@ -56,7 +52,6 @@
 	</li>
 	
 </ul>
-</c:if>
 
 <wp:ifauthorized permission="managePages">
 <h3 id="menubar-portal"><span><s:text name="menu.portalAdmin" /></span></h3>

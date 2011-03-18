@@ -137,6 +137,7 @@ body {
 	background-image: url("../img/menubar-background-top.png");
 	background-position: 0 0;
 	background-repeat: no-repeat;
+	min-height: 225px;
 }
 
 #menubar_anchor {
