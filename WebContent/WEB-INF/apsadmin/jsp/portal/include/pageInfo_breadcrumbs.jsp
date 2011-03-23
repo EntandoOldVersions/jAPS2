@@ -7,7 +7,7 @@
 <s:set value="%{getBreadCrumbsTargets(#breadcrumbs_pivotPageCode)}" name="breadCrumbsTargets" ></s:set>
 <s:iterator value="#breadCrumbsTargets" id="target" status="rowstatus">
 <s:if test="%{#rowstatus.index != 0}"> &raquo; </s:if>
-<s:if test="%{(#rowstatus.index == (#breadCrumbsTargets.size()-1) && strutsAction == 2) || !isUserAllowed(#target)}">
+<s:if test="%{!isUserAllowed(#target)}">
 <s:property value="getTitle(#target.code, #target.titles)" />
 </s:if>
 <s:else>

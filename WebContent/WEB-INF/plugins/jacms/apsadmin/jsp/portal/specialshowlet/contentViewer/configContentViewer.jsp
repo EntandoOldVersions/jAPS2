@@ -1,5 +1,7 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib uri="apsadmin-form.tld" prefix="wpsf" %>
+<%@ taglib prefix="wp" uri="aps-core.tld" %>
+<%@ taglib prefix="c" uri="c.tld" %>
 <h1><a href="<s:url action="viewTree" namespace="/do/Page" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.pageManagement" />"><s:text name="title.pageManagement" /></a></h1>
 
 <div id="main">
@@ -49,7 +51,19 @@
 	<dd><s:property value="#content.id" /></dd>
 
 	<dt><s:text name="label.description" /></dt>
+	
+<s:set var="canEditCurrentContent" value="%{false}" />
+<c:set var="currentContentGroup"><s:property value="#content.mainGroupCode" escape="false"/></c:set>
+
+<wp:ifauthorized groupName="${currentContentGroup}" permission="editContents"><s:set var="canEditCurrentContent" value="%{true}" /></wp:ifauthorized>
+
+<s:if test="#canEditCurrentContent">
+	<dd><a href="<s:url action="edit" namespace="/do/jacms/Content"><s:param name="contentId" value="#content.id" /></s:url>" title="<s:text name="label.edit" />:&#32;<s:property value="#content.descr"/>"><s:property value="#content.descr"/></a></dd>
+</s:if>
+<s:else>
 	<dd><s:property value="#content.descr" /></dd>
+</s:else>
+	
 </dl>
 </div>
 <p class="noscreen clear">
