@@ -18,39 +18,44 @@
 package com.agiletec.apsadmin.user.group;
 
 /**
- * Interfaccia base per le classi action della gestione Gruppi.
- * @version 1.0
+ * Interface defining the actions needed in order to handle groups.
  * @author E.Santoboni
  */
 public interface IGroupAction {
 	
 	/**
-	 * Esegue l'operazione di richiesta creazione di nuovo gruppo.
-	 * @return Il codice del risultato dell'azione.
+	 * Create a new group.
+	 * @return The result code.
 	 */
 	public String newGroup();
 	
 	/**
-	 * Esegue l'operazione di richiesta di modifica gruppo.
-	 * @return Il codice del risultato dell'azione.
+	 * Edit a group
+	 * @return The result code.
 	 */
 	public String edit();
 	
 	/**
-	 * Esegue l'operazione di salvataggio di un gruppo.
-	 * @return Il codice del risultato dell'azione.
+	 * Show the detail of a group.
+	 * @return The result code.
+	 */
+	public String showDetail();
+	
+	/**
+	 * Save a group.
+	 * @return The result code.
 	 */
 	public String save();
 	
 	/**
-	 * Esegue le operazioni di richiesta di cancellazione gruppo.
-	 * @return Il codice del risultato dell'azione.
+	 *  Start the deletion process of a group.
+	 * @return The result code.
 	 */
 	public String trash();
 	
 	/**
-	 * Esegue l'operazione di cancellazione di un gruppo.
-	 * @return Il codice del risultato dell'azione.
+	 * Delete a group permanently.
+	 * @return The result code.
 	 */
 	public String delete();
 	

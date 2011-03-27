@@ -6,7 +6,7 @@
 <struts>
 	
     <package name="core_do/Group" namespace="/do/Group" extends="japs-default">
-
+		
     	<action name="intro" class="groupAction">
             <result type="tiles">admin.Group.intro</result>
         	<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
@@ -24,7 +24,6 @@
         
         <!-- ######### FINE OPERAZIONI IN INTERFACCIA LISTA GRUPPI ######### -->
     	
-    	
     	<!-- ######### INIZIO OPERAZIONI DI AGGIUNTA/MODIFICA GRUPPO ######### -->
     	
         <action name="new" class="groupAction" method="newGroup">
@@ -34,6 +33,12 @@
     	
     	<action name="edit" class="groupAction" method="edit">
             <result type="tiles">admin.Group.entry</result>
+            <result name="groupList" type="chain">list</result>
+        	<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    	<action name="detail" class="groupAction" method="showDetail">
+            <result type="tiles">admin.Group.detail</result>
             <result name="groupList" type="chain">list</result>
         	<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
@@ -52,8 +57,9 @@
         </action>
         
     	<action name="delete" class="groupAction" method="delete">
-        	<result type="redirectAction">list</result>
+        	<result name="references" type="tiles">admin.Group.references</result>
             <result name="groupList" type="chain">list</result>
+        	<result type="redirectAction">list</result>
         	<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
     	

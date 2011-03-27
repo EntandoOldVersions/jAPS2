@@ -64,6 +64,18 @@ public class GroupAction extends BaseAction implements IGroupAction {
 	@Override
 	public String edit() {
 		this.setStrutsAction(ApsAdminSystemConstants.EDIT);
+		return this.extractGroupFormValues();
+	}
+	
+	@Override
+	public String showDetail() {
+		String result = this.extractGroupFormValues();
+		if (!result.equals(SUCCESS)) return result;
+		this.extractReferencingObjects(this.getName());
+		return result;
+	}
+	
+	protected String extractGroupFormValues() {
 		try {
 			if (!this.existsGroup()) {
 				this.addActionError(this.getText("error.group.notExist"));
@@ -73,7 +85,7 @@ public class GroupAction extends BaseAction implements IGroupAction {
 			this.setName(group.getName());
 			this.setDescription(group.getDescr());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			ApsSystemUtils.logThrowable(t, this, "extractGroupFormValues");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -100,16 +112,8 @@ public class GroupAction extends BaseAction implements IGroupAction {
 	@Override
 	public String trash() {
 		try {
-			if (!this.checkGroupForDelete()) {
-				return "groupList";
-			}
-			IGroupManager groupManager = this.getGroupManager();
-			Group group = groupManager.getGroup(this.getName());
-			Map<String, List<Object>> references = this.getHelper().getReferencingObjects(group, this.getRequest());
-			if (references.size()>0) {
-				this.setReferences(references);
-				return "references";
-			}
+			String check = this.checkGroupForDelete();
+			if (null != check) return check;
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
@@ -120,9 +124,8 @@ public class GroupAction extends BaseAction implements IGroupAction {
 	@Override
 	public String delete() {
 		try {
-			if (!this.checkGroupForDelete()) {
-				return "groupList";
-			}
+			String check = this.checkGroupForDelete();
+			if (null != check) return check;
 			IGroupManager groupManager = this.getGroupManager();
 			Group group = groupManager.getGroup(this.getName());
 			this.getGroupManager().removeGroup(group);
@@ -149,17 +152,35 @@ public class GroupAction extends BaseAction implements IGroupAction {
 	 * @return true in caso di cancellazione consentita, false in caso contrario.
 	 * @throws ApsSystemException In caso di errore.
 	 */
-	protected boolean checkGroupForDelete() throws ApsSystemException {
+	protected String checkGroupForDelete() throws ApsSystemException {
 		if (!this.existsGroup()) {
 			this.addActionError(this.getText("error.group.notExist"));
-			return false;
+			return "groupList";
 		}
 		String name = this.getName();
 		if (Group.FREE_GROUP_NAME.equals(name) || Group.ADMINS_GROUP_NAME.equals(name)) {
 			this.addActionError(this.getText("error.group.undeletable"));
-			return false;
+			return "groupList";
 		}
-		return true;
+		this.extractReferencingObjects(name);
+		if (null != this.getReferences() && this.getReferences().size() > 0) {
+	        return "references";
+		}
+		return null;
+	}
+	
+	protected void extractReferencingObjects(String groupCode) {
+		try {
+			Group group = this.getGroupManager().getGroup(groupCode);
+			if (null != group) {
+				Map references = this.getHelper().getReferencingObjects(group, this.getRequest());
+				if (references.size() > 0) {
+					this.setReferences(references);
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "extractReferencingObjects", "Error extracting referenced objects by group '" + groupCode + "'");
+		}
 	}
 	
 	public int getStrutsAction() {

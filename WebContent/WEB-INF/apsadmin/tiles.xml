@@ -104,6 +104,10 @@
 		<put-attribute name="title" value="title.groupManagement" />
 		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/user/group/groupReferences.jsp" />
 	</definition>
+	<definition extends="main.layout" name="admin.Group.detail">
+		<put-attribute name="title" value="title.groupManagement" />
+		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/user/group/groupDetails.jsp" />
+	</definition>
 	<definition extends="main.layout" name="admin.AuthGroup.configure">
 		<put-attribute name="title" value="title.groupManagement" />
 		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/user/group/configAuthority.jsp" />

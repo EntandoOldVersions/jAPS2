@@ -174,9 +174,9 @@ public class TestGroupAction extends ApsAdminBaseTestCase {
 		GroupAction groupAction = (GroupAction) this.getAction();
 		Map<String, List<Object>> references = groupAction.getReferences();
 		assertEquals(4, references.size());
-		List pages = references.get("PageManagerUtilizers");
+		List<Object> pages = references.get("PageManagerUtilizers");
 		assertEquals(3, pages.size());
-		List users = references.get("UserManagerUtilizers");
+		List<Object> users = references.get("UserManagerUtilizers");
 		assertEquals(6, users.size());
 	}
 	
@@ -184,7 +184,6 @@ public class TestGroupAction extends ApsAdminBaseTestCase {
 		String groupName = "newGroup";
 		try {
 			this.addGroup(groupName, "groupDescription");
-			
 			String result = this.executeDelete("admin", groupName);
 			assertEquals(Action.SUCCESS, result);
 			assertNull(this._groupManager.getGroup(groupName));
@@ -211,6 +210,9 @@ public class TestGroupAction extends ApsAdminBaseTestCase {
 		assertEquals("groupList", result);
 		actionErrors = this.getAction().getActionErrors();
 		assertEquals(1, actionErrors.size());
+		
+		result = this.executeDelete("admin", "customers");
+		assertEquals("references", result);
 	}
 	
 	private String executeNew(String currentUser) throws Throwable {
