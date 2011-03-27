@@ -36,6 +36,12 @@ public interface ICategoryAction {
 	public String edit();
 	
 	/**
+	 * Show the detail of a category.
+	 * @return The result code.
+	 */
+	public String showDetail();
+	
+	/**
 	 * Start the deletion process of a category.
 	 * @return The result code.
 	 */

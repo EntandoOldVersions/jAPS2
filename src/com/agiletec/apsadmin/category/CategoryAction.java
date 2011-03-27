@@ -40,6 +40,7 @@ import com.agiletec.apsadmin.system.BaseActionHelper;
  */
 public class CategoryAction extends AbstractTreeAction implements ICategoryAction, ICategoryTreeAction {
 	
+	@Override
 	public void validate() {
 		super.validate();
 		this.checkCode();
@@ -96,6 +97,19 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 	
 	@Override
 	public String edit() {
+		this.setStrutsAction(ApsAdminSystemConstants.EDIT);
+		return this.extractCategoryFormValues();
+	}
+	
+	@Override
+	public String showDetail() {
+		String result = this.extractCategoryFormValues();
+		if (!result.equals(SUCCESS)) return result;
+		this.extractReferencingObjects(this.getSelectedNode());
+		return result;
+	}
+	
+	protected String extractCategoryFormValues() {
 		String selectedNode = this.getSelectedNode();
 		try {
 			Category category = this.getCategory(selectedNode);
@@ -103,12 +117,11 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 				this.addActionError(this.getText("error.category.selectCategory"));
 				return "categoryTree";
 			}
-			this.setStrutsAction(ApsAdminSystemConstants.EDIT);
 			this.setParentCategoryCode(category.getParentCode());
 			this.setCategoryCode(category.getCode());
 			this.setTitles(category.getTitles());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			ApsSystemUtils.logThrowable(t, this, "extractCategoryFormValues");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -116,16 +129,9 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 	
 	@Override
 	public String trash() {
-		String selectedNode = this.getSelectedNode();
 		try {
 			String check = this.chechDelete();
 			if (null != check) return check;
-			Category categoryToDelete = this.getCategoryManager().getCategory(selectedNode);
-			Map references = this.getHelper().getReferencingObjects(categoryToDelete, this.getRequest());
-			if (references.size() > 0) {
-				this.setReferences(references);
-		        return "references";
-			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
@@ -171,7 +177,25 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 			this.addActionError(this.getText("error.category.deleteWithChildren.notAllowed"));
 			return "categoryTree";
         }
+		this.extractReferencingObjects(this.getSelectedNode());
+		if (null != this.getReferences() && this.getReferences().size() > 0) {
+	        return "references";
+		}
 		return null;
+	}
+	
+	protected void extractReferencingObjects(String categoryCode) {
+		try {
+			Category category = this.getCategoryManager().getCategory(categoryCode);
+			if (null != category) {
+				Map references = this.getHelper().getReferencingObjects(category, this.getRequest());
+				if (references.size() > 0) {
+					this.setReferences(references);
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "extractReferencingObjects", "Error extracting referenced objects by category '" + categoryCode + "'");
+		}
 	}
 	
 	@Override
@@ -182,11 +206,11 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 				Category category = this.getCategory(this.getCategoryCode());
 				category.setTitles(this.getTitles());
 				this.getCategoryManager().updateCategory(category);
-				log.finest("Aggiornamento categoria " + category.getCode());
+				log.finest("Updated category " + category.getCode());
 			} else {
 				Category category = this.getHelper().buildNewCategory(this.getCategoryCode(), this.getParentCategoryCode(), this.getTitles());
 				this.getCategoryManager().addCategory(category);
-				log.finest("Aggiunta nuova categoria");
+				log.finest("Added new category " + this.getCategoryCode());
 			}
 		} catch (Exception e) {
 			ApsSystemUtils.logThrowable(e, this, "save");

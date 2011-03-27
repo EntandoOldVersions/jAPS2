@@ -17,6 +17,7 @@
 */
 package test.com.agiletec.apsadmin.category;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,7 +171,6 @@ public class TestCategoryAction extends ApsAdminBaseTestCase {
 		try {
 			String result = this.saveNewCategory("admin", categoryCode);
 			assertEquals(Action.SUCCESS, result);
-			
 			Category category = this._categoryManager.getCategory(categoryCode);
 			assertNotNull(category);
 			assertEquals("Titolo categoria In Italiano", category.getTitles().getProperty("it"));
@@ -206,8 +206,7 @@ public class TestCategoryAction extends ApsAdminBaseTestCase {
 		}
 	}
 	
-	
-	public void testDeleteCategory() throws Throwable {
+	public void testDeleteCategory_1() throws Throwable {
 		String categoryCode = "cat_temp";
 		assertNull(this._categoryManager.getCategory(categoryCode));
 		try {
@@ -222,6 +221,8 @@ public class TestCategoryAction extends ApsAdminBaseTestCase {
 			assertEquals(Action.SUCCESS, result);
 			category = this._categoryManager.getCategory(categoryCode);
 			assertNotNull(category);
+			Map<String, Object> references = ((CategoryAction) this.getAction()).getReferences();
+			assertNull(references);
 			
 			this.initAction("/do/Category", "delete");
 			this.addParameter("selectedNode", categoryCode);
@@ -229,6 +230,8 @@ public class TestCategoryAction extends ApsAdminBaseTestCase {
 			assertEquals(Action.SUCCESS, result);
 			category = this._categoryManager.getCategory(categoryCode);
 			assertNull(category);
+			references = ((CategoryAction) this.getAction()).getReferences();
+			assertNull(references);
 		} catch (Throwable t) {
 			this._categoryManager.deleteCategory(categoryCode);
 			assertNull(this._categoryManager.getCategory(categoryCode));
@@ -236,24 +239,105 @@ public class TestCategoryAction extends ApsAdminBaseTestCase {
 		}
 	}
 	
+	public void testDeleteCategory_2() throws Throwable {
+		this.setUserOnSession("admin");
+		String categoryCode = "general_cat1";
+		assertNotNull(this._categoryManager.getCategory(categoryCode));
+		try {
+			this.initAction("/do/Category", "trash");
+			this.addParameter("selectedNode", categoryCode);
+			String result = this.executeAction();
+			assertEquals("references", result);
+			Category category = this._categoryManager.getCategory(categoryCode);
+			assertNotNull(category);
+			Map<String, Object> references = ((CategoryAction) this.getAction()).getReferences();
+			assertNotNull(references);
+			assertEquals(1, references.size());
+			
+			this.initAction("/do/Category", "delete");
+			this.addParameter("selectedNode", categoryCode);
+			result = this.executeAction();
+			assertEquals("references", result);
+			category = this._categoryManager.getCategory(categoryCode);
+			assertNotNull(category);
+			references = ((CategoryAction) this.getAction()).getReferences();
+			assertNotNull(references);
+			assertEquals(1, references.size());
+		} catch (Throwable t) {
+			throw t;
+		}
+	}
 	
-	private String saveNewCategory(String userName, String categoryCode) throws Throwable {
+	public void testCategoryDetails_1() throws Throwable {
+		String categoryCode = "cat_temp";
+		assertNull(this._categoryManager.getCategory(categoryCode));
+		try {
+			String result = this.executeCategoryDetail("admin", categoryCode);
+			assertEquals("categoryTree", result);
+			Collection<String> actionErrors = this.getAction().getActionErrors();
+			assertEquals(1, actionErrors.size());
+			
+			result = this.saveNewCategory("admin", categoryCode);
+			assertEquals(Action.SUCCESS, result);
+			Category category = this._categoryManager.getCategory(categoryCode);
+			assertNotNull(category);
+			
+			result = this.executeCategoryDetail("admin", categoryCode);
+			assertEquals(Action.SUCCESS, result);
+			CategoryAction action = (CategoryAction) this.getAction();
+			assertEquals(categoryCode, action.getCategoryCode());
+			assertEquals("Titolo categoria In Italiano", action.getTitles().get("it"));
+			assertEquals("Titolo categoria In Inglese", action.getTitles().get("en"));
+			assertNull(action.getReferences());
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._categoryManager.deleteCategory(categoryCode);
+			assertNull(this._categoryManager.getCategory(categoryCode));
+		}
+	}
+	
+	public void testCategoryDetails_2() throws Throwable {
+		String categoryCode = "general_cat1";
+		Category category = this._categoryManager.getCategory(categoryCode);
+		assertNotNull(category);
+		try {
+			String result = this.executeCategoryDetail("admin", categoryCode);
+			assertEquals(Action.SUCCESS, result);
+			CategoryAction action = (CategoryAction) this.getAction();
+			assertEquals(category.getCode(), action.getCategoryCode());
+			assertEquals(category.getTitle("it"), action.getTitles().get("it"));
+			assertEquals(category.getTitle("en"), action.getTitles().get("en"));
+			assertNotNull(action.getReferences());
+			assertEquals(1, action.getReferences().size());
+		} catch (Throwable t) {
+			throw t;
+		}
+	}
+	
+	private String saveNewCategory(String username, String categoryCode) throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("parentCategoryCode", this._categoryManager.getRoot().getCode());
 		params.put("strutsAction", "1");
 		params.put("categoryCode", categoryCode);
 		params.put("langit", "Titolo categoria In Italiano");
 		params.put("langen", "Titolo categoria In Inglese");
-		String result = this.executeSaveCategory(userName, params);
+		String result = this.executeSaveCategory(username, params);
 		return result;
 	}
 	
-	private String executeSaveCategory(String userName, Map<String, String> params) throws Throwable {
-		this.setUserOnSession(userName);
+	private String executeSaveCategory(String username, Map<String, String> params) throws Throwable {
+		this.setUserOnSession(username);
 		this.initAction("/do/Category", "save");
 		this.addParameters(params);
-		String result = this.executeAction();
-		return result;
+		return this.executeAction();
+	}
+	
+	private String executeCategoryDetail(String username, String categoryCode) throws Throwable {
+		this.setUserOnSession(username);
+		this.initAction("/do/Category", "detail");
+		this.addParameter("selectedNode", categoryCode);
+		return this.executeAction();
 	}
 	
 	private void init() throws Exception {

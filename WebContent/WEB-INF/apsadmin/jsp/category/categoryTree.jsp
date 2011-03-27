@@ -1,6 +1,6 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib uri="aps-core.tld" prefix="wp" %>
-<%@ taglib uri="apsadmin-form.tld" prefix="wpsf" %>
+<%@ taglib prefix="wp" uri="aps-core.tld" %>
+<%@ taglib prefix="wpsf" uri="apsadmin-form.tld" %>
 <h1><s:text name="title.categoryManagement" /></h1>
 
 <div id="main">
@@ -44,11 +44,13 @@
 <p class="noscreen"><s:text name="title.categoryActionsIntro" /></p>
 
 <p class="buttons">
-	<s:set id="iconImagePath" name="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/page-new.png</s:set>
+	<s:set var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/page-new.png</s:set>
 	<wpsf:submit action="new" type="image" src="%{#iconImagePath}" value="%{getText('category.options.new')}" title="%{getText('category.options.new')}" />
-	<s:set id="iconImagePath" name="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/page-edit.png</s:set>
+	<s:set var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/page-edit.png</s:set>
 	<wpsf:submit action="edit" type="image" src="%{#iconImagePath}" value="%{getText('category.options.modify')}" title="%{getText('category.options.modify')}" />
-	<s:set id="iconImagePath" name="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/delete.png</s:set>
+	<s:set var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/detail.png</s:set>
+	<wpsf:submit action="detail" type="image" src="%{#iconImagePath}" value="%{getText('category.options.detail')}" title="%{getText('category.options.detail')}" />
+	<s:set var="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/delete.png</s:set>
 	<wpsf:submit action="trash" type="image" src="%{#iconImagePath}" value="%{getText('category.options.delete')}" title="%{getText('category.options.delete')}" />
 </p>
 </fieldset>

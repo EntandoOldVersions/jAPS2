@@ -220,6 +220,10 @@
 		<put-attribute name="title" value="title.categoryManagement" />
 		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/category/trashCategory.jsp" />
 	</definition>
+	<definition extends="main.layout" name="admin.Category.detail">
+		<put-attribute name="title" value="title.categoryManagement" />
+		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/category/categoryDetails.jsp" />
+	</definition>
 	
 	<!-- ********* FINE Area Gestione Categorie ********* -->
     
