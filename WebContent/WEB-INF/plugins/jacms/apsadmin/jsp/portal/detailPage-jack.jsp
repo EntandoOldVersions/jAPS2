@@ -35,7 +35,7 @@
 				<a href="<s:url action="edit" namespace="/do/jacms/Content"><s:param name="contentId" value="#currentContent.id" /></s:url>" title="<s:text name="label.edit" />:&#32;<s:property value="#currentContent.descr"/>"><s:property value="#currentContent.descr"/></a>
 			</s:if>
 			<s:else>
-				<s:property value="#currentContent.descr"/>			
+				<s:property value="#currentContent.descr"/>
 			</s:else>
 		</td>
 		<td><span class="monospace"><s:property value="#currentContent.id"/></span></td> 
@@ -81,6 +81,9 @@
 				<s:if test="#canEditCurrentContent">
 					<a href="<s:url action="edit" namespace="/do/jacms/Content"><s:param name="contentId" value="#currentContentVar.id" /></s:url>" title="<s:text name="label.edit" />:&#32;<s:property value="#currentContentVar.descr"/>"><s:property value="#currentContentVar.descr"/></a>
 				</s:if>
+				<s:else>
+					<s:property value="#currentContentVar.descr"/>
+				</s:else>
 			</td>
 			<td>
 				<span class="monospace"><s:property value="#currentContentVar.id"/></span>
