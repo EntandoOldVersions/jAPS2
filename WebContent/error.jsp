@@ -21,7 +21,7 @@
 		<link rel="stylesheet" type="text/css" href="<wp:resourceURL />administration/css/layout_ie6.css" />
 	<![endif]-->
 </head>
-<body class="client-<s:property value="#myClient" />">
+<body>
 
 <h1>jAPS 2.0 - Error</h1>
 <p><a href="<%=response.encodeURL(request.getContextPath()) %>">Home</a></p>
