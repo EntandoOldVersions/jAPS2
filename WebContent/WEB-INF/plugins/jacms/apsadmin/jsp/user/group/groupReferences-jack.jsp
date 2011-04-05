@@ -1,9 +1,18 @@
 <%@ taglib prefix="wp" uri="aps-core.tld" %>
 <%@ taglib prefix="c" uri="c.tld" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="wpsa" uri="apsadmin-core.tld" %>
 <%@ taglib prefix="jacmswpsa" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
 
 <s:if test="null != references['jacmsContentManagerUtilizers']">
+<wpsa:subset source="references['jacmsContentManagerUtilizers']" count="10" objectName="contentReferences" advanced="true" offset="5">
+<s:set name="group" value="#contentReferences" />
+
+<div class="pager">
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+</div>
+
 <table class="generic" id="contentListTable" summary="<s:text name="note.group.referencedContents.summary" />">
 <caption><span><s:text name="title.contentList" /></span></caption>
 	<tr>
@@ -20,7 +29,7 @@
 			<s:text name="label.lastEdit" />
 		</th>
 	</tr>
-	<s:iterator var="currentContentRecordVar" value="references['jacmsContentManagerUtilizers']">
+	<s:iterator var="currentContentRecordVar" >
 		<tr>
 			<jacmswpsa:content contentId="%{#currentContentRecordVar.id}" var="currentContentVar" />
 			<s:set var="canEditCurrentContent" value="%{false}" />
@@ -44,12 +53,26 @@
 		</tr>
 	</s:iterator>
 </table>
+
+<div class="pager">
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+</div>
+
+</wpsa:subset>
 </s:if>
 <s:else>
 <p><s:text name="note.group.referencedContents.empty" /></p>
 </s:else>
 
 <s:if test="null != references['jacmsResourceManagerUtilizers']">
+<wpsa:subset source="references['jacmsResourceManagerUtilizers']" count="10" objectName="resourceReferences" advanced="true" offset="5">
+<s:set name="group" value="#resourceReferences" />
+
+<div class="pager">
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+</div>
+
 <table class="generic" id="contentListTable" summary="<s:text name="note.group.referencedResources.summary" />">
 <caption><span><s:text name="title.resourceList" /></span></caption>
 	<tr>
@@ -63,7 +86,7 @@
 			<s:text name="label.type" />
 		</th>
 	</tr>
-	<s:iterator var="currentResourceVar" value="references['jacmsResourceManagerUtilizers']">
+	<s:iterator var="currentResourceVar" >
 		<tr>
 			<s:set var="canEditCurrentResource" value="%{false}" />
 			<c:set var="currentResourceGroup"><s:property value="#currentResourceVar.mainGroup" escape="false"/></c:set>
@@ -83,6 +106,12 @@
 		</tr>
 	</s:iterator>
 </table>
+
+<div class="pager">
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+</div>
+
+</wpsa:subset>
 </s:if>
 <s:else>
 <p><s:text name="note.group.referencedResources.empty" /></p>

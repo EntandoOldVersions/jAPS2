@@ -2,15 +2,28 @@
 <%@ taglib prefix="c" uri="c.tld" %>
 <%@ taglib prefix="wp" uri="aps-core.tld" %>
 <%@ taglib prefix="wpsa" uri="apsadmin-core.tld" %>
+<%@ taglib uri="apsadmin-form.tld" prefix="wpsf" %>
 
+<s:form>
+<p class="noscreen">
+	<wpsf:hidden name="name" />
+</p>
 <s:if test="null != references['PageManagerUtilizers']">
+<wpsa:subset source="references['PageManagerUtilizers']" count="10" objectName="pageReferences" advanced="true" offset="5">
+<s:set name="group" value="#pageReferences" />
+
+<div class="pager">
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+</div>
+
 <table class="generic" id="pageListTable" summary="<s:text name="note.group.referencedPages.summary" />">
 <caption><span><s:text name="title.pageList" /></span></caption>
 	<tr>
 		<th>**PERCORSO**</th>
 		<th>** GRUPPO **</th>
 	</tr>
-	<s:iterator var="currentPageVar" value="references['PageManagerUtilizers']">
+	<s:iterator var="currentPageVar" >
 		<s:set var="canEditCurrentPage" value="%{false}" />
 		<c:set var="currentPageGroup"><s:property value="#currentPageVar.group" escape="false"/></c:set>
 		<wp:ifauthorized groupName="${currentPageGroup}" permission="managePages"><s:set var="canEditCurrentPage" value="%{true}" /></wp:ifauthorized>
@@ -29,12 +42,26 @@
 		</tr>
 	</s:iterator>
 </table>
+
+<div class="pager">
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+</div>
+
+</wpsa:subset>
 </s:if>
 <s:else>
 <p><s:text name="note.group.referencedPages.empty" /></p>
 </s:else>
 
 <s:if test="null != references['UserManagerUtilizers']">
+<wpsa:subset source="references['UserManagerUtilizers']" count="10" objectName="userReferences" advanced="true" offset="5">
+<s:set name="group" value="#userReferences" />
+
+<div class="pager">
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+</div>
+
 <wp:ifauthorized permission="superuser" var="canEditUser" />
 <table class="generic" id="userListTable" summary="<s:text name="note.group.referencedUsers.summary" />">
 <caption><span><s:text name="title.userList" /></span></caption>
@@ -48,7 +75,7 @@
 		<th class="icon"><abbr title="<s:text name="label.authorizations" />">A</abbr></th>	
 		</c:if>
 	</tr>
-	<s:iterator var="currentUserVar" value="references['UserManagerUtilizers']">
+	<s:iterator var="currentUserVar" >
 		<s:if test="!#currentUserVar.japsUser">
 			<s:set name="statusIconImagePath" id="statusIconImagePath"><wp:resourceURL/>administration/common/img/icons/user-status-notjAPSUser.png</s:set>
 			<s:set name="statusIconText" id="statusIconText"><s:text name="note.userStatus.notjAPSUser" /></s:set>
@@ -103,6 +130,12 @@
 		</tr>
 	</s:iterator>
 </table>
+
+<div class="pager">
+	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+</div>
+
+</wpsa:subset>
 </s:if>
 <s:else>
 <p><s:text name="note.group.referencedUsers.empty" /></p>
@@ -113,3 +146,4 @@
 	<wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
 </s:iterator>
 </wpsa:hookPoint>
+</s:form>
