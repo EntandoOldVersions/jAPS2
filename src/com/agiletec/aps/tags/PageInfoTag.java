@@ -66,10 +66,11 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 				this.extractPageTitle(page, currentLang);
 			} else if (this.getInfo().equals(URL_INFO)) {
 				this.extractPageUrl(page, currentLang, reqCtx);
-			}
-			else if (this.getInfo().equals(OWNER_INFO)) {
+			} else if (this.getInfo().equals(OWNER_INFO)) {
 				this.extractPageOwner(page, reqCtx);
-			}			
+			} else if (this.getInfo().equals(CHILD_OF_INFO)) {
+				this.extractIsChildOfTarget(page);
+			}
 			this.evalValue();
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "doStartTag");
@@ -78,7 +79,14 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 		this.release();
 		return EVAL_PAGE;
 	}
-
+	
+	protected void extractIsChildOfTarget(IPage page) {
+		if (null != this.getTargetPage()) {
+			boolean isChild = (page.getCode().equals(this.getTargetPage()) || page.isChildOf(this.getTargetPage()));
+			this._value = new Boolean(isChild).toString();
+		}
+	}
+	
 	protected void extractPageTitle(IPage page, Lang currentLang) {
 		ApsProperties titles = page.getTitles();
 		String value = null;
@@ -163,6 +171,13 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 		this._info = info;
 	}
 	
+	public String getTargetPage() {
+		return _targetPage;
+	}
+	public void setTargetPage(String targetPage) {
+		this._targetPage = targetPage;
+	}
+	
 	public String getLangCode() {
 		return _langCode;
 	}
@@ -214,7 +229,8 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 	
 	private String _pageCode;
 	private String _info;
-	
+	private String _targetPage;
+
 	private String _langCode;
 	
 	private String _var;
@@ -226,5 +242,6 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 	public static final String URL_INFO = "url";
 	public static final String TITLE_INFO = "title";
 	public static final String OWNER_INFO = "owner";
-	
+	public static final String CHILD_OF_INFO = "childOf";
+
 }
