@@ -62,7 +62,7 @@
 	<s:set var="useExtraTitlesBooleanStatus" value="%{getText('label.no')}" />
 </s:else>
 
-	<dt><abbr lang="en" title="<s:text name="name.SEO.full" />" /><s:text name="name.SEO.short" /></abbr>:&#32;<s:text name="name.useBetterTitles" /></dt>
+	<dt><abbr lang="en" title="<s:text name="name.SEO.full" />" ><s:text name="name.SEO.short" /></abbr>:&#32;<s:text name="name.useBetterTitles" /></dt>
 		<dd><img src="<s:property value="useExtraTitlesIconImagePath" />" alt="<s:property value="useExtraTitlesBooleanStatus" />" title="<s:property value="useExtraTitlesBooleanStatus" />" /></dd>
 
 </dl>
