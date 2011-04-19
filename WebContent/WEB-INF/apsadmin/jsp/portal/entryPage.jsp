@@ -123,7 +123,7 @@
 	<li><wpsf:checkbox name="defaultShowlet" id="defaultShowlet" cssClass="radiocheck" /><label for="defaultShowlet"><s:text name="name.hasDefaultShowlets" /></label></li>
 	<li><wpsf:checkbox name="viewerPage" id="viewerPage" cssClass="radiocheck" /><label for="viewerPage"><s:text name="name.isViewerPage" /></label></li>
 	<li><wpsf:checkbox name="showable" id="showable" cssClass="radiocheck" /><label for="showable"><s:text name="name.isShowablePage" /></label></li>
-	<li><wpsf:checkbox name="useExtraTitles" id="useExtraTitles" cssClass="radiocheck" /> <label for="useExtraTitles"><abbr lang="en" title="<s:text name="name.SEO.full" />" /><s:text name="name.SEO.short" /></abbr>:&#32;<s:text name="name.useBetterTitles" /></label></li>
+	<li><wpsf:checkbox name="useExtraTitles" id="useExtraTitles" cssClass="radiocheck" /> <label for="useExtraTitles"><abbr lang="en" title="<s:text name="name.SEO.full" />"><s:text name="name.SEO.short" /></abbr>:&#32;<s:text name="name.useBetterTitles" /></label></li>
 </ul>
 </fieldset>
 
