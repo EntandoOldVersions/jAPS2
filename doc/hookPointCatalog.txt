@@ -32,6 +32,30 @@ key="core.groupReferences"
 
 ------------------
 
+New user showlet - section after parameters fieldset
+/WEB-INF/apsadmin/jsp/portal/showletType-user-entry.jsp
+key="core.showletType.user.entry"
+
+------------------
+
+Edit showlet - section after parameters fieldset
+/WEB-INF/apsadmin/jsp/portal/showlet-edit.jsp
+key="core.showletType.entry"
+
+------------------
+
+Showlet List - table, th
+/WEB-INF/apsadmin/jsp/portal/showlet-list.jsp
+key="core.showletType.list.table.th"
+
+------------------
+
+Showlet List - table, td
+/WEB-INF/apsadmin/jsp/portal/showlet-list.jsp
+key="core.showletType.list.table.td"
+
+------------------
+
 ******************************************* JACMS *******************************************
 
 Show content references - show extra references

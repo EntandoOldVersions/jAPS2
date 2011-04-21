@@ -99,6 +99,12 @@
 	</s:elseif>
 </fieldset>
 
+<wpsa:hookPoint key="core.showletType.user.entry" objectName="hookPointElements_core_showletType_user_entry">
+<s:iterator value="#hookPointElements_core_showletType_user_entry" var="hookPointElement">
+	<wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
+</s:iterator>
+</wpsa:hookPoint>
+
 <p class="centerText"><wpsf:submit value="%{getText('label.save')}" cssClass="button" />
 
 <s:if test="strutsAction == 3">

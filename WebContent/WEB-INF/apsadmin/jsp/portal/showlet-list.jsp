@@ -72,6 +72,13 @@
 <tr>
 	<th class="tinyColumn60"><abbr title="<s:text name="title.showletManagement.howmanypages.long" />"><s:text name="title.showletManagement.howmanypages.short" /></abbr></th>
 	<th><s:text name="label.description" /></th>
+
+<wpsa:hookPoint key="core.showletType.list.table.th" objectName="hookPointElements_core_showletType_list_table_th">
+<s:iterator value="#hookPointElements_core_showletType_list_table_th" var="hookPointElement">
+	<wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
+</s:iterator>
+</wpsa:hookPoint>	
+
 	<wp:ifauthorized permission="superuser">
 	<th class="icon"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th>
 	</wp:ifauthorized>
@@ -90,6 +97,13 @@
 		<td>
 		<a href="<s:url namespace="/do/Portal/ShowletType" action="editShowletTitles"><s:param name="showletTypeCode" value="#showletType.key" /></s:url>" ><s:property value="#showletType.value" /></a>
 		</td>
+
+<wpsa:hookPoint key="core.showletType.list.table.td" objectName="hookPointElements_core_showletType_list_table_td">
+<s:iterator value="#hookPointElements_core_showletType_list_table_td" var="hookPointElement">
+	<wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
+</s:iterator>
+</wpsa:hookPoint>
+		
 		<wp:ifauthorized permission="superuser">
 		<td class="icon">
 		<s:set var="concreteShowletType" value="%{getShowletType(#showletType.key)}"></s:set>

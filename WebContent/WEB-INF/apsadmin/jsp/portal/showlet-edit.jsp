@@ -62,6 +62,12 @@
 </fieldset>
 </s:if>
 
+<wpsa:hookPoint key="core.showletType.entry" objectName="hookPointElements_core_showletType_entry">
+<s:iterator value="#hookPointElements_core_showletType_entry" var="hookPointElement">
+	<wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
+</s:iterator>
+</wpsa:hookPoint>
+
 <p class="centerText">
 	<wpsf:submit value="%{getText('label.save')}" cssClass="button" />
 </p>
