@@ -71,4 +71,10 @@
 
 </s:form>
 
+
+<p>
+	<a href="#jacms-content-model-detail-shortcut" id="jacms-content-model-detail-shortcut">
+		jacms-content-model-detail-shortcut
+	</a>
+</p>
 </div>
