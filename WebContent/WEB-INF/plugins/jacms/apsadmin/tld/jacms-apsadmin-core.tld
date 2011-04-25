@@ -85,6 +85,36 @@
 		</attribute>
 	</tag>
 	
+	<tag>
+		<description>
+			<![CDATA[Returns a resource (or one of its property) through the code.
+			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property.
+			The names of the available property of "Resource": "id", "descr", "type", 
+			"mainGroup" (code), "folder", "categories" (list of categories), "allowedFileTypes".]]>
+		</description>
+		<name>resource</name>
+		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ResourceInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The code of the resource to return]]></description>
+			<name>resourceId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the content (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The name of the property to return. It can be one of those indicated in the declaration of the tag.]]></description>
+			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
 	<!--  INFO TAG DEFINITION - END -->
     
 	<tag>
