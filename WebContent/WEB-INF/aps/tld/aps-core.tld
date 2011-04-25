@@ -208,7 +208,40 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-
+	
+	<tag>
+		<description><![CDATA[Return the list of the system categories on SelectItem objects.]]></description>
+		<name>categories</name>
+		<tag-class>com.agiletec.aps.tags.CategoriesTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The style of the single select item. Currently it can be 'default' (single title node), 
+				'full' (title with all parents) or 'prettyFull' (title with all parents in form of '..').
+				The default when none is given is 'default'.]]></description>
+			<name>titleStyle</name>
+			<required>no</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[the separator beetwen the titles when 'titleStyle' is 'full' or 'prettyFull'.]]></description>
+			<name>fullTitleSeparator</name>
+			<required>no</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name of the page-scoped variable where to place the list of categories.]]></description>
+			<name>var</name>
+			<required>no</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The root of the categories to show. The default is the system root categories]]></description>
+			<name>root</name>
+			<required>no</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
 	<tag>
 		<description><![CDATA[This is the sub-tag of the "url" tag.<br/>
 			Adds a parameter in the URL query string generated.
@@ -238,7 +271,7 @@
 			<description><![CDATA[Declares the set of the pages to generate.]]></description>
 			<name>spec</name>
 			<required>no</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Name of the page context variable where the data of target being iterated are made available.]]></description>
