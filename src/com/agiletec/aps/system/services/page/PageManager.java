@@ -30,6 +30,8 @@ import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
+import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
+import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 
@@ -40,7 +42,7 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
  * in the same level is always kept.
  * @author M.Diana - E.Santoboni
  */
-public class PageManager extends AbstractService implements IPageManager, GroupUtilizer {
+public class PageManager extends AbstractService implements IPageManager, GroupUtilizer, LangsChangedObserver {
 
 	@Override
 	public void init() throws Exception {
@@ -90,7 +92,16 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			throw new ApsSystemException("Error while building the tree of pages", t);
 		}
 	}
-
+	
+	@Override
+	public void updateFromLangsChanged(LangsChangedEvent event) {
+		try {
+			this.init();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateFromLangsChanged", "Error on init method");
+		}
+	}
+	
 	/**
 	 * Delete a page and eventually the association with the showlets. 
 	 * @param pageCode the code of the page to delete

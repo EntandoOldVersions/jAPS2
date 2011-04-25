@@ -116,6 +116,7 @@
 		<property name="showletTypeDAO" >
 			<bean class="com.agiletec.aps.system.services.showlettype.ShowletTypeDAO">
 				<property name="dataSource" ref="portDataSource" />
+				<property name="langManager" ref="LangManager"/>
 			</bean>
 		</property>
 	</bean>

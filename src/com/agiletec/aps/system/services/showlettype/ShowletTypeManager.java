@@ -25,6 +25,8 @@ import java.util.Map;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
+import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
@@ -33,7 +35,8 @@ import com.agiletec.aps.util.ApsProperties;
  * istanze di showlet nelle pagine)
  * @author 
  */
-public class ShowletTypeManager extends AbstractService implements IShowletTypeManager {
+public class ShowletTypeManager extends AbstractService 
+		implements IShowletTypeManager, LangsChangedObserver {
 	
 	@Override
 	public void init() throws Exception {
@@ -59,6 +62,15 @@ public class ShowletTypeManager extends AbstractService implements IShowletTypeM
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "loadShowletTypes");
 			throw new ApsSystemException("Error loading showlets types", t);
+		}
+	}
+	
+	@Override
+	public void updateFromLangsChanged(LangsChangedEvent event) {
+		try {
+			this.init();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateFromLangsChanged", "Error on init method");
 		}
 	}
 	

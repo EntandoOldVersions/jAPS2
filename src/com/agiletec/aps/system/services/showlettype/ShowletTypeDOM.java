@@ -30,6 +30,7 @@ import org.jdom.output.XMLOutputter;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.lang.Lang;
 
 /**
  * Classe di supporto all'interpretazione dell'XML 
@@ -57,8 +58,13 @@ public class ShowletTypeDOM {
 		this.decodeDOM(xmlText);
 	}
 	
+	public ShowletTypeDOM(String xmlText, List<Lang> langs) throws ApsSystemException {
+		this.decodeDOM(xmlText);
+		this.setLangs(langs);
+	}
+	
 	public ShowletTypeDOM(List<ShowletTypeParameter> parameters, String action) throws ApsSystemException {
-		this._doc = new Document();
+		this.setDoc(new Document());
 		Element root = new Element("config");
 		if (null != parameters && parameters.size() > 0) {
 			for (int i = 0; i < parameters.size(); i++) {
@@ -76,7 +82,7 @@ public class ShowletTypeDOM {
 			actionElement.setAttribute("name", action);
 			root.addContent(actionElement);
 		}
-		this._doc.setRootElement(root);
+		this.getDoc().setRootElement(root);
 	}
 	
 	/**
@@ -86,22 +92,43 @@ public class ShowletTypeDOM {
 	 */
 	public List<ShowletTypeParameter> getParameters() {
 		List<ShowletTypeParameter> parameters = null;
-		List<Element> paramElements = this._doc.getRootElement().getChildren(TAB_PARAMETER);
+		List<Element> paramElements = this.getDoc().getRootElement().getChildren(TAB_PARAMETER);
 		if (null != paramElements && paramElements.size() > 0) {
 			parameters = new ArrayList<ShowletTypeParameter>();
 			Iterator<Element> paramElementsIter = paramElements.iterator();
 			while (paramElementsIter.hasNext()) {
-				Element currentElement = paramElementsIter.next();
-				ShowletTypeParameter parameter = new ShowletTypeParameter();
-				parameter.setName(currentElement.getAttributeValue("name"));
-				String text = currentElement.getText();
-				if (null != text) {
-					parameter.setDescr(text.trim());
-				}
-				parameters.add(parameter);
+				Element parameterElement = paramElementsIter.next();
+				this.createParameters(parameters, parameterElement);
 			}
 		}
 		return parameters;
+	}
+	
+	protected void createParameters(List<ShowletTypeParameter> parameters, Element parameterElement) {
+		String name = parameterElement.getAttributeValue("name");
+		String description = parameterElement.getText();
+		if (name.indexOf("{lang}") > 0) {
+			for (int i=0; i<this.getLangs().size(); i++) {
+				Lang lang = this.getLangs().get(i);
+				String newName = name.replace("{lang}", lang.getCode());
+				String newDescription = description;
+				if (null != description && description.indexOf("{lang}") > 0) {
+					newDescription = description.replace("{lang}", lang.getCode());
+				}
+				this.addParameter(parameters, newName, newDescription);
+			}
+		} else {
+			this.addParameter(parameters, name, description);
+		}
+	}
+	
+	protected void addParameter(List<ShowletTypeParameter> parameters, String name, String description) {
+		ShowletTypeParameter parameter = new ShowletTypeParameter();
+		parameter.setName(name);
+		if (null != description) {
+			parameter.setDescr(description.trim());
+		}
+		parameters.add(parameter);
 	}
 	
 	/**
@@ -110,7 +137,7 @@ public class ShowletTypeDOM {
 	 */
 	public String getAction() {
 		String action = null;
-		Element actionElement = _doc.getRootElement().getChild(TAB_ACTION);
+		Element actionElement = this.getDoc().getRootElement().getChild(TAB_ACTION);
 		if (null != actionElement) {
 			action = actionElement.getAttributeValue("name");
 		}
@@ -122,7 +149,7 @@ public class ShowletTypeDOM {
 		Format format = Format.getPrettyFormat();
 		format.setIndent("");
 		out.setFormat(format);
-		return out.outputString(this._doc);
+		return out.outputString(this.getDoc());
 	}
 	
 	private void decodeDOM(String xmlText) throws ApsSystemException {
@@ -130,15 +157,31 @@ public class ShowletTypeDOM {
 		builder.setValidation(false);
 		StringReader reader = new StringReader(xmlText);
 		try {
-			_doc = builder.build(reader);
+			this.setDoc(builder.build(reader));
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "decodeDOM");
 			throw new ApsSystemException("Error detected while parsing the XML", t);
 		}
 	}
 	
+	protected Document getDoc() {
+		return _doc;
+	}
+	protected void setDoc(Document doc) {
+		this._doc = doc;
+	}
+	
+	protected List<Lang> getLangs() {
+		return _langs;
+	}
+	protected void setLangs(List<Lang> langs) {
+		this._langs = langs;
+	}
+	
 	private Document _doc;
+	private List<Lang> _langs;
+	
 	private final String TAB_PARAMETER = "parameter";
 	private final String TAB_ACTION = "action";
-
+	
 }

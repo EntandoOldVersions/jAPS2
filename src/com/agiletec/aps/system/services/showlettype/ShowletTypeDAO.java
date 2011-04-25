@@ -28,6 +28,7 @@ import java.util.Map;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
@@ -80,7 +81,7 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 			showletType.setTitles(titles);
 			String xml = res.getString(3);
 			if (null != xml && xml.trim().length() > 0) {
-				ShowletTypeDOM showletTypeDom = new ShowletTypeDOM(xml);
+				ShowletTypeDOM showletTypeDom = new ShowletTypeDOM(xml, this.getLangManager().getLangs());
 				showletType.setTypeParameters(showletTypeDom.getParameters());
 				showletType.setAction(showletTypeDom.getAction());
 			}
@@ -184,6 +185,15 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 			closeDaoResources(null, stat, conn);
 		}
 	}
+	
+	protected ILangManager getLangManager() {
+		return _langManager;
+	}
+	public void setLangManager(ILangManager langManager) {
+		this._langManager = langManager;
+	}
+	
+	private ILangManager _langManager;
 	
 	private final String ALL_SHOWLET_TYPES =
 		"SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked FROM showletcatalog";
