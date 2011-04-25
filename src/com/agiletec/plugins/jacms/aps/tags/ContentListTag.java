@@ -25,11 +25,18 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.Showlet;
+import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
 
 /**
  * Loads a list of contents IDs by applying the filters (if any).
@@ -39,13 +46,22 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 	
 	@Override
 	public int doStartTag() throws JspException {
-		if (!this.isCacheable()) {
-			return EVAL_BODY_INCLUDE;
-		}
 		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
 			IContentListHelper helper = (IContentListHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
+			boolean hasUserfilters = false;
+			if (null != this.getUserFilterOptionsVar()) {
+				List<UserFilterOptionBean> userFilters = helper.getUserFilters(reqCtx);
+				if (null != userFilters && userFilters.size() > 0) {
+					hasUserfilters = true;
+					this.setUserFilterOptions(userFilters);
+					this.pageContext.setAttribute(this.getUserFilterOptionsVar(), userFilters);
+				}
+			}
+			if (!this.isCacheable() || hasUserfilters) {
+				return EVAL_BODY_INCLUDE;
+			}
 			List<String> contentsId = helper.searchInCache(this.getListName(), reqCtx);
 			if (contentsId != null && !contentsId.isEmpty()) {
 				this.pageContext.setAttribute(this.getListName(), contentsId);
@@ -61,15 +77,16 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 	
 	@Override
 	public int doEndTag() throws JspException {
-		if (this.isListEvaluated()) {
-			this.release();
-			return super.doEndTag();
-		}
 		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
+			this.extractExtraShowletParameters(reqCtx);
+			if (this.isListEvaluated()) {
+				this.release();
+				return super.doEndTag();
+			}
 			IContentListHelper helper = (IContentListHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
-			List<String> contents = helper.getContentsId(this, reqCtx);
+			List<String> contents = helper.getContentsId(this, this.getUserFilterOptions(), reqCtx);
 			this.pageContext.setAttribute(this.getListName(), contents);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "doEndTag");
@@ -77,6 +94,39 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 		}
 		this.release();
 		return super.doEndTag();
+	}
+	
+	private void extractExtraShowletParameters(RequestContext reqCtx) {
+		try {
+			Showlet showlet = (Showlet) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
+			ApsProperties config = showlet.getConfig();
+			if (null != config) {
+				Lang currentLang = (Lang) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_LANG));
+				this.addMultilanguageShowletParameter(config, IContentListHelper.SHOWLET_PARAM_TITLE, currentLang, this.getTitleVar());
+				this.addMultilanguageShowletParameter(config, IContentListHelper.SHOWLET_PARAM_PAGE_LINK_DESCR, currentLang, this.getPageLinkDescriptionVar());
+				if (null != this.getPageLinkVar()) {
+					String pageLink = config.getProperty(ContentListHelper.SHOWLET_PARAM_PAGE_LINK);
+					if (null != pageLink) {
+						this.pageContext.setAttribute(this.getPageLinkVar(), pageLink);
+					}
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "extractExtraShowletParameters", "Error extracting extra parameters");
+		}
+	}
+	
+	protected void addMultilanguageShowletParameter(ApsProperties config, String showletParamPrefix, Lang currentLang, String var) {
+		if (null == var) return;
+		String paramValue = config.getProperty(showletParamPrefix + "_" + currentLang.getCode());
+		if (null == paramValue) {
+			ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
+			Lang defaultLang = langManager.getDefaultLang();
+			paramValue = config.getProperty(showletParamPrefix + "_" + defaultLang.getCode());
+		}
+		if (null != paramValue) {
+			this.pageContext.setAttribute(var, paramValue);
+		}
 	}
 	
 	@Override
@@ -87,6 +137,11 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 		this._filters = new EntitySearchFilter[0];
 		this._listEvaluated = false;
 		this._cacheable = true;
+		this.setUserFilterOptions(null);
+		this.setTitleVar(null);
+		this.setPageLinkVar(null);
+		this.setPageLinkDescriptionVar(null);
+		this.setUserFilterOptionsVar(null);
 	}
 	
 	@Override
@@ -186,6 +241,41 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 		this._cacheable = cacheable;
 	}
 	
+	protected List<UserFilterOptionBean> getUserFilterOptions() {
+		return _userFilterOptions;
+	}
+	protected void setUserFilterOptions(List<UserFilterOptionBean> userFilterOptions) {
+		this._userFilterOptions = userFilterOptions;
+	}
+	
+	public String getTitleVar() {
+		return _titleVar;
+	}
+	public void setTitleVar(String titleVar) {
+		this._titleVar = titleVar;
+	}
+	
+	public String getPageLinkVar() {
+		return _pageLinkVar;
+	}
+	public void setPageLinkVar(String pageLinkVar) {
+		this._pageLinkVar = pageLinkVar;
+	}
+	
+	public String getPageLinkDescriptionVar() {
+		return _pageLinkDescriptionVar;
+	}
+	public void setPageLinkDescriptionVar(String pageLinkDescriptionVar) {
+		this._pageLinkDescriptionVar = pageLinkDescriptionVar;
+	}
+	
+	public String getUserFilterOptionsVar() {
+		return _userFilterOptionsVar;
+	}
+	public void setUserFilterOptionsVar(String userFilterOptionsVar) {
+		this._userFilterOptionsVar = userFilterOptionsVar;
+	}
+	
 	private String _listName;
 	private String _contentType;
 	private String _category;
@@ -193,6 +283,14 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 	
 	private boolean _cacheable = true;
 	
+	private List<UserFilterOptionBean> _userFilterOptions;
+	
 	private boolean _listEvaluated;
+	
+	private String _titleVar;
+	private String _pageLinkVar;
+	private String _pageLinkDescriptionVar;
+	
+	private String _userFilterOptionsVar;
 	
 }

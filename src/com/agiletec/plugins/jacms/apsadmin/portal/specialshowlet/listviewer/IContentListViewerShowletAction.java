@@ -41,6 +41,36 @@ public interface IContentListViewerShowletAction extends ISimpleShowletConfigAct
 	public String changeContentType();
 	
 	/**
+	 * Esegue l'operazione di aggiunta di una categoria.
+	 * @return Il codice del risultato dell'azione.
+	 */
+	public String addCategory();
+	
+	/**
+	 * Esegue l'operazione di rimozione di una categoria.
+	 * @return Il codice del risultato dell'azione.
+	 */
+	public String removeCategory();
+	
+	/**
+	 * Esegue l'operazione di aggiunta di un nuovo filtro utente.
+	 * @return Il codice del risultato dell'azione.
+	 */
+	public String addUserFilter();
+	
+	/**
+	 * Esegue l'operazione di rimozione di un filtro utente.
+	 * @return Il codice del risultato dell'azione.
+	 */
+	public String removeUserFilter();
+	
+	/**
+	 * Esegue l'operazione di spostamento di un filtro utente.
+	 * @return Il codice del risultato dell'azione.
+	 */
+	public String moveUserFilter();
+	
+	/**
 	 * Esegue l'operazione di aggiunta di un nuovo filtro 
 	 * in base ai parametri di richiesta corrente.
 	 * @return Il codice del risultato dell'azione.

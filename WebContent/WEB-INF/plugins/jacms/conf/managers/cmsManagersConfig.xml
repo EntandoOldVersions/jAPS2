@@ -112,6 +112,7 @@
 	<bean id="jacmsContentListHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper" >
 		<property name="cacheManager" ref="CacheManager" />
 		<property name="contentManager" ref="jacmsContentManager" />
+		<property name="searchEngineManager" ref="jacmsSearchEngineManager"/>
 	</bean>
 	
 	<bean id="jacmsContentViewerHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentViewerHelper" >

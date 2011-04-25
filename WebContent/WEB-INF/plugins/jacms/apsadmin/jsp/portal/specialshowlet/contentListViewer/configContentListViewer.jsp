@@ -49,6 +49,7 @@
 </fieldset>
 </s:if>
 <s:else>
+
 <fieldset class="margin-bit-bottom"><legend><s:text name="title.contentInfo" /></legend>
 <p>
 	<label for="contentType" class="basic-mint-label"><s:text name="label.type"/>:</label>
@@ -57,12 +58,55 @@
 </p>
 <p class="noscreen">
 	<wpsf:hidden name="contentType" value="%{getShowlet().getConfig().get('contentType')}" />
-</p>	
-<p>
-	<label for="category" class="basic-mint-label"><s:text name="label.category" />:</label>
-	<wpsf:select name="category" id="category" list="categories" listKey="code" listValue="getShortFullTitle(currentLang.code)" headerKey="" headerValue="%{getText('label.all')}" value="%{getShowlet().getConfig().get('category')}" cssClass="text" />
+	<wpsf:hidden name="categories" value="%{getShowlet().getConfig().get('categories')}" />
+	<s:iterator value="categoryCodes" var="categoryCodeVar" status="rowstatus">
+	<input type="hidden" name="categoryCodes" value="<s:property value="#categoryCodeVar" />" id="categoryCodes-<s:property value="#rowstatus.index" />"/>
+	</s:iterator>
 </p>
+
+	<p>
+		<label for="category" class="basic-mint-label"><s:text name="label.categories" />:</label>
+		<wpsf:select name="categoryCode" id="category" list="categories" listKey="code" listValue="getShortFullTitle(currentLang.code)" headerKey="" headerValue="%{getText('label.all')}" cssClass="text" />
+		<wpsf:submit action="addCategory" value="%{getText('label.join')}" cssClass="button" />
+	</p>
+	
+	<s:if test="null != categoryCodes && categoryCodes.size() > 0">
+		<table class="generic" summary="<s:text name="note.resourceCategories.summary"/>">
+		<caption><span><s:text name="title.resourceCategories.list"/></span></caption>
+		<tr>
+			<th><s:text name="label.category"/></th>
+			<th class="icon"><abbr title="<s:text name="label.remove" />">&ndash;</abbr></th>
+		</tr>
+		<s:iterator value="categoryCodes" var="categoryCodeVar">
+		<s:set name="showletCategory" value="%{getCategory(#categoryCodeVar)}"></s:set>
+		<tr>
+			<td><s:property value="#showletCategory.getFullTitle(currentLang.code)"/></td>
+			<td class="icon">
+				<wpsa:actionParam action="removeCategory" var="actionName" >
+					<wpsa:actionSubParam name="categoryCode" value="%{#categoryCodeVar}" />
+				</wpsa:actionParam>
+				<wpsa:set name="iconImagePath" id="iconImagePath"><wp:resourceURL />administration/common/img/icons/22x22/delete.png</wpsa:set>
+				<wpsf:submit type="image" src="%{#iconImagePath}" action="%{#actionName}" value="%{getText('label.remove')}" title="%{getText('label.remove') + ': ' + #showletCategory.getFullTitle(currentLang.code)}" />
+			</td>
+		</tr>
+		</s:iterator>
+		</table>
+	</s:if>
+	<s:else>
+		<p><s:text name="note.categories.none" /></p>		
+	</s:else>
 </fieldset>
+
+<fieldset><legend><s:text name="title.filterOptions" /></legend>
+<p>
+	<label for="filterKey" class="basic-mint-label"><s:text name="label.filter" />:</label>
+	<wpsf:select name="filterKey" id="filterKey" list="allowedFilterTypes" listKey="key" listValue="value" cssClass="text" />
+	<wpsf:submit action="setFilterType" value="%{getText('label.add')}" cssClass="button" />
+</p>
+
+<p class="noscreen">
+	<wpsf:hidden name="filters" value="%{getShowlet().getConfig().get('filters')}" />
+</p>
 
 <s:if test="null != filtersProperties && filtersProperties.size()>0" >
 <table class="generic margin-bit-top" summary="<s:text name="note.page.contentListViewer.summary" />">
@@ -148,13 +192,110 @@
 </table>
 </s:if>
 <s:else>
-	<p><span class="important"><s:text name="title.filterOptions" />:</span> <s:text name="note.filters.none" /></p>		
+	<p><s:text name="note.filters.none" /></p>		
+</s:else>
+</fieldset>
+
+<%-- TITLES --%>
+<fieldset><legend class="accordion_toggler"><s:text name="title.extraOption" /></legend>
+<div class="accordion_element">
+<p><s:text name="note.extraOption.intro" /></p>
+	<s:iterator id="lang" value="langs">
+		<p>
+			<label for="title_<s:property value="#lang.code" />"  class="basic-mint-label"><s:text name="label.title.showlet" />&#32;(<s:property value="#lang.code" />):</label>
+			<wpsf:textfield name="title_%{#lang.code}" id="title_%{#lang.code}" value="%{showlet.config.get('title_' + #lang.code)}" cssClass="text" />
+		</p>
+	</s:iterator>
+
+	<p>
+		<label for="pageLink"  class="basic-mint-label"><s:text name="label.link.page" />:</label>
+		<wpsf:select list="pages" name="pageLink" id="pageLink" listKey="code" listValue="getShortFullTitle(currentLang.code)" 
+				value="%{showlet.config.get('pageLink')}" headerKey="" headerValue="- %{getText('label.select')} -" />
+	</p>
+	
+	<s:iterator var="lang" value="langs">
+		<p>
+			<label for="linkDescr_<s:property value="#lang.code" />"  class="basic-mint-label"><s:text name="label.link.descr"/>&#32;(<s:property value="#lang.code" />):</label>
+			<wpsf:textfield name="linkDescr_%{#lang.code}" id="linkDescr_%{#lang.code}" value="%{showlet.config.get('linkDescr_' + #lang.code)}" cssClass="text" />
+		</p>
+	</s:iterator>
+
+</div>
+</fieldset>
+
+
+<%-- USER FILTERS - START BLOCK --%>
+<fieldset><legend><s:text name="title.filters.search" /></legend>
+	<p>
+		<label for="userFilterKey" class="basic-mint-label"><s:text name="label.filter" />:</label>
+		<wpsf:select name="userFilterKey" id="userFilterKey" list="allowedUserFilterTypes" listKey="key" listValue="value" cssClass="text" />
+		<wpsf:submit action="addUserFilter" value="%{getText('label.add')}" cssClass="button" />
+	</p>
+
+	<p class="noscreen">
+		<wpsf:hidden name="userFilters" value="%{getShowlet().getConfig().get('userFilters')}" />
+	</p>
+	
+<s:if test="null != userFiltersProperties && userFiltersProperties.size() > 0" >
+	<table class="generic margin-bit-top" summary="<s:text name="note.page.contentListViewer.frontendFilters.summary" />">
+	<caption><span><s:text name="title.filters.search" /></span></caption>
+	<tr>
+		<th><abbr title="<s:text name="label.number" />">N</abbr></th>
+		<th><s:text name="name.filterDescription" /></th>
+		<th class="icon" colspan="3"><abbr title="<s:text name="label.actions" />">&ndash;</abbr></th> 
+	</tr>
+	<s:iterator value="userFiltersProperties" id="userFilter" status="rowstatus">
+	<tr>
+		<td class="rightText"><s:property value="#rowstatus.index+1"/></td>
+		<td>
+			<s:text name="label.filterBy" />
+			<strong>
+				<s:if test="#userFilter['type'] == 'metadata'">
+					<s:if test="#userFilter['key'] == 'fulltext'">
+						<s:text name="label.fulltext" />			
+					</s:if>
+					<s:elseif test="#userFilter['key'] == 'category'">
+						<s:text name="label.category" />			
+					</s:elseif>
+				</s:if>
+				<s:elseif test="#userFilter['type'] == 'attribute'">
+					<s:property value="#userFilter['key']" />
+				</s:elseif>
+			</strong>
+		</td>
+		<td class="icon">
+			<wpsa:actionParam action="moveUserFilter" var="actionName" >
+				<wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+				<wpsa:actionSubParam name="movement" value="UP" />
+			</wpsa:actionParam>
+			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-up.png</s:set>		
+			<wpsf:submit action="%{#actionName}" type="image" src="%{#iconImagePath}" value="%{getText('label.moveUp')}" title="%{getText('label.moveUp')}" />
+		</td>
+		<td class="icon">
+			<wpsa:actionParam action="moveUserFilter" var="actionName" >
+				<wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+				<wpsa:actionSubParam name="movement" value="DOWN" />
+			</wpsa:actionParam>
+			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/go-down.png</s:set>
+			<wpsf:submit action="%{#actionName}" type="image" src="%{#iconImagePath}" value="%{getText('label.moveDown')}" title="%{getText('label.moveDown')}" />
+		</td>
+		<td class="icon">
+			<wpsa:actionParam action="removeUserFilter" var="actionName" >
+				<wpsa:actionSubParam name="filterIndex" value="%{#rowstatus.index}" />
+			</wpsa:actionParam>
+			<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/delete.png</s:set>
+			<wpsf:submit action="%{#actionName}" type="image"  src="%{#iconImagePath}" value="%{getText('label.remove')}" title="%{getText('label.remove')}" />
+		</td>	
+	</tr>
+	</s:iterator>
+	</table>
+</s:if>
+<s:else>
+	<p><s:text name="note.filters.none" /></p>		
 </s:else>
 
-<p class="margin-more-bottom"><wpsf:submit action="newFilter" value="%{getText('label.add')}" cssClass="button" /></p>
-<p class="noscreen">
-	<wpsf:hidden name="filters" value="%{getShowlet().getConfig().get('filters')}" />
-</p>
+</fieldset>
+<%-- USER FILTERS - END BLOCK --%>
 
 <fieldset><legend><s:text name="title.publishingOptions" /></legend>
 <p>

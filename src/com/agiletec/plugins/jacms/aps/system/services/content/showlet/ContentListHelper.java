@@ -25,10 +25,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.ListUtils;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.searchengine.ISearchEngineManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.cache.ICacheManager;
@@ -41,7 +45,7 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.EntitySearchFilterDOM;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.FilterUtils;
 
 /**
  * Classe helper per la showlet di erogazione contenuti in lista.
@@ -52,55 +56,89 @@ public class ContentListHelper implements IContentListHelper {
 	@Override
 	public EntitySearchFilter[] getFilters(String contentType, String showletParam, RequestContext reqCtx) {
 		if (null == showletParam || showletParam.trim().length()==0) return null;
-		EntitySearchFilterDOM dom = new EntitySearchFilterDOM();
+		FilterUtils dom = new FilterUtils();
 		Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 		return dom.getFilters(contentType, showletParam, this.getContentManager(), currentLang.getCode());
 	}
 	
 	@Override
 	public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, RequestContext reqCtx) {
-		EntitySearchFilterDOM dom = new EntitySearchFilterDOM();
+		FilterUtils dom = new FilterUtils();
 		Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 		return dom.getFilter(contentType, bean, this.getContentManager(), currentLang.getCode());
 	}
 	
 	@Override
 	public String getShowletParam(EntitySearchFilter[] filters) {
-		EntitySearchFilterDOM dom = new EntitySearchFilterDOM();
+		FilterUtils dom = new FilterUtils();
 		return dom.getShowletParam(filters);
 	}
 	
 	@Override
 	public List<String> getContentsId(IContentListBean bean, RequestContext reqCtx) throws Throwable {
+		List<UserFilterOptionBean> userFilters = null;
+		return this.getContentsId(bean, userFilters, reqCtx);
+	}
+	
+	@Override
+	public List<String> getContentsId(IContentListBean bean, List<UserFilterOptionBean> userFilters, RequestContext reqCtx) throws Throwable {
 		List<String> contentsId = null;
 		try {
 			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 			ApsProperties config = showlet.getConfig();
 			if (null == bean.getContentType() && null != config) {
-				bean.setContentType(config.getProperty("contentType"));
+				bean.setContentType(config.getProperty(SHOWLET_PARAM_CONTENT_TYPE));
 			}
 			if (null == bean.getContentType()) {
 				throw new ApsSystemException("Tipo contenuto non definito");
 			}
 			if (null == bean.getCategory() && null != config) {
-				bean.setCategory(config.getProperty("category"));
+				bean.setCategory(config.getProperty(SHOWLET_PARAM_CATEGORY));
 			}
-			this.addShowletFilters(bean, config, "filters", reqCtx);
-			String[] categories = this.getCategories(bean.getCategory(), config);
-			contentsId = this.getContentsId(bean, categories, reqCtx);
+			this.addShowletFilters(bean, config, SHOWLET_PARAM_FILTERS, reqCtx);
+			String[] categories = this.getCategories(bean.getCategory(), config, userFilters);
+			contentsId = this.getContentsId(bean, userFilters, categories, reqCtx);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getContentsId");
-			throw new ApsSystemException("Errore in preparazione lista contenuti", t);
+			throw new ApsSystemException("Error extracting contenut list", t);
 		}
 		return contentsId;
 	}
 	
 	protected String[] getCategories(String category, ApsProperties config) {
+		return this.getCategories(category, config, null);
+	}
+	
+	protected String[] getCategories(String category, ApsProperties config, List<UserFilterOptionBean> userFilters) {
+		Set<String> codes = new HashSet<String>();
 		if (null != category && category.trim().length()>0) {
-			String[] categories = {category};
-			return categories;
+			codes.add(category);
 		}
-		return null;
+		String categoriesParam = (null != config) ? config.getProperty(SHOWLET_PARAM_CATEGORIES) : null;
+		if (null != categoriesParam && categoriesParam.trim().length() > 0) {
+			List<String> categoryCodes = splitValues(categoriesParam, CATEGORIES_SEPARATOR);
+			for (int i = 0; i < categoryCodes.size(); i++) {
+				codes.add(categoryCodes.get(i));
+			}
+		}
+		if (null != userFilters) {
+			for (int i = 0; i < userFilters.size(); i++) {
+				UserFilterOptionBean userFilterBean = userFilters.get(i);
+				if (userFilterBean.getType().equals(UserFilterOptionBean.TYPE_METADATA) 
+						&& userFilterBean.getKey().equals(UserFilterOptionBean.KEY_CATEGORY) 
+						&& null != userFilterBean.getFormFieldValues()) {
+					codes.add(userFilterBean.getFormFieldValues().get(userFilterBean.getFormFieldNames()[0]));
+				}
+			}
+		}
+		if (codes.size() == 0) return null;
+		String[] categoryCodes = new String[codes.size()];
+		Iterator<String> iter = codes.iterator();
+		int i = 0;
+		while (iter.hasNext()) {
+			categoryCodes[i++] = iter.next();
+		}
+		return categoryCodes;
 	}
 	
 	protected void addShowletFilters(IContentListBean bean, ApsProperties showletParams, String showletParamName, RequestContext reqCtx) {
@@ -123,11 +161,38 @@ public class ContentListHelper implements IContentListHelper {
 		return contentsId;
 	}
 	
+	protected List<String> getContentsId(IContentListBean bean, List<UserFilterOptionBean> userFilters, String[] categories, RequestContext reqCtx) throws Throwable {
+		UserFilterOptionBean fullTextUserFilter = null;
+		if (null == userFilters || userFilters.size() == 0) {
+			return this.getContentsId(bean, categories, reqCtx);
+		} else {
+			for (int i = 0; i < userFilters.size(); i++) {
+				UserFilterOptionBean userFilter = userFilters.get(i);
+				if (userFilter.getType().equals(UserFilterOptionBean.TYPE_METADATA) 
+						&& userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT)) {
+					fullTextUserFilter = userFilter;
+				}
+				EntitySearchFilter filter = userFilter.getEntityFilter();
+				if (null != filter) bean.addFilter(filter);
+			}
+		}
+		Collection<String> userGroupCodes = this.getAllowedGroups(reqCtx);
+		List<String> contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), categories, bean.getFilters(), userGroupCodes);
+		if (fullTextUserFilter != null && null != fullTextUserFilter.getFormFieldValues()) {
+			String word = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[0]);
+			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+			List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(currentLang.getCode(), word, this.getAllowedGroups(reqCtx));
+			return ListUtils.intersection(fullTextResult, contentsId);
+		} else {
+			return contentsId;
+		}
+	}
+	
 	private void putListInCache(String contentType, RequestContext reqCtx, List<String> contentsId, String cacheKey) {
 		if (this.getCacheManager() != null && contentsId != null) {
 			IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
-			String pageCacheGroupName = SystemConstants.PAGES_CACHE_GROUP_PREFIX+page.getCode();
-			String contentTypeCacheGroupName = JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX+contentType;
+			String pageCacheGroupName = SystemConstants.PAGES_CACHE_GROUP_PREFIX + page.getCode();
+			String contentTypeCacheGroupName = JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + contentType;
 			String[] groups = {contentTypeCacheGroupName, pageCacheGroupName};
 			this.getCacheManager().putInCache(cacheKey, contentsId, groups);
 		}
@@ -193,6 +258,57 @@ public class ContentListHelper implements IContentListHelper {
 		return cacheKey.toString();
 	}
 	
+	public static String concatStrings(Collection<String> values, String separator) {
+		StringBuffer concatedValues = new StringBuffer();
+		if (null == values) return concatedValues.toString();
+		boolean first = true;
+		Iterator<String> valuesIter = values.iterator();
+		while (valuesIter.hasNext()) {
+			if (!first) {
+				concatedValues.append(separator);
+			}
+			concatedValues.append(valuesIter.next());
+			first = false;
+		}
+		return concatedValues.toString();
+	}
+	
+	public static List<String> splitValues(String concatedValues, String separator) {
+		List<String> values = new ArrayList<String>();
+		if (concatedValues != null && concatedValues.trim().length() > 0) {
+			 String[] codes = concatedValues.split(separator);
+			 for (int i = 0; i < codes.length; i++) {
+				 values.add(codes[i]);
+			}
+		}
+		return values;
+	}
+	
+	@Override
+	public List<UserFilterOptionBean> getUserFilters(RequestContext reqCtx) throws ApsSystemException {
+		List<UserFilterOptionBean> userEntityFilters = null;
+		try {
+			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			ApsProperties config = showlet.getConfig();
+			String typeCode = config.getProperty(SHOWLET_PARAM_CONTENT_TYPE);
+			IApsEntity prototype = this.getContentManager().getEntityPrototype(typeCode);
+			if (null == prototype) {
+				ApsSystemUtils.getLogger().severe("Null content type by code '" + typeCode + "'");
+				return null;
+			}
+			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
+			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+			String userFilters = config.getProperty(SHOWLET_PARAM_USER_FILTERS);
+			if (null != userFilters && userFilters.length() > 0) {
+				userEntityFilters = FilterUtils.getUserFilters(userFilters, currentFrame, currentLang, prototype, reqCtx.getRequest());	
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getUserFilters");
+			throw new ApsSystemException("Error extracting user filters", t);
+		}
+		return userEntityFilters;
+	}
+	
 	protected ICacheManager getCacheManager() {
 		return _cacheManager;
 	}
@@ -207,7 +323,15 @@ public class ContentListHelper implements IContentListHelper {
 		this._contentManager = contentManager;
 	}
 	
+	protected ISearchEngineManager getSearchEngineManager() {
+		return _searchEngineManager;
+	}
+	public void setSearchEngineManager(ISearchEngineManager searchEngineManager) {
+		this._searchEngineManager = searchEngineManager;
+	}
+	
 	private ICacheManager _cacheManager;
 	private IContentManager _contentManager;
+	private ISearchEngineManager _searchEngineManager;
 	
 }

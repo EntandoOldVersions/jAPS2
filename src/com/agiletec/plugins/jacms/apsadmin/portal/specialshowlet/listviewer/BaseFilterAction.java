@@ -28,8 +28,8 @@ import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
+import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction;
-import com.agiletec.apsadmin.util.SelectItem;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 
@@ -146,9 +146,11 @@ public class BaseFilterAction extends SimpleShowletConfigAction implements ICont
 		this._modelId = modelId;
 	}
 	
+	@Deprecated
 	public String getCategory() {
 		return _category;
 	}
+	@Deprecated
 	public void setCategory(String category) {
 		this._category = category;
 	}
@@ -231,7 +233,5 @@ public class BaseFilterAction extends SimpleShowletConfigAction implements ICont
 	private boolean _attributeFilter;
 	
 	private IContentManager _contentManager;
-	
-	private final String METADATA_KEY_PREFIX = "keyFilter_";
 	
 }

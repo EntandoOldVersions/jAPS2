@@ -32,6 +32,7 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
+import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 
@@ -87,6 +88,23 @@ public class ContentViewerHelper implements IContentViewerHelper {
     	}
         return renderedContent;
     }
+	
+	@Override
+	public ContentAuthorizationInfo getAuthorizationInfo(String contentId, RequestContext reqCtx) throws ApsSystemException {
+		ContentAuthorizationInfo authInfo = null;
+		try {
+            Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+            contentId = this.extractContentId(contentId, showlet.getConfig(), reqCtx);
+            authInfo = this.getContentDispenser().getAuthorizationInfo(contentId);
+            if (null == authInfo) {
+				ApsSystemUtils.getLogger().severe("Null authorization info by content '" + contentId + "'");
+			}
+        } catch (Throwable t) {
+        	ApsSystemUtils.logThrowable(t, this, "getAuthorizationInfo");
+    		throw new ApsSystemException("Error extracting content authorization info by content '" + contentId + "'", t);
+    	}
+		return authInfo;
+	}
 	
 	protected void manageAttributeValues(ContentRenderizationInfo renderInfo, boolean publishExtraTitle, RequestContext reqCtx) {
 		if (!publishExtraTitle) return;

@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2011-02-05 10:22:06 CET
+-- Started on 2011-04-25 17:24:22 CEST
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -13,7 +13,7 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 1823 (class 0 OID 354355)
+-- TOC entry 1823 (class 0 OID 1094713)
 -- Dependencies: 1503
 -- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -28,7 +28,7 @@ INSERT INTO categories (catcode, parentcode, titles) VALUES ('home', 'home', '<?
 
 
 --
--- TOC entry 1824 (class 0 OID 354361)
+-- TOC entry 1824 (class 0 OID 1094719)
 -- Dependencies: 1504
 -- Data for Name: contentmodels; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -36,7 +36,7 @@ INSERT INTO categories (catcode, parentcode, titles) VALUES ('home', 'home', '<?
 
 
 --
--- TOC entry 1825 (class 0 OID 354367)
+-- TOC entry 1825 (class 0 OID 1094725)
 -- Dependencies: 1505
 -- Data for Name: contentrelations; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -44,7 +44,7 @@ INSERT INTO categories (catcode, parentcode, titles) VALUES ('home', 'home', '<?
 
 
 --
--- TOC entry 1826 (class 0 OID 354370)
+-- TOC entry 1826 (class 0 OID 1094728)
 -- Dependencies: 1506
 -- Data for Name: contents; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -52,7 +52,7 @@ INSERT INTO categories (catcode, parentcode, titles) VALUES ('home', 'home', '<?
 
 
 --
--- TOC entry 1827 (class 0 OID 354376)
+-- TOC entry 1827 (class 0 OID 1094734)
 -- Dependencies: 1507
 -- Data for Name: contentsearch; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -60,7 +60,7 @@ INSERT INTO categories (catcode, parentcode, titles) VALUES ('home', 'home', '<?
 
 
 --
--- TOC entry 1828 (class 0 OID 354379)
+-- TOC entry 1828 (class 0 OID 1094737)
 -- Dependencies: 1508
 -- Data for Name: localstrings; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -85,10 +85,22 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ADMINISTRATIO
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ADMINISTRATION_BASIC_GOTO', 'en', 'Go to the administration with normal client');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ADMINISTRATION_MINT_GOTO', 'it', 'Accedi con client avanzato');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ADMINISTRATION_MINT_GOTO', 'en', 'Go to the administration with advanced client');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('DATE_FROM', 'en', 'From');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('DATE_FROM', 'it', 'Da');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('DATE_TO', 'en', 'To');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('DATE_TO', 'it', 'A');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('TEXT', 'en', 'Text');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('TEXT', 'it', 'Testo');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ALL', 'en', 'All');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ALL', 'it', 'Tutte');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('NUMBER_FROM', 'en', 'From');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('NUMBER_FROM', 'it', 'Da');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('NUMBER_TO', 'en', 'To');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('NUMBER_TO', 'it', 'A');
 
 
 --
--- TOC entry 1829 (class 0 OID 354385)
+-- TOC entry 1829 (class 0 OID 1094743)
 -- Dependencies: 1509
 -- Data for Name: pagemodels; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -102,7 +114,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('home', 'Home P
 
 
 --
--- TOC entry 1830 (class 0 OID 354391)
+-- TOC entry 1830 (class 0 OID 1094749)
 -- Dependencies: 1510
 -- Data for Name: pages; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -141,7 +153,7 @@ INSERT INTO pages (code, parentcode, pos, modelcode, titles, groupcode, showinme
 
 
 --
--- TOC entry 1831 (class 0 OID 354397)
+-- TOC entry 1831 (class 0 OID 1094755)
 -- Dependencies: 1511
 -- Data for Name: resourcerelations; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -149,7 +161,7 @@ INSERT INTO pages (code, parentcode, pos, modelcode, titles, groupcode, showinme
 
 
 --
--- TOC entry 1832 (class 0 OID 354400)
+-- TOC entry 1832 (class 0 OID 1094758)
 -- Dependencies: 1512
 -- Data for Name: resources; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -157,7 +169,7 @@ INSERT INTO pages (code, parentcode, pos, modelcode, titles, groupcode, showinme
 
 
 --
--- TOC entry 1833 (class 0 OID 354406)
+-- TOC entry 1833 (class 0 OID 1094764)
 -- Dependencies: 1513
 -- Data for Name: showletcatalog; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -190,18 +202,6 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
 <property key="en">Login Form</property>
 <property key="it">Form di Login</property>
 </properties>', NULL, NULL, NULL, NULL, 1);
-INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('content_viewer_list', '<?xml version="1.0" encoding="UTF-8"?>
-<properties>
-<property key="en">Contents - Publish a List of Contents</property>
-<property key="it">Contenuti - Pubblica una Lista di Contenuti</property>
-</properties>', '<config>
-	<parameter name="contentType">Content Type (mandatory)</parameter>
-	<parameter name="modelId">Content Model</parameter>
-	<parameter name="category">Content Category</parameter>
-	<parameter name="maxElemForItem">Contents for each page</parameter>
-	<parameter name="filters" />
-	<action name="listViewerConfig"/>
-</config>', 'jacms', NULL, NULL, 1);
 INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Internal Servlet</property>
@@ -212,10 +212,27 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
 	</parameter>
 	<action name="configSimpleParameter"/>
 </config>', NULL, NULL, NULL, 1);
+INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('content_viewer_list', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Contents - Publish a List of Contents</property>
+<property key="it">Contenuti - Pubblica una Lista di Contenuti</property>
+</properties>', '<config>
+	<parameter name="contentType">Content Type (mandatory)</parameter>
+	<parameter name="modelId">Content Model</parameter>
+	<parameter name="userFilters">Front-End user filter options</parameter>
+	<parameter name="category">Content Category **deprecated**</parameter>
+	<parameter name="categories">Content Category codes (comma separeted)</parameter>
+	<parameter name="maxElemForItem">Contents for each page</parameter>
+	<parameter name="filters" />
+	<parameter name="title_{lang}">Showlet Title in lang {lang}</parameter>
+	<parameter name="pageLink">The code of the Page to link</parameter>
+	<parameter name="linkDescr_{lang}">Link description in lang {lang}</parameter>
+	<action name="listViewerConfig"/>
+</config>', 'jacms', NULL, NULL, 1);
 
 
 --
--- TOC entry 1834 (class 0 OID 354412)
+-- TOC entry 1834 (class 0 OID 1094770)
 -- Dependencies: 1514
 -- Data for Name: showletconfig; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -224,7 +241,7 @@ INSERT INTO showletconfig (pagecode, framepos, showletcode, config, publishedcon
 
 
 --
--- TOC entry 1835 (class 0 OID 354418)
+-- TOC entry 1835 (class 0 OID 1094776)
 -- Dependencies: 1515
 -- Data for Name: sysconfig; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -287,7 +304,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'para
 
 
 --
--- TOC entry 1836 (class 0 OID 354424)
+-- TOC entry 1836 (class 0 OID 1094782)
 -- Dependencies: 1516
 -- Data for Name: uniquekeys; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -296,7 +313,7 @@ INSERT INTO uniquekeys (id, keyvalue) VALUES (1, 1);
 
 
 --
--- TOC entry 1837 (class 0 OID 354427)
+-- TOC entry 1837 (class 0 OID 1094785)
 -- Dependencies: 1517
 -- Data for Name: workcontentrelations; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -304,14 +321,14 @@ INSERT INTO uniquekeys (id, keyvalue) VALUES (1, 1);
 
 
 --
--- TOC entry 1838 (class 0 OID 354430)
+-- TOC entry 1838 (class 0 OID 1094788)
 -- Dependencies: 1518
 -- Data for Name: workcontentsearch; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
 
 
--- Completed on 2011-02-05 10:22:06 CET
+-- Completed on 2011-04-25 17:24:22 CEST
 
 --
 -- PostgreSQL database dump complete

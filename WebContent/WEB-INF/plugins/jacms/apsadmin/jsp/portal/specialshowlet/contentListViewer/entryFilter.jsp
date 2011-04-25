@@ -40,10 +40,16 @@
 
 <p class="noscreen">
 	<wpsf:hidden name="contentType" />
-	<wpsf:hidden name="category" />
+	<wpsf:hidden name="categories" value="%{#parameters['categories']}" />
+	<wpsf:hidden name="userFilters" value="%{#parameters['userFilters']}" />
 	<wpsf:hidden name="filters" />
 	<wpsf:hidden name="modelId" />
 	<wpsf:hidden name="maxElemForItem" />
+	<wpsf:hidden name="pageLink" value="%{#parameters['pageLink']}" />
+	<s:iterator id="lang" value="langs">
+	<wpsf:hidden name="%{'linkDescr_' + #lang.code}" value="%{#parameters['linkDescr_' + #lang.code]}" />
+	<wpsf:hidden name="%{'title_' + #lang.code}" value="%{#parameters['title_' + #lang.code]}" />
+	</s:iterator>
 </p>
 
 <s:if test="filterTypeId < 0">

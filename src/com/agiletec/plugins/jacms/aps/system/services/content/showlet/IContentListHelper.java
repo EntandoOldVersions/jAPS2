@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 
 /**
@@ -52,6 +53,8 @@ public interface IContentListHelper {
 	 */
 	public List<String> getContentsId(IContentListBean bean, RequestContext reqCtx) throws Throwable;
 	
+	public List<String> getContentsId(IContentListBean bean, List<UserFilterOptionBean> userFilters, RequestContext reqCtx) throws Throwable;
+	
 	/**
 	 * Restituisce l'insieme dei filtri in base al parametro di configurazione della showlet detentore dei filtri.
 	 * Il parametro è nella forma di:
@@ -82,8 +85,29 @@ public interface IContentListHelper {
 	 */
 	public String getShowletParam(EntitySearchFilter[] filters);
 	
+	/**
+	 * Return tle list of the front-end user filter options.
+	 * @param reqCtx The request context.
+	 * @return The list of the filter options.
+	 * @throws ApsSystemException in case of error.
+	 */
+	public List<UserFilterOptionBean> getUserFilters(RequestContext reqCtx) throws ApsSystemException;
+	
 	public static final String[] allowedMetadataFilterKeys = 
 		{IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, IContentManager.CONTENT_DESCR_FILTER_KEY, IContentManager.CONTENT_STATUS_FILTER_KEY, 
 		IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY, IContentManager.CONTENT_ONLINE_FILTER_KEY};
+	
+	public static final String CATEGORIES_SEPARATOR = ",";
+	
+	public static final String SHOWLET_PARAM_CONTENT_TYPE = "contentType";
+	public static final String SHOWLET_PARAM_USER_FILTERS = "userFilters";
+	
+	@Deprecated(/** to maintain compatibility with versions prior to 2.2.0.1 */)
+	public static final String SHOWLET_PARAM_CATEGORY = "category";
+	public static final String SHOWLET_PARAM_CATEGORIES = "categories";
+	public static final String SHOWLET_PARAM_FILTERS = "filters";
+	public static final String SHOWLET_PARAM_TITLE = "title";
+	public static final String SHOWLET_PARAM_PAGE_LINK = "pageLink";
+	public static final String SHOWLET_PARAM_PAGE_LINK_DESCR = "linkDescr";
 	
 }

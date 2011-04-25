@@ -32,6 +32,8 @@ public interface IContentListFilterAction {
 	
 	public String saveFilter();
 	
+	public static final String METADATA_KEY_PREFIX = "keyFilter_";
+	
 	public static final int METADATA_FILTER_TYPE = 0;
 	public static final int TEXT_ATTRIBUTE_FILTER_TYPE = 1;
 	public static final int NUMBER_ATTRIBUTE_FILTER_TYPE = 2;

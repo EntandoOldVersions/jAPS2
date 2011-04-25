@@ -26,6 +26,74 @@
 	
 	<tag>
 		<description>
+			<![CDATA[Loads a list of contents IDs by applying the filters (if any).
+			Only the IDs of the contents accessible in the portal can be loaded.]]>
+		</description>
+		<name>contentList</name>
+		<tag-class>com.agiletec.plugins.jacms.aps.tags.ContentListTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>
+			<![CDATA[Name of the variable in the page context that holds the search result.]]>
+			</description>
+			<name>listName</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				<![CDATA[Sets the code of the content types to search.<br/>
+				The name must match the configured one, respecting capital letters and spaces.]]>
+			</description>
+			<name>contentType</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				<![CDATA[Identifier string of the category of the content to search.]]>
+			</description>
+			<name>category</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				<![CDATA[Toggles the system caching usage when retrieving the list.
+				Admitted values (true|false), default "true".]]>
+			</description>
+			<name>cacheable</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Inserts the title on a variable of the page context with the name provided.]]></description>
+      		<name>titleVar</name>
+      		<required>no</required>
+      		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+      		<description><![CDATA[Inserts the code of the page to link on a variable of the page context with the name provided.]]></description>
+      		<name>pageLinkVar</name>
+      		<required>no</required>
+      		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+      		<description><![CDATA[Inserts the description of the page to link on a variable of the page context with the name provided.]]></description>
+      		<name>pageLinkDescriptionVar</name>
+      		<required>no</required>
+      		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+      		<description><![CDATA[Name of the variable in the page context that holds the user filter options]]></description>
+      		<name>userFilterOptionsVar</name>
+      		<required>no</required>
+      		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+	</tag>
+	
+	<tag>
+		<description>
 			<![CDATA["ContentListTag" sub-tag, it creates a filter 
 			to restrict the result of the content search.<br/>
 			Please note that the filters will be applied in the same order they are
@@ -112,50 +180,6 @@
 	
 	<tag>
 		<description>
-			<![CDATA[Loads a list of contents IDs by applying the filters (if any).
-			Only the IDs of the contents accessible in the portal can be loaded.]]>
-		</description>
-		<name>contentList</name>
-		<tag-class>com.agiletec.plugins.jacms.aps.tags.ContentListTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<description>
-			<![CDATA[Name of the variable in the page context that holds the search result.]]>
-			</description>
-			<name>listName</name>
-			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>
-				<![CDATA[Sets the code of the content types to search.<br/>
-				The name must match the configured one, respecting capital letters and spaces.]]>
-			</description>
-			<name>contentType</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>
-				<![CDATA[Identifier string of the category of the content to search.]]>
-			</description>
-			<name>category</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>
-				<![CDATA[Toggles the system caching usage when retrieving the list.
-				Admitted values (true|false), default "true".]]>
-			</description>
-			<name>cacheable</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-	</tag>
-	
-	<tag>
-		<description>
 			<![CDATA[Displays the content given its ID.]]>
 		</description>
 		<name>content</name>
@@ -194,6 +218,43 @@
 		<attribute>
 			<description>
 				<![CDATA[Inserts the rendered content in a variable of the page context with the name provided.]]>
+			</description>
+			<name>var</name>
+			<required>no</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>
+			<![CDATA[Returns the authorization information of the specified content. 
+				The content can will be extracted by id from showlet parameters or from request parameter. 
+				The tag extract any specific parameter (by "param" attribute) 
+				or entire ContentAuthorizationInfo object (setting "var" attribute and anything on "param" attribute).]]>
+		</description>
+		<name>contentAuthorizationInfo</name>
+		<tag-class>com.agiletec.plugins.jacms.aps.tags.ContentAuthorizationInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				<![CDATA[ID of the content]]>
+			</description>
+			<name>contentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				<![CDATA[Currently it can be 'contentId' or 'mainGroup'.]]>
+			</description>
+			<name>param</name>
+			<required>no</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				<![CDATA[Inserts the required parameter (or the entire authorization info object) 
+				in a variable of the page context with the name provided.]]>
 			</description>
 			<name>var</name>
 			<required>no</required>

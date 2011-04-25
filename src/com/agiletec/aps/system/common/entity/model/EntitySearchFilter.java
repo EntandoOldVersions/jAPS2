@@ -197,10 +197,12 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		return value.toString();
 	}
 	
+	@Deprecated
 	public static EntitySearchFilter getInstance(IApsEntity prototype, String toStringFilter) {
 		return getInstance(prototype, getProperties(toStringFilter));
 	}
 	
+	@Deprecated
 	public static Properties getProperties(String toStringFilter) {
 		Properties props = new Properties();
 		String[] params = toStringFilter.split(SEPARATOR);
