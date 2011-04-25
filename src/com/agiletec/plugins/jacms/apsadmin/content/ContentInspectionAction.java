@@ -49,9 +49,16 @@ public class ContentInspectionAction extends AbstractContentAction {
 	}
 	
 	public List<ContentRecordVO> getReferencingContents() {
-		List<ContentRecordVO> referencingContents;
+		List<ContentRecordVO> referencingContents = null;
 		try {
-			referencingContents = ((ContentUtilizer) this.getContentManager()).getContentUtilizers(this.getContentId());
+			List<String> referencingContentsId = ((ContentUtilizer) this.getContentManager()).getContentUtilizers(this.getContentId());
+			if (null != referencingContentsId) {
+				referencingContents = new ArrayList<ContentRecordVO>();
+				for (int i = 0; i < referencingContentsId.size(); i++) {
+					ContentRecordVO currentReferencedContent = this.getContentManager().loadContentVO(referencingContentsId.get(i));
+					referencingContents.add(currentReferencedContent);
+				}
+			}
 		} catch (Throwable t) {
 			String msg = "Error getting referencing contents by content " + this.getContentId();
 			ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );

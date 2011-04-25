@@ -38,7 +38,6 @@ import com.agiletec.apsadmin.system.entity.EntityActionHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -197,11 +196,11 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 			List referencingContents = ((ContentUtilizer) this.getContentManager()).getContentUtilizers(content.getId());
 			if (referencingContents!= null && !referencingContents.isEmpty()) {
 				for (int i=0; i<referencingContents.size(); i++) {
-					ContentRecordVO contentVo = (ContentRecordVO) referencingContents.get(i);
-					Content refContent = this.getContentManager().loadContent(contentVo.getId(), true);
+					String contentId = (String) referencingContents.get(i);
+					Content refContent = this.getContentManager().loadContent(contentId, true);
 					if (!content.getMainGroup().equals(refContent.getMainGroup()) && 
 							!content.getGroups().contains(refContent.getMainGroup())) {
-						String[] args = {this.getGroupManager().getGroup(refContent.getMainGroup()).getDescr(), contentVo.getId()+" '"+refContent.getDescr()+"'"};
+						String[] args = {this.getGroupManager().getGroup(refContent.getMainGroup()).getDescr(), contentId+" '"+refContent.getDescr()+"'"};
 						action.addFieldError("mainGroup", action.getText("error.content.referencedContent.wrongGroups", args));
 					}
 				}

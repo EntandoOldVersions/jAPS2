@@ -306,38 +306,28 @@ public class ResourceManager extends AbstractService
     
 	@Override
 	public List getGroupUtilizers(String groupName) throws ApsSystemException {
-    	List<ResourceInterface> utilizers = new ArrayList<ResourceInterface>();
+		List<String> resourcesId = null;
     	try {
 	    	List<String> allowedGroups = new ArrayList<String>(1);
 	    	allowedGroups.add(groupName);
-	    	List<String> resourcesId = this.getResourceDAO().searchResourcesId(null, null, null, null, allowedGroups);
-	    	for (int i=0; i<resourcesId.size(); i++) {
-	    		String id = resourcesId.get(i);
-	    		ResourceInterface resource = this.loadResource(id);
-	    		if (null != resource) utilizers.add(resource);
-	    	}
+	    	resourcesId = this.getResourceDAO().searchResourcesId(null, null, null, null, allowedGroups);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getGroupUtilizers");
 			throw new ApsSystemException("Error searching group utilizers : group '" + groupName + "'", t);
 		}
-    	return utilizers;
+		return resourcesId;
 	}
     
     @Override
 	public List getCategoryUtilizers(String categoryCode) throws ApsSystemException {
-    	List<ResourceInterface> utilizers = new ArrayList<ResourceInterface>();
+    	List<String> resourcesId = null;
     	try {
-	    	List<String> resourcesId = this.getResourceDAO().searchResourcesId(null, null, null, categoryCode, null);
-	    	for (int i=0; i<resourcesId.size(); i++) {
-	    		String id = resourcesId.get(i);
-	    		ResourceInterface resource = this.loadResource(id);
-	    		if (null != resource) utilizers.add(resource);
-	    	}
+	    	resourcesId = this.getResourceDAO().searchResourcesId(null, null, null, categoryCode, null);
     	} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getCategoryUtilizers");
 			throw new ApsSystemException("Error searching category utilizers : category code '" + categoryCode + "'", t);
 		}
-    	return utilizers;
+    	return resourcesId;
 	}
     
     @Override

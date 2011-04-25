@@ -264,8 +264,8 @@ public class TestResourceManager extends BaseTestCase {
     	
     	utilizers = ((GroupUtilizer) this._resourceManager).getGroupUtilizers("customers");
     	assertEquals(1, utilizers.size());
-    	ResourceInterface resource = (ResourceInterface)  utilizers.get(0);
-    	assertEquals("jAPS", resource.getDescr());
+    	String resourceId = (String) utilizers.get(0);
+    	assertEquals("82", resourceId);
     }
     
     private List<String> getAllGroupCodes() {

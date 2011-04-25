@@ -27,7 +27,6 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.apsadmin.category.CategoryAction;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 
 /**
  * @author E.Santoboni
@@ -57,8 +56,8 @@ public class TestTrashReferencedCategory extends ApsAdminBaseTestCase {
 			List contentReferences = references.get(JacmsSystemConstants.CONTENT_MANAGER+"Utilizers");
 			assertEquals(2, contentReferences.size());
 			for (int i=0; i<contentReferences.size(); i++) {
-				ContentRecordVO content = (ContentRecordVO) contentReferences.get(i);
-				assertTrue(content.getId().equals("EVN193") || content.getId().equals("EVN192"));
+				String contentId = (String) contentReferences.get(i);
+				assertTrue(contentId.equals("EVN193") || contentId.equals("EVN192"));
 			}
 		} catch (Throwable t) {
 			throw t;

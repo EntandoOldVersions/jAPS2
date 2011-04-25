@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -430,73 +429,57 @@ public class ContentManager extends ApsEntityManager
 	
 	@Override
 	public List getPageUtilizers(String pageCode) throws ApsSystemException {
-		List<ContentRecordVO> contentsVo = null;
+		List<String> contentIds = null;
     	try {
-    		List<String> contentIds = this.getContentDAO().getPageUtilizers(pageCode);
-			contentsVo = this.getContentsRecord(contentIds);
+    		contentIds = this.getContentDAO().getPageUtilizers(pageCode);
     	} catch (Throwable t) {
             throw new ApsSystemException("Error while loading referenced contents : page " + pageCode, t);
     	}
-    	return contentsVo;
+    	return contentIds;
 	}
 	
 	@Override
 	public List getContentUtilizers(String contentId) throws ApsSystemException {
-		List<ContentRecordVO> contentsVo = null;
+		List<String> contentIds = null;
     	try {
-    		List<String> contentIds = this.getContentDAO().getContentUtilizers(contentId);
-			contentsVo = this.getContentsRecord(contentIds);
+    		contentIds = this.getContentDAO().getContentUtilizers(contentId);
     	} catch (Throwable t) {
             throw new ApsSystemException("Error while loading referenced contents : content " + contentId, t);
     	}
-    	return contentsVo;
+    	return contentIds;
 	}
 	
 	@Override
 	public List getGroupUtilizers(String groupName) throws ApsSystemException {
-		List<ContentRecordVO> contentsVo = null;
+		List<String> contentIds = null;
 		try {
-			List<String> contentIds = this.getContentDAO().getGroupUtilizers(groupName);
-			contentsVo = this.getContentsRecord(contentIds);
+			contentIds = this.getContentDAO().getGroupUtilizers(groupName);
 		} catch (Throwable t) {
 			throw new ApsSystemException("Error while loading referenced contents : group " + groupName, t);
 		}
-		return contentsVo;
+		return contentIds;
 	}
 	
 	@Override
 	public List getResourceUtilizers(String resourceId) throws ApsSystemException {
-		List<ContentRecordVO> contentsVo = null;
+		List<String> contentIds = null;
 		try {
-			List<String> contentIds = this.getContentDAO().getResourceUtilizers(resourceId);
-			contentsVo = this.getContentsRecord(contentIds);
+			contentIds = this.getContentDAO().getResourceUtilizers(resourceId);
 		} catch (Throwable t) {
 			throw new ApsSystemException("Error while loading referenced contents : resource " + resourceId, t);
 		}
-		return contentsVo;
+		return contentIds;
 	}
 	
 	@Override
 	public List getCategoryUtilizers(String resourceId) throws ApsSystemException {
-		List<ContentRecordVO> contentsVo = null;
+		List<String> contentIds = null;
 		try {
-			List<String> contentIds = this.getContentDAO().getCategoryUtilizers(resourceId);
-			contentsVo = this.getContentsRecord(contentIds);
+			contentIds = this.getContentDAO().getCategoryUtilizers(resourceId);
 		} catch (Throwable t) {
 			throw new ApsSystemException("Error while loading referenced contents : category " + resourceId, t);
 		}
-		return contentsVo;
-	}
-	
-	protected List<ContentRecordVO> getContentsRecord(List<String> contentIds) throws Throwable {
-		List<ContentRecordVO> contentsVo = new ArrayList<ContentRecordVO>();
-		Iterator<String> iter = contentIds.iterator();
-		while (iter.hasNext()) {
-			String id = (String) iter.next();
-			ContentRecordVO contentVo = this.loadContentVO(id);
-			if (contentVo != null) contentsVo.add(contentVo);
-		}
-		return contentsVo;
+		return contentIds;
 	}
 	
 	@Override

@@ -21,8 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,19 +33,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
-import com.agiletec.aps.system.services.cache.ICacheManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.ContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AbstractResourceAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
+import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
-import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMonoInstanceResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMultiInstanceResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
@@ -60,11 +53,10 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
 public class ResourceWardenServlet extends HttpServlet {
 	
 	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException {
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		Logger log = ApsSystemUtils.getLogger();
 		if (log.isLoggable(Level.FINEST)) {
-			log.finest("Richiesta:" + request.getRequestURI());
+			log.finest("Request:" + request.getRequestURI());
 		}
 		
 		//Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
@@ -117,37 +109,11 @@ public class ResourceWardenServlet extends HttpServlet {
 		}
 	}
 	
-	private boolean isAuthOnProtectedRes(UserDetails currentUser, String resourceId, 
-			String contentId, HttpServletRequest request) {
-		boolean isAuth = false;
-		ICacheManager cacheManager = (ICacheManager) ApsWebApplicationUtils.getBean(SystemConstants.CACHE_MANAGER, request);
+	private boolean isAuthOnProtectedRes(UserDetails currentUser, String resourceId, String contentId, HttpServletRequest request) {
+		IContentDispenser dispender = (IContentDispenser) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_DISPENSER_MANAGER, request);
+		ContentAuthorizationInfo authInfo = dispender.getAuthorizationInfo(contentId);
 		IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
-		if (cacheManager != null) {
-			String authorizationCacheKey = ContentManager.getContentAuthInfoCacheKey(contentId);
-			ContentAuthorizationInfo authInfo = (ContentAuthorizationInfo) cacheManager.getFromCache(authorizationCacheKey);
-			isAuth = (authInfo.isProtectedResourceReference(resourceId) && authInfo.isUserAllowed(authManager.getGroupsOfUser(currentUser)));
-		} else {
-			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER, request);
-			try {
-				List<ContentRecordVO> referencedContents = ((ResourceUtilizer) contentManager).getResourceUtilizers(resourceId); 
-				Content content = contentManager.loadContent(contentId, true);
-				if (content == null) return false;
-				boolean isContentIntoReferences = false;
-				for (Iterator<ContentRecordVO> iterator = referencedContents.iterator(); iterator.hasNext();) {
-					ContentRecordVO contentVO = iterator.next();
-					if (contentId.equals(contentVO.getId())) {
-						isContentIntoReferences = true;
-						break;
-					}
-				}
-				if (!isContentIntoReferences) return false;
-				return authManager.isAuth(currentUser, content);
-			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "isAuthOnProtectedRes");
-				return false;
-			}
-		}
-		return isAuth;
+		return (authInfo.isProtectedResourceReference(resourceId) && authInfo.isUserAllowed(authManager.getGroupsOfUser(currentUser)));
 	}
 	
 	private void createResponse(HttpServletResponse resp, ResourceInterface resource, 
