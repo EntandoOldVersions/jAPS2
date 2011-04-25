@@ -5,7 +5,7 @@
 <%@ taglib prefix="jacmswpsa" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
 
 <s:if test="null != references['jacmsContentManagerUtilizers']">
-<wpsa:subset source="references['jacmsContentManagerUtilizers']" count="10" objectName="contentReferences" advanced="true" offset="5">
+<wpsa:subset source="references['jacmsContentManagerUtilizers']" count="10" objectName="contentReferences" advanced="true" offset="5" pagerId="contentManagerReferences">
 <s:set name="group" value="#contentReferences" />
 
 <div class="pager">
@@ -29,7 +29,8 @@
 			<s:text name="label.lastEdit" />
 		</th>
 	</tr>
-	<s:iterator var="currentContentRecordVar" >
+	<s:iterator var="currentContentIdVar" >
+		<jacmswpsa:content contentId="%{#currentContentIdVar}" var="currentContentRecordVar" record="true" />
 		<tr>
 			<jacmswpsa:content contentId="%{#currentContentRecordVar.id}" var="currentContentVar" />
 			<s:set var="canEditCurrentContent" value="%{false}" />
@@ -65,7 +66,7 @@
 </s:else>
 
 <s:if test="null != references['jacmsResourceManagerUtilizers']">
-<wpsa:subset source="references['jacmsResourceManagerUtilizers']" count="10" objectName="resourceReferences" advanced="true" offset="5">
+<wpsa:subset source="references['jacmsResourceManagerUtilizers']" count="10" objectName="resourceReferences" advanced="true" offset="5" pagerId="resourceManagerReferences">
 <s:set name="group" value="#resourceReferences" />
 
 <div class="pager">
@@ -86,7 +87,8 @@
 			<s:text name="label.type" />
 		</th>
 	</tr>
-	<s:iterator var="currentResourceVar" >
+	<s:iterator var="currentResourceIdVar" >
+		<jacmswpsa:resource resourceId="%{#currentResourceIdVar}" var="currentResourceVar" />
 		<tr>
 			<s:set var="canEditCurrentResource" value="%{false}" />
 			<c:set var="currentResourceGroup"><s:property value="#currentResourceVar.mainGroup" escape="false"/></c:set>

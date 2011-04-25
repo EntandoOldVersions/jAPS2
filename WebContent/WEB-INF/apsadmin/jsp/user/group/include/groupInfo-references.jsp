@@ -2,14 +2,14 @@
 <%@ taglib prefix="c" uri="c.tld" %>
 <%@ taglib prefix="wp" uri="aps-core.tld" %>
 <%@ taglib prefix="wpsa" uri="apsadmin-core.tld" %>
-<%@ taglib uri="apsadmin-form.tld" prefix="wpsf" %>
+<%@ taglib prefix="wpsf" uri="apsadmin-form.tld" %>
 
 <s:form>
 <p class="noscreen">
 	<wpsf:hidden name="name" />
 </p>
 <s:if test="null != references['PageManagerUtilizers']">
-<wpsa:subset source="references['PageManagerUtilizers']" count="10" objectName="pageReferences" advanced="true" offset="5">
+<wpsa:subset source="references['PageManagerUtilizers']" count="10" objectName="pageReferences" advanced="true" offset="5" pagerId="pageManagerReferences">
 <s:set name="group" value="#pageReferences" />
 
 <div class="pager">
@@ -20,8 +20,8 @@
 <table class="generic" id="pageListTable" summary="<s:text name="note.group.referencedPages.summary" />">
 <caption><span><s:text name="title.pageList" /></span></caption>
 	<tr>
-		<th>**PERCORSO**</th>
-		<th>** GRUPPO **</th>
+		<th>** PATH **</th>
+		<th>** GROUP **</th>
 	</tr>
 	<s:iterator var="currentPageVar" >
 		<s:set var="canEditCurrentPage" value="%{false}" />
@@ -54,7 +54,7 @@
 </s:else>
 
 <s:if test="null != references['UserManagerUtilizers']">
-<wpsa:subset source="references['UserManagerUtilizers']" count="10" objectName="userReferences" advanced="true" offset="5">
+<wpsa:subset source="references['UserManagerUtilizers']" count="10" objectName="userReferences" advanced="true" offset="5" pagerId="userManagerReferences">
 <s:set name="group" value="#userReferences" />
 
 <div class="pager">
