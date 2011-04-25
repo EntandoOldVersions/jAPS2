@@ -46,13 +46,16 @@
 	</s:else>
  	
 <p>
-	<s:if test="#group.advanced"><wpsf:submit type="image" name="pagerItem_1" value="%{getText('label.goToFirst')}" title="%{getText('label.goToFirst')}" src="%{#goFirst}" disabled="%{1 == #group.currItem}" /><wpsf:submit type="image" name="%{'pagerItem_' + (#group.currItem - #group.offset) }" value="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.backward')}" title="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.backward')}" src="%{#jumpBackward}" disabled="%{1 == #group.beginItemAnchor}" /></s:if>	
-	<wpsf:submit type="image" name="%{'pagerItem_' + #group.prevItem}" value="%{getText('label.prev')}" title="%{getText('label.prev.full')}" src="%{#goPrevious}" disabled="%{1 == #group.currItem}" />	
+	<s:if test="null != #group.pagerId"><s:set var="pagerIdMarker" value="#group.pagerId" /></s:if>
+	<s:else><s:set var="pagerIdMarker">pagerItem</s:set></s:else>
+	<s:if test="#group.advanced"><wpsf:submit type="image" name="%{#pagerIdMarker + '_1'}" value="%{getText('label.goToFirst')}" title="%{getText('label.goToFirst')}" src="%{#goFirst}" disabled="%{1 == #group.currItem}" /><wpsf:submit type="image" name="%{#pagerIdMarker + '_' + (#group.currItem - #group.offset) }" value="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.backward')}" title="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.backward')}" src="%{#jumpBackward}" disabled="%{1 == #group.beginItemAnchor}" /></s:if>	
+	<wpsf:submit type="image" name="%{#pagerIdMarker + '_' + #group.prevItem}" value="%{getText('label.prev')}" title="%{getText('label.prev.full')}" src="%{#goPrevious}" disabled="%{1 == #group.currItem}" />	
 	<s:subset source="#group.items" count="#group.endItemAnchor-#group.beginItemAnchor+1" start="#group.beginItemAnchor-1">
-		<s:iterator id="item"><wpsf:submit name="%{'pagerItem_' + #item}" value="%{#item}" disabled="%{#item == #group.currItem}" cssClass="paddingLateral05 disabled-%{#item == #group.currItem}" /></s:iterator>
+		<s:iterator id="item"><wpsf:submit name="%{#pagerIdMarker + '_' + #item}" value="%{#item}" disabled="%{#item == #group.currItem}" cssClass="paddingLateral05 disabled-%{#item == #group.currItem}" /></s:iterator>
 	</s:subset>
-	<wpsf:submit type="image" name="%{'pagerItem_' + #group.nextItem}" value="%{getText('label.next')}" title="%{getText('label.next.full')}" src="%{#goNext}" disabled="%{#group.maxItem == #group.currItem}" />
-	<s:if test="#group.advanced"><s:set name="jumpForwardStep" value="#group.currItem + #group.offset"></s:set><wpsf:submit type="image" name="%{'pagerItem_' + (#jumpForwardStep)}" value="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.forward')}" title="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.forward')}" src="%{#jumpForward}" disabled="%{#group.maxItem == #group.endItemAnchor}" /><wpsf:submit type="image" name="%{'pagerItem_' + #group.size}" value="%{getText('label.goToLast')}" title="%{getText('label.goToLast')}" src="%{#goLast}" disabled="%{#group.maxItem == #group.currItem}" /></s:if>
+	<wpsf:submit type="image" name="%{#pagerIdMarker + '_' + #group.nextItem}" value="%{getText('label.next')}" title="%{getText('label.next.full')}" src="%{#goNext}" disabled="%{#group.maxItem == #group.currItem}" />
+	<s:if test="#group.advanced"><s:set name="jumpForwardStep" value="#group.currItem + #group.offset"></s:set><wpsf:submit type="image" name="%{#pagerIdMarker + '_' + (#jumpForwardStep)}" value="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.forward')}" title="%{getText('label.jump') + ' ' + #group.offset + ' ' + getText('label.forward')}" src="%{#jumpForward}" disabled="%{#group.maxItem == #group.endItemAnchor}" /><wpsf:submit type="image" name="%{#pagerIdMarker + '_' + #group.size}" value="%{getText('label.goToLast')}" title="%{getText('label.goToLast')}" src="%{#goLast}" disabled="%{#group.maxItem == #group.currItem}" /></s:if>
+	<s:set var="pagerIdMarker" value="null" />
 </p>
 
 </s:if>
