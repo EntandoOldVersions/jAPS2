@@ -28,11 +28,12 @@ import org.apache.commons.beanutils.BeanComparator;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.apsadmin.system.services.shortcut.IShortcutManager;
 import com.agiletec.apsadmin.system.services.shortcut.model.Shortcut;
-import com.agiletec.apsadmin.util.SelectItem;
+import com.agiletec.apsadmin.system.services.shortcut.model.UserConfigBean;
 
 /**
  * Action that manage the shortcut configuration of the current user.
@@ -154,21 +155,30 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 	}
 	
 	public String[] getUserConfig() {
-		String[] config = null;
+		return this.getUserConfigBean().getConfig();
+	}
+	
+	public UserConfigBean getUserConfigBean() {
+		UserConfigBean config = null;
 		try {
-			config = (String[]) this.getRequest().getSession().getAttribute(SESSION_PARAM_MY_SHORTCUTS);
-			if (null == config) {
-				config = this.getShortcutManager().getUserConfig(this.getCurrentUser());
-				this.setUserConfig(config);
+			config = (UserConfigBean) this.getRequest().getSession().getAttribute(SESSION_PARAM_MY_SHORTCUTS);
+			if (null == config || !this.getCurrentUser().getUsername().equals(config.getUsername())) {
+				config = this.getShortcutManager().getUserConfigBean(this.getCurrentUser());
+				this.setUserConfigBean(config);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getUserConfig");
-			throw new RuntimeException("Error extracting userConfig by user " + this.getCurrentUser(), t);
+			ApsSystemUtils.logThrowable(t, this, "getUserConfigBean");
+			throw new RuntimeException("Error extracting user config bean by user " + this.getCurrentUser(), t);
 		}
 		return config;
 	}
 	
-	protected void setUserConfig(String[] userConfig) {
+	protected void setUserConfig(String[] config) {
+		UserConfigBean userConfig = new UserConfigBean(this.getCurrentUser().getUsername(), config);
+		this.setUserConfigBean(userConfig);
+	}
+	
+	protected void setUserConfigBean(UserConfigBean userConfig) {
 		this.getRequest().getSession().setAttribute(SESSION_PARAM_MY_SHORTCUTS, userConfig);
 	}
 	

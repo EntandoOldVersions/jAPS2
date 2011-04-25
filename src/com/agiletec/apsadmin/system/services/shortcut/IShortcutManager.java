@@ -22,6 +22,7 @@ import java.util.List;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.services.shortcut.model.Shortcut;
+import com.agiletec.apsadmin.system.services.shortcut.model.UserConfigBean;
 
 /**
  * Interface of the manager of Shortcut catalog and user config.
@@ -31,14 +32,25 @@ public interface IShortcutManager {
 	
 	/**
 	 * Save a shortcut config of the given user.
-	 * THe saved confif shold be not equals than the given, the invalid position 
-	 * (whith invalid shortcut code, or with shortcut not allowed to the user) will be emptied.
+	 * The saved config shold be not equals than the given, the invalid position 
+	 * (with invalid shortcut code, or with shortcut not allowed to the user) will be emptied.
 	 * @param user The user owner of the config to save.
 	 * @param config The config to save.
 	 * @return The saved config.
 	 * @throws ApsSystemException In case of error.
 	 */
 	public String[] saveUserConfig(UserDetails user, String[] config) throws ApsSystemException;
+	
+	/**
+	 * Save a shortcut config of the given user.
+	 * The saved config shold be not equals than the given, the invalid position 
+	 * (with invalid shortcut code, or with shortcut not allowed to the user) will be emptied.
+	 * @param user The user owner of the config to save.
+	 * @param config The config to save.
+	 * @return The saved config.
+	 * @throws ApsSystemException In case of error.
+	 */
+	public UserConfigBean saveUserConfigBean(UserDetails user, UserConfigBean userConfig) throws ApsSystemException;
 	
 	/**
 	 * Return the size of the box that contains the user shortcuts.
@@ -54,6 +66,15 @@ public interface IShortcutManager {
 	 * @throws ApsSystemException In case of error.
 	 */
 	public String[] getUserConfig(UserDetails user) throws ApsSystemException;
+	
+	/**
+	 * Return the shorcut config of the given user.
+	 * The config contains only the shortcut allowed.
+	 * @param user The user that require the config.
+	 * @return The user config of the given user.
+	 * @throws ApsSystemException In case of error.
+	 */
+	public UserConfigBean getUserConfigBean(UserDetails user) throws ApsSystemException;
 	
 	/**
 	 * Delete a config by user

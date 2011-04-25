@@ -36,6 +36,7 @@ import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.services.shortcut.model.MenuSection;
 import com.agiletec.apsadmin.system.services.shortcut.model.Shortcut;
+import com.agiletec.apsadmin.system.services.shortcut.model.UserConfigBean;
 
 /**
  * Manager of Shortcut catalog and user config.
@@ -70,6 +71,17 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 	}
 	
 	@Override
+	public UserConfigBean saveUserConfigBean(UserDetails user, UserConfigBean userConfig) throws ApsSystemException {
+		if (null == user || null == userConfig 
+				|| userConfig.getUsername().equals(user.getUsername())) {
+			ApsSystemUtils.getLogger().info("Required operation for null user or invalid user config");
+			return null;
+		}
+		String[] config = this.saveUserConfig(user, userConfig.getConfig());
+		return new UserConfigBean(user.getUsername(), config);
+	}
+	
+	@Override
 	public String[] saveUserConfig(UserDetails user, String[] config) throws ApsSystemException {
 		if (null == user) {
 			ApsSystemUtils.getLogger().info("Required operation for null user");
@@ -84,6 +96,13 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 			throw new ApsSystemException("Error saving user config by user " + user.getUsername(), t);
 		}
 		return config;
+	}
+	
+	@Override
+	public UserConfigBean getUserConfigBean(UserDetails user) throws ApsSystemException {
+		String[] config = this.getUserConfig(user);
+		if (null == config) return null;
+		return new UserConfigBean(user.getUsername(), config);
 	}
 	
 	@Override
@@ -160,7 +179,7 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getAllowedShortcuts");
-			throw new ApsSystemException("Error extracting Allowed Short Cuts by user " + user.getUsername(), t);
+			throw new ApsSystemException("Error extracting allowed shortcuts by user " + user.getUsername(), t);
 		}
 		BeanComparator comparator = new BeanComparator("source");
 		Collections.sort(allowedShortcuts, comparator);
