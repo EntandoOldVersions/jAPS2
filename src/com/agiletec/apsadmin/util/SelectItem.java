@@ -19,31 +19,16 @@ package com.agiletec.apsadmin.util;
 
 /**
  * @author E.Santoboni
+ * @deprecated Use {@link com.agiletec.aps.util.SelectItem}
  */
-public class SelectItem {
+public class SelectItem extends com.agiletec.aps.util.SelectItem {
 	
 	public SelectItem(String key, String value) {
-		this._key = key;
-		this._value = value;
+		super(key, value);
 	}
 	
 	public SelectItem(String key, String value, String optgroup) {
-		this(key, value);
-		this._optgroup = optgroup;
+		super(key, value, optgroup);
 	}
-	
-	public String getKey() {
-		return _key;
-	}
-	public String getValue() {
-		return _value;
-	}
-	public String getOptgroup() {
-		return _optgroup;
-	}
-	
-	private String _key;
-	private String _value;
-	private String _optgroup;
 	
 }
