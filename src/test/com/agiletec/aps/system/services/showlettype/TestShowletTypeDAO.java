@@ -23,6 +23,8 @@ import javax.sql.DataSource;
 
 import test.com.agiletec.aps.BaseTestCase;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.system.services.showlettype.ShowletTypeDAO;
 
@@ -35,6 +37,8 @@ public class TestShowletTypeDAO extends BaseTestCase {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
     	ShowletTypeDAO showletTypeDao = new ShowletTypeDAO();
     	showletTypeDao.setDataSource(dataSource);
+    	ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
+    	showletTypeDao.setLangManager(langManager);
     	Map<String, ShowletType> types = null;
 		try {
 			types = showletTypeDao.loadShowletTypes();

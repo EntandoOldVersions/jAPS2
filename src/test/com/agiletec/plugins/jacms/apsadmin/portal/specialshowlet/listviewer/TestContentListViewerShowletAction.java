@@ -27,7 +27,7 @@ import test.com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.EntitySearchFilterDOM;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.FilterUtils;
 import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.ContentListViewerShowletAction;
 import com.opensymphony.xwork2.Action;
 
@@ -201,7 +201,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 		params.put("showletTypeCode", "content_viewer_list");
 		params.put("contentType", "NEW");
 		params.put("filters", "(order=DESC;attributeFilter=true;likeOption=false;key=Date)");
-		List<Properties> temp = EntitySearchFilterDOM.getPropertiesFilters("(order=ASC;attributeFilter=true;likeOption=false;key=Title)");
+		List<Properties> temp = FilterUtils.getFiltersProperties("(order=ASC;attributeFilter=true;likeOption=false;key=Title)");
 		assertEquals(1, temp.size());
 		Properties newFilter = temp.get(0);
 		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", "addFilter");
