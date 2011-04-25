@@ -39,6 +39,7 @@ public class ContentAuthorizationInfo implements Serializable {
 	public ContentAuthorizationInfo(Content content) {
 		this._contentId = content.getId();
 		this._contentType = content.getTypeCode();
+		this._mainGroup = content.getMainGroup();
 		String[] allowedGroups = new String[1+content.getGroups().size()];
 		allowedGroups[0] = content.getMainGroup();
 		int index = 1;
@@ -107,13 +108,13 @@ public class ContentAuthorizationInfo implements Serializable {
 	 * da aggiungere nella lista.
 	 */
 	protected void addProtectedResourceId(String resourceId) {
-		int len = _protectedResourcesId.length;
+		int len = this._protectedResourcesId.length;
 		String[] newArray = new String[len + 1];
 		for(int i=0; i < len; i++){
-			newArray[i] = _protectedResourcesId[i];
+			newArray[i] = this._protectedResourcesId[i];
 		}
 		newArray[len] = resourceId;
-		_protectedResourcesId = newArray;
+		this._protectedResourcesId = newArray;
 	}
 	
 	/**
@@ -124,8 +125,8 @@ public class ContentAuthorizationInfo implements Serializable {
 	 * false in caso contrario.
 	 */
 	public boolean isProtectedResourceReference(String resourceId) {
-		for (int i=0; i<_protectedResourcesId.length; i++) {
-			if (_protectedResourcesId[i].equals(resourceId)) return true;
+		for (int i=0; i<this._protectedResourcesId.length; i++) {
+			if (this._protectedResourcesId[i].equals(resourceId)) return true;
 		}
 		return false;
 	}
@@ -136,9 +137,14 @@ public class ContentAuthorizationInfo implements Serializable {
 	public String getContentType() {
 		return _contentType;
 	}
-	
+	public String getMainGroup() {
+		return _mainGroup;
+	}
+
 	private String _contentId;
 	private String _contentType;
+	
+	private String _mainGroup;
 	
 	private String[] _allowedGroups = new String[0];
 	private String[] _protectedResourcesId = new String[0];

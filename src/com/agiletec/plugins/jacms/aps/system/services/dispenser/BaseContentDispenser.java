@@ -64,6 +64,11 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 		return this.getRenderizationInfo(authInfo, contentToRender, contentId, modelId, langCode, reqCtx);
 	}
 	
+	@Override
+	public ContentAuthorizationInfo getAuthorizationInfo(String contentId) {
+		return this.getAuthorizationInfo(null, contentId);
+	}
+	
 	/**
 	 * Carica le informazioni di autorizzazione sul contenuto.
 	 * @param content Il contenuto del quale restituire le informazioni di autorizzazione. 

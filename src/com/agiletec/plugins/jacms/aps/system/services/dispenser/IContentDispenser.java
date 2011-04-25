@@ -20,22 +20,37 @@ package com.agiletec.plugins.jacms.aps.system.services.dispenser;
 import com.agiletec.aps.system.RequestContext;
 
 /**
- * Interfaccia base per i servizio fornitori di contenuti formattati.
- * Le implementazioni potranno o meno implementare meccanismi di caching.
+ * Basic interface for service providers formatted content.
+ * Implementations may or may not use the caching engine.
  * @author M.Diana - E.Santoboni
  */
 public interface IContentDispenser {
 	
 	/**
-	 * Fornisce un contenuto formattato.
-	 * @param contentId Identificatore del contenuto.
-	 * @param modelId Identificatore del modello di contenuto.
-	 * @param langCode Codice della lingua di renderizzazione richiesta.
-	 * @param reqCtx Il contesto della richiesta.
-	 * @return Il contenuto formattato, solitamente un frammento di html.
+	 * Return the formatted content.
+	 * @param contentId The content id.
+	 * @param modelId The velocity model id.
+	 * @param langCode The code of the current lang.
+	 * @param reqCtx The request context.
+	 * @return The formatted content.
 	 */
 	public String getRenderedContent(String contentId, long modelId, String langCode, RequestContext reqCtx);
 	
+	/**
+	 * Return the object that contains the authorization info of the content.
+	 * @param contentId The content that extract the info.
+	 * @return The authorization info.
+	 */
+	public ContentAuthorizationInfo getAuthorizationInfo(String contentId);
+	
+	/**
+	 * Return the object that contains the renderization info of the content.
+	 * @param contentId The content id.
+	 * @param modelId The velocity model id.
+	 * @param langCode The code of the current lang.
+	 * @param reqCtx The request context.
+	 * @return The formatted content.
+	 */
 	public ContentRenderizationInfo getRenderizationInfo(String contentId, long modelId, String langCode, RequestContext reqCtx);
 	
 }
