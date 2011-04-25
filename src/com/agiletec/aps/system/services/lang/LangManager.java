@@ -29,6 +29,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import com.agiletec.aps.util.FileTextReader;
 
 /**
@@ -50,16 +51,16 @@ public class LangManager extends AbstractService implements ILangManager {
 	private void loadSystemLangs() throws ApsSystemException {
 		String xmlConfig = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_LANGS);
 		List<Lang> tempList = this.parse(xmlConfig);
-		_langs = new HashMap<String, Lang>(tempList.size());
-		_langList = new ArrayList<Lang>(tempList.size());
+		this._langs = new HashMap<String, Lang>(tempList.size());
+		this._langList = new ArrayList<Lang>(tempList.size());
 		for (int i=0; i<tempList.size(); i++){
 			Lang lang = (Lang) tempList.get(i);
-			_langs.put(lang.getCode(), lang);
+			this._langs.put(lang.getCode(), lang);
 			if(lang.isDefault()){
-				_defaultLang = lang;
-				_langList.add(0, lang);
+				this._defaultLang = lang;
+				this._langList.add(0, lang);
 			} else {
-				_langList.add(lang);
+				this._langList.add(lang);
 			}
 		}
 	}
@@ -95,10 +96,10 @@ public class LangManager extends AbstractService implements ILangManager {
 		String xmlConfig = FileTextReader.getText(is);
 		LangDOM langDom = new LangDOM(xmlConfig);
 		List<Lang> tempList = langDom.getLangs();
-		_assignableLangs = new HashMap<String, Lang>();
+		this._assignableLangs = new HashMap<String, Lang>();
 		for (int i=0; i<tempList.size(); i++){
 			Lang lang = (Lang) tempList.get(i);
-			_assignableLangs.put(lang.getCode(), lang);
+			this._assignableLangs.put(lang.getCode(), lang);
 		}
 	}
 	
@@ -155,6 +156,8 @@ public class LangManager extends AbstractService implements ILangManager {
 		langDom.addLangs(this._langList);
 		String xml = langDom.getXMLDocument();
 		this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_LANGS, xml);
+		LangsChangedEvent event = new LangsChangedEvent();
+		this.notifyEvent(event);
 	}
 	
 	/**
