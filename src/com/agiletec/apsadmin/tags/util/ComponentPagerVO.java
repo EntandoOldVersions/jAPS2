@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Componente specifico per il paginatore dell'interfaccia di amministrazione.
- * @version 1.0
  * @author E.Santoboni
  */
 public class ComponentPagerVO extends Component implements IPagerVO {
@@ -44,6 +43,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 		this._size = pagerVo.getSize();
 		this._advanced = pagerVo.isAdvanced();
 		this._offset = pagerVo.getOffset();
+		this._pagerId = pagerVo.getPagerId();
 		this._beginItemAnchor = pagerVo.getBeginItemAnchor();
 		this._endItemAnchor = pagerVo.getEndItemAnchor();
 	}
@@ -52,6 +52,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * Array di utilità; restituisce l'array ordinato degli indici numerici degli item.
 	 * @return L'array ordinato degli indici numerici degli item.
 	 */
+	@Override
 	public int[] getItems() {
 		int[] items = new int[this.getMaxItem()];
 		for (int i = 0; i<this.getMaxItem(); i++) {
@@ -67,6 +68,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * @return Il nome del parametro tramite il quale 
 	 * individuare dalla request l'identificativo del item richiesto.
 	 */
+	@Override
 	public String getParamItemName() {
 		return "item";
 	}
@@ -75,6 +77,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * Restituisce il numero massimo di elementi della lista per ogni item.
 	 * @return Il numero massimo di elementi della lista per ogni item.
 	 */
+	@Override
 	public int getMax() {
 		return _max;
 	}
@@ -83,6 +86,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * Restituisce l'identificativo numerico del gruppo item precedente.
 	 * @return L'identificativo numerico del gruppo item precedente.
 	 */
+	@Override
 	public int getPrevItem() {
 		return _prevItem;
 	}
@@ -91,6 +95,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * Restituisce il size della lista principale.
 	 * @return Il size della lista principale.
 	 */
+	@Override
 	public int getSize() {
 		return _size;
 	}
@@ -99,6 +104,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * Restituisce l'identificativo numerico del gruppo item successivo.
 	 * @return L'identificativo numerico del gruppo item successivo.
 	 */
+	@Override
 	public int getNextItem() {
 		return _nextItem;
 	}
@@ -107,6 +113,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * Restituisce l'identificativo numerico del gruppo item corrente.
 	 * @return L'identificativo numerico del gruppo item corrente.
 	 */
+	@Override
 	public int getCurrItem() {
 		return _currItem;
 	}
@@ -115,6 +122,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * Restituisce l'indice di partenza sulla lista principale dell'item corrente.
 	 * @return L'indice di partenza sulla lista principale dell'item corrente.
 	 */
+	@Override
 	public int getBegin() {
 		return _begin;
 	}
@@ -123,6 +131,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * Restituisce l'indice di arrivo sulla lista principale dell'item corrente.
 	 * @return L'indice di arrivo sulla lista principale dell'item corrente.
 	 */
+	@Override
 	public int getEnd() {
 		return _end;
 	}
@@ -131,26 +140,32 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	 * Restituisce l'identificativo numerico dell'ultimo gruppo iter.
 	 * @return L'identificativo numerico dell'ultimo gruppo item.
 	 */
+	@Override
 	public int getMaxItem() {
 		return _maxItem;
 	}
 	
+	@Override
 	public String getPagerId() {
-		return null;
+		return _pagerId;
 	}
 	
+	@Override
 	public int getBeginItemAnchor() {
 		return _beginItemAnchor;
 	}
 	
+	@Override
 	public int getEndItemAnchor() {
 		return _endItemAnchor;
 	}
 	
+	@Override
 	public boolean isAdvanced() {
 		return _advanced;
 	}
 	
+	@Override
 	public int getOffset() {
 		return _offset;
 	}
@@ -164,6 +179,7 @@ public class ComponentPagerVO extends Component implements IPagerVO {
 	private int _size;
 	private int _max;
 	
+	private String _pagerId;
 	private int _offset;
 	private int _beginItemAnchor;
 	private int _endItemAnchor;

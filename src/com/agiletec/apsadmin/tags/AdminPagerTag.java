@@ -46,7 +46,7 @@ public class AdminPagerTag extends StrutsBodyTagSupport {
 		try {
 			AdminPagerTagHelper helper = new AdminPagerTagHelper();
 			IPagerVO pagerVo = helper.getPagerVO((Collection)source, 
-					this._countAttr, this.isAdvanced(), this.getOffset(), request);
+					this.getPagerId(), this._countAttr, this.isAdvanced(), this.getOffset(), request);
 			compPagerVo.initPager(pagerVo);
 			stack.getContext().put(this.getObjectName(), compPagerVo);
 			stack.setValue("#attr['" + this.getObjectName() + "']", compPagerVo, false);
@@ -66,7 +66,15 @@ public class AdminPagerTag extends StrutsBodyTagSupport {
 		}
 		return EVAL_BODY_INCLUDE;
 	}
-
+	
+	public String getPagerId() {
+		return _pagerId;
+	}
+	public void setPagerId(String pagerId) {
+		this._pagerId = pagerId;
+	}
+	
+	@Override
 	public int doEndTag() throws JspException {
 		this.getStack().pop();
 		_subsetIteratorFilter = null;
@@ -100,7 +108,9 @@ public class AdminPagerTag extends StrutsBodyTagSupport {
 	public void setOffset(int offset) {
 		this._offset = offset;
 	}
-
+	
+	private String _pagerId;
+	
 	private int _countAttr;
 	private String _sourceAttr;
 
