@@ -308,19 +308,19 @@
 
 </s:else>
 
-<wp:ifauthorized permission="validateContents">
 <fieldset><legend><s:text name="title.contentActions" /></legend>
 <p class="noscreen"><s:text name="title.contentActionsIntro" /></p>
 <p class="buttons">
+<wp:ifauthorized permission="validateContents">
 	<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/approve.png</s:set>	
 	<wpsf:submit action="approveContentGroup" type="image" src="%{#iconImagePath}" value="%{getText('label.approve')}" title="%{getText('note.button.approve')}" />
 	<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/suspend.png</s:set>
 	<wpsf:submit action="suspendContentGroup" type="image" src="%{#iconImagePath}" value="%{getText('label.suspend')}" title="%{getText('note.button.suspend')}" />
+</wp:ifauthorized>
 	<s:set name="iconImagePath" id="iconImagePath"><wp:resourceURL/>administration/common/img/icons/32x32/delete.png</s:set>
 	<wpsf:submit action="trashContentGroup" type="image" src="%{#iconImagePath}" value="%{getText('label.remove')}" title="%{getText('note.button.delete')}" />
 </p>
 </fieldset>
-</wp:ifauthorized>
 
 <div class="pager">
 	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
