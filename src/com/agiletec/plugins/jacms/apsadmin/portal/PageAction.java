@@ -63,11 +63,11 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 							new String[]{contentGroups.toString(), content.getId(), content.getDescr()}));
 				}
 			}
-			List<ContentRecordVO> linkingContentsVo = ((PageUtilizer) contentManager).getPageUtilizers(this.getPageCode());
+			List<String> linkingContentsVo = ((PageUtilizer) contentManager).getPageUtilizers(this.getPageCode());
 			if (null != linkingContentsVo) {
 				for (int i = 0; i < linkingContentsVo.size(); i++) {
-					ContentRecordVO contentVo = linkingContentsVo.get(i);
-					Content linkingContent = contentManager.loadContent(contentVo.getId(), true);
+					String contentId = linkingContentsVo.get(i);
+					Content linkingContent = contentManager.loadContent(contentId, true);
 					if (null != linkingContent && !CmsPageActionUtil.isPageLinkableByContent(page, linkingContent)) {
 						this.addFieldError("extraGroups", this.getText("error.page.extraGoups.pageHasToBeFree", 
 								new String[]{linkingContent.getId(), linkingContent.getDescr()}));
@@ -156,15 +156,34 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 	}
 	
 	public List<ContentRecordVO> getReferencingContents(String pageCode) {
-		List<ContentRecordVO> referencingContents;
+		List<ContentRecordVO> referencingContents = null;
 		try {
-			referencingContents = ((PageUtilizer) this.getContentManager()).getPageUtilizers(pageCode);
+			List<String> referencingContentsId = this.getReferencingContentsId(pageCode);
+			if (null != referencingContentsId) {
+				referencingContents = new ArrayList<ContentRecordVO>();
+				for (int i = 0; i < referencingContentsId.size(); i++) {
+					ContentRecordVO contentVo = this.getContentManager().loadContentVO(referencingContentsId.get(i));
+					if (null != contentVo) referencingContents.add(contentVo);
+				}
+			}
 		} catch (Throwable t) {
 			String msg = "Error getting referencing contents by page '" + pageCode + "'";
 			ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencingContents;
+	}
+	
+	public List<String> getReferencingContentsId(String pageCode) {
+		List<String> referencingContentsId = null;
+		try {
+			referencingContentsId = ((PageUtilizer) this.getContentManager()).getPageUtilizers(pageCode);
+		} catch (Throwable t) {
+			String msg = "Error getting referencing contents by page '" + pageCode + "'";
+			ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
+			throw new RuntimeException(msg, t);
+		}
+		return referencingContentsId;
 	}
 	
 	public boolean isViewerPage() {
