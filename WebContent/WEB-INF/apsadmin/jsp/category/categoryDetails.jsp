@@ -1,11 +1,11 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib uri="apsadmin-core.tld" prefix="wpsa" %>
 
-** CATEGORY DETAILS **
+<h1><a href="<s:url action="viewTree" namespace="/do/Category" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.categoryManagement" />"><s:text name="title.categoryManagement" /></a></h1>
 
 <div id="main">
+<h2><s:text name="title.categoryDetail" /></h2>
 
-<br /><br />
 
 <dl class="table-display">
 	<dt><s:text name="name.categoryCode" /></dt>
@@ -18,13 +18,12 @@
 		</dd>
 </dl>
 
-<br /><br />
-
 <wpsa:hookPoint key="core.categoryDetails" objectName="hookPointElements_core_categoryDetails">
 <s:iterator value="#hookPointElements_core_categoryDetails" var="hookPointElement">
 	<wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
 </s:iterator>
 </wpsa:hookPoint>
+
 
 <s:include value="/WEB-INF/apsadmin/jsp/category/include/categoryInfo-references.jsp" />
 
