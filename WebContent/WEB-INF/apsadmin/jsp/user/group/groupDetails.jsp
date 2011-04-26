@@ -1,20 +1,19 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib uri="apsadmin-core.tld" prefix="wpsa" %>
 
-** GROUP DETAILS **
+<s:set var="targetNS" value="%{'/do/Group'}" />
+<h1><s:text name="title.groupManagement" /><s:include value="/WEB-INF/apsadmin/jsp/common/inc/operations-context-general.jsp" /></h1>
 
 <div id="main">
 
-<br /><br />
+<h2><s:text name="title.groupDetail" /></h2>
 
 <dl class="table-display">
-	<dt><s:text name="name.groupCode" /></dt>
+	<dt><s:text name="label.group" /></dt>
 		<dd><s:property value="name" /></dd>
-	<dt><s:text name="name.groupDescription" /></dt>
+	<dt><s:text name="label.description" /></dt>
 		<dd><s:property value="description" /></dd>
 </dl>
-
-<br /><br />
 
 <wpsa:hookPoint key="core.groupDetails" objectName="hookPointElements_core_groupDetails">
 <s:iterator value="#hookPointElements_core_groupDetails" var="hookPointElement">

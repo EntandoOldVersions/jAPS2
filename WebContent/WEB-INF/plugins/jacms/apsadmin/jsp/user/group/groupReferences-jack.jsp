@@ -4,6 +4,8 @@
 <%@ taglib prefix="wpsa" uri="apsadmin-core.tld" %>
 <%@ taglib prefix="jacmswpsa" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
 
+<div class="subsection-light">
+<h3><s:text name="title.group.referencedContents" /></h3>
 <s:if test="null != references['jacmsContentManagerUtilizers']">
 <wpsa:subset source="references['jacmsContentManagerUtilizers']" count="10" objectName="contentReferences" advanced="true" offset="5" pagerId="contentManagerReferences">
 <s:set name="group" value="#contentReferences" />
@@ -64,6 +66,10 @@
 <s:else>
 <p><s:text name="note.group.referencedContents.empty" /></p>
 </s:else>
+</div>
+
+<div class="subsection-light">
+<h3><s:text name="title.group.referencedResources" /></h3>
 
 <s:if test="null != references['jacmsResourceManagerUtilizers']">
 <wpsa:subset source="references['jacmsResourceManagerUtilizers']" count="10" objectName="resourceReferences" advanced="true" offset="5" pagerId="resourceManagerReferences">
@@ -118,3 +124,4 @@
 <s:else>
 <p><s:text name="note.group.referencedResources.empty" /></p>
 </s:else>
+</div>

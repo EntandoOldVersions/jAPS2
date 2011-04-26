@@ -24,7 +24,8 @@
 <table class="generic" id="contentListTable" summary="<s:text name="note.content.publishedContent.summary" />">
 <caption><span><s:text name="title.contentList" /></span></caption>
 	<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/contentReferencesTable_header.jsp" />
-	<s:iterator var="currentContentRecordVar" value="#publishedContents">
+	<s:iterator var="currentContentVar" value="#publishedContents">
+	<jacms:content contentId="%{#currentContentVar.id}" var="currentContentRecordVar" record="true" />
 	<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/contentReferencesTable_row.jsp" />
 	</s:iterator>
 </table>
@@ -39,8 +40,8 @@
 <p><s:text name="note.publishedContent.empty" /></p>
 </s:else>
 
-<h3><s:text name="title.referencedContent" /></h3>
+<div class="subsection-light">
 <s:set var="referencingContentsId" value="getReferencingContentsId(selectedNode)" />
 <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/portal/include/referencingContents.jsp" />
-
+</div>
 </s:form>

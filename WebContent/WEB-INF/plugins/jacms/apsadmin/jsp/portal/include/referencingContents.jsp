@@ -4,8 +4,9 @@
 <%@ taglib prefix="c" uri="c.tld" %>
 <%@ taglib prefix="jacms" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
 
-<s:if test="!#referencingContentsId.empty">
+<h3><s:text name="title.referencedContent" /></h3>
 
+<s:if test="!#referencingContentsId.empty">
 <wpsa:subset source="#referencingContentsId" count="10" objectName="contentReferencesGroup" advanced="true" offset="5" pagerId="referencingContentsId">
 <s:set name="group" value="#contentReferencesGroup" />
 <div class="pager">
@@ -29,5 +30,5 @@
 
 </s:if>
 <s:else>
-<p><s:text name="note.referencingContent.empty" /></p>
+<p><s:text name="note.referencedContent.empty" /></p>
 </s:else>

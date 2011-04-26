@@ -9,62 +9,67 @@
 <s:form>
 
 <div id="main">
+<h2><s:text name="title.contentEditing" /></h2>
+
+<s:set var="myNameIsJack" value="true" />
+<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/include/snippet-content.jsp" />
 
 <div class="message message_error">
-<h2><s:text name="message.title.ActionErrors" /></h2>
-<p><s:text name="message.note.resolveReferences" />:</p>
-
+	<h3><s:text name="message.title.ActionErrors" /></h3>
+	<p><s:text name="message.note.resolveReferences" />:</p>
 </div>
 
 <s:if test="references['jacmsContentManagerUtilizers']">
-<h3><s:text name="message.title.referencedContents" /></h3>
-<s:set var="referencingContentsId" value="references['jacmsContentManagerUtilizers']" />
-<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/portal/include/referencingContents.jsp" />
+	<s:set var="referencingContentsId" value="references['jacmsContentManagerUtilizers']" />
+	<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/portal/include/referencingContents.jsp" />
 </s:if>
 
 <s:if test="references['PageManagerUtilizers']">
-<h3><s:text name="message.title.referencedPages" /></h3>
-
-<wpsa:subset source="references['PageManagerUtilizers']" count="10" objectName="pageReferences" advanced="true" offset="5" pagerId="pageManagerReferences">
-<s:set name="group" value="#pageReferences" />
-
-<div class="pager">
-	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
-	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
-</div>
-
-<table class="generic" id="pageListTable" summary="<s:text name="note.group.referencedPages.summary" />">
-<caption><span><s:text name="title.pageList" /></span></caption>
-	<tr>
-		<th>** PATH **</th>
-		<th>** GROUP **</th>
-	</tr>
-	<s:iterator var="currentPageVar" >
-		<s:set var="canEditCurrentPage" value="%{false}" />
-		<c:set var="currentPageGroup"><s:property value="#currentPageVar.group" escape="false"/></c:set>
-		<wp:ifauthorized groupName="${currentPageGroup}" permission="managePages"><s:set var="canEditCurrentPage" value="%{true}" /></wp:ifauthorized>
+<div class="subsection-light">
+<h3><s:text name="title.referencingPages" /></h3>
+	<wpsa:subset source="references['PageManagerUtilizers']" count="10" objectName="pageReferences" advanced="true" offset="5" pagerId="pageManagerReferences">
+	<s:set name="group" value="#pageReferences" />
+	
+	<div class="pager">
+		<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
+		<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+	</div>
+	
+	<table class="generic" id="pageListTable" summary="<s:text name="note.content.referencedPages.summary" />">
+	<caption><span><s:text name="name.pages" /></span></caption>
 		<tr>
-			<td>
-				<s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />
-				<s:if test="#canEditCurrentPage">
-					<a href="<s:url namespace="/do/Page" action="viewTree"><s:param name="selectedNode" value="#currentPageVar.code" /></s:url>"><img src="<wp:resourceURL />administration/common/img/icons/node-leaf.png" alt="<s:text name="note.goToSomewhere" />: <s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />" title="<s:text name="note.goToSomewhere" />: <s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />" /></a>
-					<a href="<s:url namespace="/do/Page" action="configure"><s:param name="pageCode" value="#currentPageVar.code" /></s:url>"><img src="<wp:resourceURL />administration/common/img/icons/page-configure.png" alt="<s:text name="title.configPage" />: <s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />" title="<s:text name="title.configPage" />: <s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />" /></a>
-				</s:if>
-				<s:else></s:else>
-			</td>
-			<td>
-				<s:property value="#currentPageVar.group" />
-			</td>
+			<th><s:text name="title.pageActions" /></th>
+			<th><s:text name="label.page" /></th>
+			<th><s:text name="label.group" /></th>
 		</tr>
-	</s:iterator>
-</table>
-
-<div class="pager">
-	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+		<s:iterator var="currentPageVar" >
+			<s:set var="canEditCurrentPage" value="%{false}" />
+			<c:set var="currentPageGroup"><s:property value="#currentPageVar.group" escape="false"/></c:set>
+			<wp:ifauthorized groupName="${currentPageGroup}" permission="managePages"><s:set var="canEditCurrentPage" value="%{true}" /></wp:ifauthorized>
+			<tr>
+				<td class="icon_double">
+					<s:if test="#canEditCurrentPage">
+						<a href="<s:url namespace="/do/Page" action="viewTree"><s:param name="selectedNode" value="#currentPageVar.code" /></s:url>"><img src="<wp:resourceURL />administration/common/img/icons/node-leaf.png" alt="<s:text name="note.goToSomewhere" />: <s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />" title="<s:text name="note.goToSomewhere" />: <s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />" /></a>
+						<a href="<s:url namespace="/do/Page" action="configure"><s:param name="pageCode" value="#currentPageVar.code" /></s:url>"><img src="<wp:resourceURL />administration/common/img/icons/page-configure.png" alt="<s:text name="title.configPage" />: <s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />" title="<s:text name="title.configPage" />: <s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />" /></a>
+					</s:if>
+					<s:else><abbr title="<s:text name="label.none" />">&ndash;</abbr></s:else>
+				</td>
+				<td>
+					<s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />
+				</td>
+				<td>
+					<s:property value="#currentPageVar.group" />
+				</td>
+			</tr>
+		</s:iterator>
+	</table>
+	
+	<div class="pager">
+		<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
+	</div>
+	
+	</wpsa:subset>
 </div>
-
-</wpsa:subset>
-
 </s:if>
 
 <wpsa:hookPoint key="jacms.contentReferences" objectName="hookPointElements_jacms_contentReferences">

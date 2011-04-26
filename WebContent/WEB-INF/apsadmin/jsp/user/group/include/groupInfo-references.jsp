@@ -8,6 +8,9 @@
 <p class="noscreen">
 	<wpsf:hidden name="name" />
 </p>
+<div class="subsection-light">
+<h3><s:text name="title.group.referencedPages" /></h3>
+
 <s:if test="null != references['PageManagerUtilizers']">
 <wpsa:subset source="references['PageManagerUtilizers']" count="10" objectName="pageReferences" advanced="true" offset="5" pagerId="pageManagerReferences">
 <s:set name="group" value="#pageReferences" />
@@ -20,8 +23,8 @@
 <table class="generic" id="pageListTable" summary="<s:text name="note.group.referencedPages.summary" />">
 <caption><span><s:text name="title.pageList" /></span></caption>
 	<tr>
-		<th>** PATH **</th>
-		<th>** GROUP **</th>
+		<th><s:text name="label.page" /></th>
+		<th><s:text name="label.group" /></th>
 	</tr>
 	<s:iterator var="currentPageVar" >
 		<s:set var="canEditCurrentPage" value="%{false}" />
@@ -52,7 +55,10 @@
 <s:else>
 <p><s:text name="note.group.referencedPages.empty" /></p>
 </s:else>
+</div>
 
+<div class="subsection-light">
+<h3><s:text name="title.group.referencedUsers" /></h3>
 <s:if test="null != references['UserManagerUtilizers']">
 <wpsa:subset source="references['UserManagerUtilizers']" count="10" objectName="userReferences" advanced="true" offset="5" pagerId="userManagerReferences">
 <s:set name="group" value="#userReferences" />
@@ -140,6 +146,7 @@
 <s:else>
 <p><s:text name="note.group.referencedUsers.empty" /></p>
 </s:else>
+</div>
 
 <wpsa:hookPoint key="core.groupReferences" objectName="hookPointElements_core_groupReferences">
 <s:iterator value="#hookPointElements_core_groupReferences" var="hookPointElement">
