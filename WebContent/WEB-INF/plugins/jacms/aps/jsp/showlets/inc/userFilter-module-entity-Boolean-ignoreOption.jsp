@@ -3,8 +3,10 @@
 
 <c:set var="formFieldNameControlVar" value="${userFilterOptionVar.formFieldNames[2]}" />
 <input name="<c:out value="${formFieldNameControlVar}" />" type="hidden" value="true" />
-
 <c:set var="formFieldNameIgnoreVar" value="${userFilterOptionVar.formFieldNames[1]}" />
 <c:set var="formFieldIgnoreValue" value="${userFilterOptionVar.formFieldValues[formFieldNameIgnoreVar]}" />
 <c:set var="formFieldControlValue" value="${userFilterOptionVar.formFieldValues[formFieldNameControlVar]}" />
-<input name="<c:out value="${userFilterOptionVar.formFieldNames[1]}" />" <c:if test="${(null == formFieldIgnoreValue && null == formFieldControlValue) || (null != formFieldControlValue && formFieldIgnoreValue == 'true')}">checked="checked"</c:if> value="true" type="checkbox" /> ** IGNORA ** 
+
+
+<input id="ignore_<c:out value="${userFilterOptionVar.formFieldNames[1]}" />" name="<c:out value="${userFilterOptionVar.formFieldNames[1]}" />" <c:if test="${(null == formFieldIgnoreValue && null == formFieldControlValue) || (null != formFieldControlValue && formFieldIgnoreValue == 'true')}">checked="checked"</c:if> value="true" type="checkbox" />
+<label for="ignore_<c:out value="${userFilterOptionVar.formFieldNames[1]}" />"><wp:i18n key="IGNORE" /></label>

@@ -202,7 +202,7 @@
 <p><s:text name="note.extraOption.intro" /></p>
 	<s:iterator id="lang" value="langs">
 		<p>
-			<label for="title_<s:property value="#lang.code" />"  class="basic-mint-label"><s:text name="label.title.showlet" />&#32;(<s:property value="#lang.code" />):</label>
+			<label for="title_<s:property value="#lang.code" />"  class="basic-mint-label"><span class="monospace">(<s:property value="#lang.code" />)</span><s:text name="label.title" />:</label>
 			<wpsf:textfield name="title_%{#lang.code}" id="title_%{#lang.code}" value="%{showlet.config.get('title_' + #lang.code)}" cssClass="text" />
 		</p>
 	</s:iterator>
@@ -215,7 +215,7 @@
 	
 	<s:iterator var="lang" value="langs">
 		<p>
-			<label for="linkDescr_<s:property value="#lang.code" />"  class="basic-mint-label"><s:text name="label.link.descr"/>&#32;(<s:property value="#lang.code" />):</label>
+			<label for="linkDescr_<s:property value="#lang.code" />"  class="basic-mint-label"><span class="monospace">(<s:property value="#lang.code" />)</span><s:text name="label.link.descr"/>:</label>
 			<wpsf:textfield name="linkDescr_%{#lang.code}" id="linkDescr_%{#lang.code}" value="%{showlet.config.get('linkDescr_' + #lang.code)}" cssClass="text" />
 		</p>
 	</s:iterator>

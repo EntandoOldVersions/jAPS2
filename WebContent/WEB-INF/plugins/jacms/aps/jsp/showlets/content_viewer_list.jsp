@@ -29,7 +29,7 @@
 		<c:forEach var="userFilterOptionVar" items="${userFilterOptionsVar}">
 			<c:if test="${null != userFilterOptionVar.formFieldErrors}">
 			<c:forEach var="formFieldError" items="${userFilterOptionVar.formFieldErrors}">
-			<li><c:out value="${formFieldError}" /></li>
+			<li><c:out value="${formFieldError.value}" /></li>
 			</c:forEach>
 			</c:if>
 		</c:forEach>
@@ -78,8 +78,8 @@
 </form>
 </c:if>
 
-<c:if test="${contentList != null}">
-
+<c:choose>
+<c:when test="${contentList != null && !empty contentList}">
 	<wp:pager listName="contentList" objectName="groupContent" pagerIdFromFrame="true" >
 		<ul>
 		<c:forEach var="contentId" items="${contentList}" begin="${groupContent.begin}" end="${groupContent.end}">
@@ -106,8 +106,11 @@
 		</c:if>
 		
 	</wp:pager>
-	
-</c:if>
+</c:when>
+<c:otherwise><p><wp:i18n key="LIST_VIEWER_EMPTY" /></p></c:otherwise>
+</c:choose>
+
+
 
 <c:if test="${null != pageLinkVar && null != pageLinkDescriptionVar}">
 	<p><a href="<wp:url page="${pageLinkVar}"/>"><c:out value="${pageLinkDescriptionVar}" /></a></p>

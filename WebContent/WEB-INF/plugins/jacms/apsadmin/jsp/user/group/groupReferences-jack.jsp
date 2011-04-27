@@ -80,14 +80,11 @@
 	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
 </div>
 
-<table class="generic" id="contentListTable" summary="<s:text name="note.group.referencedResources.summary" />">
+<table class="generic" id="resourceListTable" summary="<s:text name="note.group.referencedResources.summary" />">
 <caption><span><s:text name="title.resourceList" /></span></caption>
 	<tr>
 		<th>
 			<s:text name="label.description" />
-		</th>
-		<th>
-			<s:text name="label.code" />
 		</th>
 		<th>
 			<s:text name="label.type" />
@@ -104,9 +101,6 @@
 					<a href="<s:url action="edit" namespace="/do/jacms/Resource"><s:param name="resourceId" value="#currentResourceVar.id" /></s:url>" title="<s:text name="label.edit" />:&#32;<s:property value="#currentResourceVar.descr"/>"><s:property value="#currentResourceVar.descr"/></a>
 				</s:if>
 				<s:else><s:property value="#currentResourceVar.descr"/></s:else>
-			</td>
-			<td>
-				<span class="monospace"><s:property value="#currentResourceVar.id"/></span>
 			</td>
 			<td>
 				<s:property value="#currentResourceVar.type"/>
