@@ -1,36 +1,43 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="wp" uri="aps-core.tld" %>
 <s:include value="/WEB-INF/apsadmin/jsp/common/template/defaultExtraResources.jsp" />
-
-<link type="text/css" rel="stylesheet" href="<wp:resourceURL />administration/common/css/MooContentAssist_themes.css" />
- 
-<script type="text/javascript" src="<wp:resourceURL />administration/common/js/mootools-xml.js"></script> 
-<script type="text/javascript" src="<wp:resourceURL />administration/common/js/MooContentAssist.js"></script>
 <script type="text/javascript">
-<!--//--><![CDATA[//><!--
-
-/************ client script ************/
-window.addEvent("domready",function(){ 
-	var a = new MooContentAssist("newModel_contentShape",{
-		css: {
-		"activeItem": "theme_japs_activeItem",
-		"completedItem": "theme_japs_completedItem",
-		"assistList": "theme_japs_assistList",
-		"occurence": "theme_japs_occurence",
-		"completedText": "theme_japs_completedText",
-		"assistWindow": "theme_japs_assistWindow",
-		"messages": "theme_japs_messages"
-		},
-		words: "<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/template/extraresources/inc/attributeType_xml2js_Model.jsp" />",
-		messages: { 
-			nothingFound: "<s:text name="note.contentAssist.nothingFound" />"	
-		}
+	<jsp:include page="/WEB-INF/plugins/jacms/apsadmin/jsp/common/template/extraresources/inc/attributeType-json-Model.jsp" />
+</script>
+<s:if test="#myClient == 'normal'">
+<%-- normal start --%>
+	<link type="text/css" rel="stylesheet" href="<wp:resourceURL />administration/common/css/MooContentAssist_themes.css" />
+	<script type="text/javascript" src="<wp:resourceURL />administration/common/js/mootools-xml.js"></script> 
+	<script type="text/javascript" src="<wp:resourceURL />administration/common/js/MooContentAssist.js"></script>
+	<script type="text/javascript">
+	<!--//--><![CDATA[//><!--
+	/************ client script ************/
+	window.addEvent("domready",function(){ 
+		var editorAssisted = new MooContentAssist( {
+			frameSize : 3,
+			vocabularyDiscoverer: false,
+			windowPadding: {
+				"x": 0,
+				"y": 2
+			},
+			aggressiveAssist : false,
+			source : document.id("newModel_contentShape"),
+			css : {
+				item: "item", 
+				itemsContainer: "itemsContainer_theme_japs",
+				itemSelected: "itemSelected",
+				messageItem: "messageItem",
+				matchedText: "matchedText"
+			},
+			vocabulary : ENTANDO_MODEL_VOCABULARY
+		});
 	});
-});
-//--><!]]></script>
-
+	//--><!]]></script>
+<%-- normal end --%>
+</s:if>
 <s:if test="#myClient == 'advanced'">
-<%-- detail function --%>
+<%-- advanced start --%>
+	<%-- detail function --%>
 	<link rel="stylesheet" type="text/css" href="<wp:resourceURL />administration/mint/js/darkwing-LightFace-89eadac/Assets/LightFace.css" media="screen" />
 	<script type="text/javascript" src="<wp:resourceURL />administration/mint/js/darkwing-LightFace-89eadac/Source/LightFace.js"></script>
 	<script type="text/javascript" src="<wp:resourceURL />administration/mint/js/darkwing-LightFace-89eadac/Source/LightFace.Static.js"></script>
@@ -41,39 +48,51 @@ window.addEvent("domready",function(){
 	
 	<script type="text/javascript" src="<wp:resourceURL />administration/mint/js/downloadify/js/swfobject.js"></script>
 	<script type="text/javascript" src="<wp:resourceURL />administration/mint/js/downloadify/js/downloadify.min.js"></script>
-	
-	<style>
-		.CodeMirror {
-			max-width: 900px;
-		}
-	</style>
-	
 	<script type="text/javascript">
 	var myModalLightFace = null;
 window.addEvent('domready', function(){
 //domready
-<%
-//TODO fix the height of the object with chrome, make i18n labels for "Close" and "Download as VM File"
-%>
 	var downloadTitleString = "Download as VM file";
 	var closeTitleString = "Close";
 	
 	var details_shortcut = document.id("jacms-content-model-detail-shortcut");
 
-	/////////////
-	var titleString = document.getElement('label[for="newModel_contentShape"]').get("text")+ " " 
-	+document.id("newModel_id").get("value")+ " " +
-	document.id("newModel_contentType").getElement('option[selected="selected"]').get("text")+ " " +
-	document.id('newModel_description').get("value")+ " ";
-
+	var getPopUpTitle = function() {
+		var titleString = "";
+		var contentType = document.id("newModel_contentType");
+		var id = document.id("newModel_id");
+		var description = document.id('newModel_description');
+		var titleString = "";
+		if (contentType!==null && id!==null && description!==null) {
+			id = id.get("value"); 
+			description = description.get("value");
+			contentType = contentType.get("value")
+			document.getElements("options").each(function(item) {
+				if (item.get("value") == contentType) { contentType = item.get("text"); };
+			});
+			titleString = "<s:text name="contentModel.label.shape" /> " +id+ " " +contentType+ " " +description;
+		}
+		return titleString;
+	};
+	
 	var getVMfilename = function(){
-		return document.id("newModel_contentType").getElement('option[selected="selected"]').get("value")
-		+"-"+ document.id("newModel_description").get("value").replace(/\s{1,}/g,"-").replace(/-{1,}/g,"-")
-		+"-"+ document.id("newModel_id").get("value")+".vm";
+		titleString = "contentmodel.vm";
+		var contentType = document.id("newModel_contentType");
+		var id = document.id("newModel_id");
+		var description = document.id('newModel_description');
+		var titleString = "";
+		if (contentType!==null && id!==null && description!==null) {
+			id = id.get("value"); 
+			description = description.get("value");
+			contentType = contentType.get("value")
+			titleString = contentType+"-"+description+"-"+id+".vm";
+			titleString = titleString.replace(/\s{1,}/g,"-").replace(/-{1,}/g,"-");
+		}
+		return titleString;
 	};
 
 	myModalLightFace = new LightFace({
-		title: titleString,
+		title: getPopUpTitle(),
 		content: "",
 		draggable: true,
 		buttons: [
@@ -106,15 +125,6 @@ window.addEvent('domready', function(){
 		filename: getVMfilename,
 		data: function(){ 
 		  return document.id("newModel_contentShape").get("value");
-		},
-		onComplete: function(){ 
-			myModalLightFace.close();
-		},
-		onCancel: function(){ 
-			//alert('You have cancelled the saving of this file.');
-		},
-		onError: function(){ 
-			//alert('Error!  Damn!'); 
 		},
 		transparent: true,
 		swf: '<wp:resourceURL />administration/mint/js/downloadify/media/downloadify.swf',
@@ -151,4 +161,41 @@ window.addEvent('domready', function(){
 //domready
 });
 	</script>
+	<script type="text/javascript">
+		var contentModelsEditorActive = true;
+	</script>
+	<!--[if IE]>
+		<script type="text/javascript">
+			contentModelsEditorActive = false;
+		</script>
+		<link type="text/css" rel="stylesheet" href="<wp:resourceURL />administration/common/css/MooContentAssist_themes.css" />
+		<script type="text/javascript" src="<wp:resourceURL />administration/common/js/mootools-xml.js"></script> 
+		<script type="text/javascript" src="<wp:resourceURL />administration/common/js/MooContentAssist.js"></script>
+		<script type="text/javascript">
+		/************ client script ************/
+		window.addEvent("domready",function(){ 
+			var editorAssisted = new MooContentAssist( {
+				frameSize : 3,
+				vocabularyDiscoverer: false,
+				windowPadding: {
+					"x": 0,
+					"y": 2
+				},
+				aggressiveAssist : false,
+				source : document.id("newModel_contentShape"),
+				css : {
+					item: "item", 
+					itemsContainer: "itemsContainer_theme_japs",
+					itemSelected: "itemSelected",
+					messageItem: "messageItem",
+					matchedText: "matchedText"
+				},
+				vocabulary : ENTANDO_MODEL_VOCABULARY
+			});
+		});
+		</script>
+	<![endif]-->
+	<script src="<wp:resourceURL />administration/mint/js/contentModels-editor.js"></script>
+	<link rel="stylesheet" href="<wp:resourceURL />administration/mint/css/content-model-editor.css" />
+<%-- advanced end --%>
 </s:if>
