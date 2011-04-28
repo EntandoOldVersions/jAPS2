@@ -83,7 +83,6 @@
 </p>
 </s:if>
 
-<s:if test="getStrutsAction() == 1">
 <p>
 	<label for="upload" class="basic-mint-label"><s:text name="label.file" />:</label>
 	<s:file name="upload" id="upload" label="label.file"/>
@@ -91,6 +90,11 @@
 <p>
 	<wpsf:checkbox name="normalizeFileName" id="normalizeFileName" cssClass="radiocheck" />&#32;<label for="normalizeFileName"><s:text name="label.normalize" />&#32;<s:text name="label.filename" /></label>
 </p>
+
+<s:if test="getStrutsAction() == 2">
+<h3><s:text name="title.referencingContent" /></h3>
+<s:set var="referencingContentsId" value="references['jacmsContentManagerUtilizers']" />
+<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/portal/include/referencingContents.jsp" />
 </s:if>
 
 </fieldset>

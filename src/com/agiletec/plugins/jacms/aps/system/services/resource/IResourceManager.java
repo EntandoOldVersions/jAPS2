@@ -61,10 +61,17 @@ public interface IResourceManager {
     
     /**
 	 * Aggiorna una risorsa nel db.
-	 * @param resource Il contenuto da aggiungere o modificare.
+	 * @param resource La risorsa da modificare.
 	 * @throws ApsSystemException in caso di errore.
-	 */	
-	public void updateResource(ResourceInterface resource) throws ApsSystemException;
+	 */
+    public void updateResource(ResourceInterface resource) throws ApsSystemException;
+	
+    /**
+	 * Aggiorna una risorsa nel db.
+	 * @param bean L'oggetto detentore dei dati della risorsa da modificare.
+	 * @throws ApsSystemException in caso di errore.
+	 */
+    public void updateResource(ResourceDataBean bean) throws ApsSystemException;
 	
 	/**
      * Carica una lista di identificativi di risorse 

@@ -27,10 +27,14 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
 
 /**
- * @version 1.0
  * @author E.Santoboni
  */
 public class MockResourceDataBean implements ResourceDataBean {
+	
+	@Override
+	public String getResourceId() {
+		return null;
+	}
 	
 	/**
 	 * Restituisce il tipo di risorsa.

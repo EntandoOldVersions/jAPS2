@@ -126,6 +126,7 @@
 		<property name="contentModelManager" ref="jacmsContentModelManager" />
 		<property name="langManager" ref="LangManager" />
 		<property name="cacheManager" ref="CacheManager" />
+		<property name="contentManager" ref="jacmsContentManager" />
 	</bean>
 	
 </beans>

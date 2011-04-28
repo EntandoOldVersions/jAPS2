@@ -42,7 +42,16 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
 public class ResourceActionHelper extends BaseActionHelper implements IResourceActionHelper {
 	
 	@Override
-	public Map getReferencingObjects(ResourceInterface resource, HttpServletRequest request) throws ApsSystemException {
+	public Map<String, List> getReferencingObjects(ResourceInterface resource, HttpServletRequest request) throws ApsSystemException {
+		Map<String, List> references = new HashMap<String, List>();
+    	if (null != resource) {
+    		return this.getReferencingObjects(resource.getId(), request);
+    	}
+    	return references;
+	}
+	
+	@Override
+	public Map<String, List> getReferencingObjects(String resourceId, HttpServletRequest request) throws ApsSystemException {
 		Map<String, List> references = new HashMap<String, List>();
     	try {
     		String[] defNames = ApsWebApplicationUtils.getWebApplicationContext(request).getBeanNamesForType(ResourceUtilizer.class);
@@ -56,14 +65,14 @@ public class ResourceActionHelper extends BaseActionHelper implements IResourceA
 				}
 				if (service != null) {
 					ResourceUtilizer resourceUtilizer = (ResourceUtilizer) service;
-					List utilizers = resourceUtilizer.getResourceUtilizers(resource.getId());
+					List utilizers = resourceUtilizer.getResourceUtilizers(resourceId);
 					if (utilizers != null && !utilizers.isEmpty()) {
-						//TODO STUDIARE CODIFICA CHIAVE
 						references.put(resourceUtilizer.getName()+"Utilizers", utilizers);
 					}
 				}
 			}
     	} catch (Throwable t) {
+    		ApsSystemUtils.logThrowable(t, this, "getReferencingObjects", "Error extracting referencing objects by resource '" + resourceId +"'");
     		throw new ApsSystemException("Errore in getReferencingObjects", t);
     	}
     	return references;

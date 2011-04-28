@@ -138,10 +138,7 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 			if (ApsAdminSystemConstants.ADD == this.getStrutsAction()) {
 				this.getResourceManager().addResource(this);
 			} else if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
-				ResourceInterface resource = this.loadResource(this.getResourceId());
-				resource.setDescr(this.getDescr());
-				resource.setCategories(this.getCategories());
-				this.getResourceManager().updateResource(resource);
+				this.getResourceManager().updateResource(this);
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
@@ -183,9 +180,9 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 			this.addActionError(this.getText("error.resource.delete.invalid"));
 			return INPUT;
 		}
-		Map references = this.getResourceActionHelper().getReferencingObjects(resource, this.getRequest());
+		Map<String, List> references = this.getResourceActionHelper().getReferencingObjects(resource, this.getRequest());
+		this.setReferences(references);
 		if (references.size() > 0) {
-			this.setReferences(references);
 			return "references";
 		}
 		return null;
@@ -246,11 +243,18 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 		this._strutsAction = strutsAction;
 	}
 	
-	public Map getReferences() {
+	public Map<String, List> getReferences() {
+		try {
+			if (null == this._references) {
+				this._references = this.getResourceActionHelper().getReferencingObjects(this.getResourceId(), this.getRequest());
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getReferences", "Error extracting references");
+		}
 		return _references;
 	}
 	
-	public void setReferences(Map references) {
+	public void setReferences(Map<String, List> references) {
 		this._references = references;
 	}
 	
@@ -316,7 +320,8 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 	
 	@Override
 	public InputStream getInputStream() throws Throwable {
-		return new FileInputStream(this._file);
+		if (null == this.getFile()) return null;
+		return new FileInputStream(this.getFile());
 	}
 	
 	@Override
@@ -372,7 +377,7 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
     
     private int _strutsAction;
 	
-	private Map _references;
+	private Map<String, List> _references;
 	
 	private String _categoryCode;
 	

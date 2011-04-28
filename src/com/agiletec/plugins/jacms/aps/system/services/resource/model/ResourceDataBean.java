@@ -34,6 +34,12 @@ import com.agiletec.aps.system.services.category.Category;
 public interface ResourceDataBean {
 	
 	/**
+	 * Restituisce l'identificativo della risorsa.
+	 * @return L'identificativo della risorsa.
+	 */
+	public String getResourceId();
+	
+	/**
 	 * Restituisce il tipo di risorsa.
 	 * @return Il tipo di risorsa.
 	 */

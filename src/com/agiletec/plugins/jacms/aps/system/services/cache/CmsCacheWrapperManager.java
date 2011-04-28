@@ -31,6 +31,7 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedObserver;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -38,13 +39,17 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.event.ContentModelChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.event.ContentModelChangedObserver;
+import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceUtilizer;
+import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedEvent;
+import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedObserver;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 
 /**
  * Cache Wrapper Manager for plugin jacms
  * @author E.Santoboni
  */
 public class CmsCacheWrapperManager extends AbstractService 
-		implements PublicContentChangedObserver, ContentModelChangedObserver, EntityTypesChangingObserver {
+		implements PublicContentChangedObserver, ContentModelChangedObserver, EntityTypesChangingObserver, ResourceChangedObserver {
 	
 	@Override
 	public void init() throws Exception {
@@ -53,11 +58,74 @@ public class CmsCacheWrapperManager extends AbstractService
 	
 	@Override
 	public void updateFromPublicContentChanged(PublicContentChangedEvent event) {
-		Content content = event.getContent();
-		Logger log = ApsSystemUtils.getLogger();
-		if (log.isLoggable(Level.FINEST)) {
-			log.info("Notified public content update : type " + content.getId());
+		try {
+			Content content = event.getContent();
+			Logger log = ApsSystemUtils.getLogger();
+			if (log.isLoggable(Level.FINEST)) {
+				log.info("Notified public content update : type " + content.getId());
+			}
+			this.releaseRelatedItems(content);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateFromPublicContentChanged", 
+					"Error notifing event " + PublicContentChangedEvent.class.getName());
 		}
+	}
+	
+	@Override
+	public void updateFromContentModelChanged(ContentModelChangedEvent event) {
+		try {
+			ContentModel model = event.getContentModel();
+			Logger log = ApsSystemUtils.getLogger();
+			if (log.isLoggable(Level.FINEST)) {
+				log.info("Notified content model update : type " + model.getId());
+			}
+			String cacheGroupKey = JacmsSystemConstants.CONTENT_MODEL_CACHE_GROUP_PREFIX + model.getId();
+			this.getCacheManager().flushGroup(cacheGroupKey);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateFromContentModelChanged", 
+					"Error notifing event " + ContentModelChangedEvent.class.getName());
+		}
+	}
+	
+	@Override
+	public void updateFromEntityTypesChanging(EntityTypesChangingEvent event) {
+		try {
+			String entityManagerName = event.getEntityManagerName();
+			if (!entityManagerName.equals(JacmsSystemConstants.CONTENT_MANAGER)) return;
+			if (event.getOperationCode() == EntityTypesChangingEvent.INSERT_OPERATION_CODE) return;
+			IApsEntity oldEntityType = event.getOldEntityType();
+			Logger log = ApsSystemUtils.getLogger();
+			if (log.isLoggable(Level.FINEST)) {
+				log.info("Notified content type modify : type " + oldEntityType.getTypeCode());
+			}
+			String typeGroupKey = JacmsSystemConstants.CONTENTS_TYPE_CACHE_GROUP_PREFIX + oldEntityType.getTypeCode();
+			this.getCacheManager().flushGroup(typeGroupKey);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateFromEntityTypesChanging", 
+					"Error notifing event " + EntityTypesChangingEvent.class.getName());
+		}
+	}
+	
+	@Override
+	public void updateFromResourceChanged(ResourceChangedEvent event) {
+		try {
+			ResourceInterface resource = event.getResource();
+			if (null == resource) return;
+			List<String> utilizers = ((ResourceUtilizer) this.getContentManager()).getResourceUtilizers(resource.getId());
+			for (int i = 0; i < utilizers.size(); i++) {
+				String contentId = utilizers.get(i);
+				Content content = this.getContentManager().loadContent(contentId, true);
+				if (null != content) {
+					this.releaseRelatedItems(content);
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateFromResourceChanged", 
+					"Error notifing event " + ResourceChangedEvent.class.getName());
+		}
+	}
+	
+	private void releaseRelatedItems(Content content) {
 		String authInfokey = ContentManager.getContentAuthInfoCacheKey(content.getId());
 		this.getCacheManager().flushEntry(authInfokey);
 		this.getCacheManager().flushGroup(JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + content.getTypeCode());
@@ -73,29 +141,11 @@ public class CmsCacheWrapperManager extends AbstractService
 		}
 	}
 	
-	@Override
-	public void updateFromContentModelChanged(ContentModelChangedEvent event) {
-		ContentModel model = event.getContentModel();
-		Logger log = ApsSystemUtils.getLogger();
-		if (log.isLoggable(Level.FINEST)) {
-			log.info("Notified content model update : type " + model.getId());
-		}
-		String cacheGroupKey = JacmsSystemConstants.CONTENT_MODEL_CACHE_GROUP_PREFIX + model.getId();
-		this.getCacheManager().flushGroup(cacheGroupKey);
+	protected IContentManager getContentManager() {
+		return _contentManager;
 	}
-	
-	@Override
-	public void updateFromEntityTypesChanging(EntityTypesChangingEvent event) {
-		String entityManagerName = event.getEntityManagerName();
-		if (!entityManagerName.equals(JacmsSystemConstants.CONTENT_MANAGER)) return;
-		if (event.getOperationCode() == EntityTypesChangingEvent.INSERT_OPERATION_CODE) return;
-		IApsEntity oldEntityType = event.getOldEntityType();
-		Logger log = ApsSystemUtils.getLogger();
-		if (log.isLoggable(Level.FINEST)) {
-			log.info("Notified content type modify : type " + oldEntityType.getTypeCode());
-		}
-		String typeGroupKey = JacmsSystemConstants.CONTENTS_TYPE_CACHE_GROUP_PREFIX + oldEntityType.getTypeCode();
-		this.getCacheManager().flushGroup(typeGroupKey);
+	public void setContentManager(IContentManager contentManager) {
+		this._contentManager = contentManager;
 	}
 	
 	protected ICacheManager getCacheManager() {
@@ -119,6 +169,7 @@ public class CmsCacheWrapperManager extends AbstractService
 		this._contentModelManager = contentModelManager;
 	}
 	
+	private IContentManager _contentManager;
 	private ICacheManager _cacheManager;
 	private ILangManager _langManager;
 	private IContentModelManager _contentModelManager;

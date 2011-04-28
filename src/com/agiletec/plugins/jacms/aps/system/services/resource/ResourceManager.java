@@ -38,6 +38,7 @@ import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.util.DateConverter;
+import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMonoInstanceResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMultiInstanceResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
@@ -87,22 +88,9 @@ public class ResourceManager extends AbstractService
      */
 	@Override
 	public ResourceInterface addResource(ResourceDataBean bean) throws ApsSystemException {
-    	ResourceInterface resource = this.createResourceType(bean.getResourceType());
-    	try {
-    		resource.setDescr(bean.getDescr());
-    		resource.setMainGroup(bean.getMainGroup());
-    		resource.setCategories(bean.getCategories());
-    		resource.setMasterFileName(bean.getFileName());
-    		resource.saveResourceInstances(bean);
-    		this.addResource(resource);
-    	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "addResource");
-    		resource.deleteResourceInstances();
-			throw new ApsSystemException("Error adding resource", t);
-    	}
-    	return resource;
+		return this.saveResource(bean);
     }
-    
+	
     /**
      * Salva una risorsa nel db, indipendentemente dal tipo.
      * @param resource La risorsa da salvare.
@@ -121,7 +109,29 @@ public class ResourceManager extends AbstractService
     	}
     }
     
-    /**
+    @Override
+	public void updateResource(ResourceDataBean bean) throws ApsSystemException {
+		ResourceInterface oldResource = this.loadResource(bean.getResourceId());
+		try {
+			if (null == bean.getInputStream()) {
+				oldResource.setDescr(bean.getDescr());
+				oldResource.setCategories(bean.getCategories());
+				this.getResourceDAO().updateResource(oldResource);
+				this.notifyResourceChanging(oldResource);
+			} else {
+				ResourceInterface updatedResource = this.saveResource(bean);
+				if (!updatedResource.getMasterFileName().equals(oldResource.getMasterFileName())) {
+					oldResource.deleteResourceInstances();
+				}
+				this.notifyResourceChanging(updatedResource);
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateResource");
+			throw new ApsSystemException("Error updating resource", t);
+		}
+	}
+    
+	/**
 	 * Aggiorna una risorsa nel db.
 	 * @param resource Il contenuto da aggiungere o modificare.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
@@ -130,10 +140,42 @@ public class ResourceManager extends AbstractService
 	public void updateResource(ResourceInterface resource) throws ApsSystemException {
 		try {
 			this.getResourceDAO().updateResource(resource);
+			this.notifyResourceChanging(resource);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "updateResource");
 			throw new ApsSystemException("Error updating resource", t);
 		}
+	}
+	
+	protected ResourceInterface saveResource(ResourceDataBean bean) throws ApsSystemException {
+    	ResourceInterface resource = this.createResourceType(bean.getResourceType());
+    	try {
+    		resource.setDescr(bean.getDescr());
+    		resource.setMainGroup(bean.getMainGroup());
+    		resource.setCategories(bean.getCategories());
+    		resource.setMasterFileName(bean.getFileName());
+    		resource.saveResourceInstances(bean);
+    		if (null != bean.getResourceId()) {
+    			resource.setId(bean.getResourceId());
+    			this.getResourceDAO().updateResource(resource);
+    			this.notifyResourceChanging(resource);
+    		} else {
+    			this.addResource(resource);
+    		}
+    	} catch (Throwable t) {
+    		ApsSystemUtils.logThrowable(t, this, "saveResource");
+    		if (null == bean.getResourceId()) {
+    			resource.deleteResourceInstances();
+    		}
+			throw new ApsSystemException("Error saving resource", t);
+    	}
+    	return resource;
+    }
+	
+	private void notifyResourceChanging(ResourceInterface resource) throws ApsSystemException {
+		ResourceChangedEvent event = new ResourceChangedEvent();
+		event.setResource(resource);
+		this.notifyEvent(event);
 	}
 	
     /**

@@ -31,6 +31,14 @@ import com.agiletec.aps.system.services.category.Category;
  */
 public class BaseResourceDataBean implements ResourceDataBean {
 	
+	@Override
+	public String getResourceId() {
+		return _resourceId;
+	}
+	public void setResourceId(String resourceId) {
+		this._resourceId = resourceId;
+	}
+	
 	public BaseResourceDataBean(File file) {
 		if (null == file) {
 			throw new RuntimeException("Null File");
@@ -108,6 +116,7 @@ public class BaseResourceDataBean implements ResourceDataBean {
 		return new FileInputStream(this._file);
 	}
 	
+	private String _resourceId;
 	private String _resourceType;
 	private String _description;
 	private String _mainGroup;

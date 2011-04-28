@@ -33,7 +33,23 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  */
 public interface IResourceActionHelper {
 	
-	public Map getReferencingObjects(ResourceInterface resource, HttpServletRequest request) throws ApsSystemException;
+	/**
+	 * Return the map (indexed by the Key of the manager) of the list of the object that reference the given resource.
+	 * @param resourceId The id of the resource.
+	 * @param request The request
+	 * @return The References of the given resource.
+	 * @throws ApsSystemException In case of exception
+	 */
+	public Map<String, List> getReferencingObjects(String resourceId, HttpServletRequest request) throws ApsSystemException;
+	
+	/**
+	 * Return the map (indexed by the Key of the manager) of the list of the object that reference the given resource.
+	 * @param resourceId The resource.
+	 * @param request The request
+	 * @return The References of the given resource.
+	 * @throws ApsSystemException In case of exception
+	 */
+	public Map<String, List> getReferencingObjects(ResourceInterface resource, HttpServletRequest request) throws ApsSystemException;
 	
 	public List<Group> getAllowedGroups(UserDetails currentUser);
 	
