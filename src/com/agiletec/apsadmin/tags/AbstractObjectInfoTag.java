@@ -73,7 +73,7 @@ public abstract class AbstractObjectInfoTag extends StrutsBodyTagSupport {
 		return "Null required object property : key '" + keyValue + "' - property '" + propertyValue + "'";
 	}
 	
-	private Object getPropertyValue(Object masterObject, String propertyValue) {
+	protected Object getPropertyValue(Object masterObject, String propertyValue) {
 		try {
 			BeanInfo beanInfo = Introspector.getBeanInfo(masterObject.getClass());
 			PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
