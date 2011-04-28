@@ -227,13 +227,13 @@
 	
 	<tag>
 		<description>
-			<![CDATA[Returns the authorization information of the specified content. 
+			<![CDATA[Return an information of a specified content. 
 				The content can will be extracted by id from showlet parameters or from request parameter. 
 				The tag extract any specific parameter (by "param" attribute) 
 				or entire ContentAuthorizationInfo object (setting "var" attribute and anything on "param" attribute).]]>
 		</description>
-		<name>contentAuthorizationInfo</name>
-		<tag-class>com.agiletec.plugins.jacms.aps.tags.ContentAuthorizationInfoTag</tag-class>
+		<name>contentInfo</name>
+		<tag-class>com.agiletec.plugins.jacms.aps.tags.ContentInfoTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description>

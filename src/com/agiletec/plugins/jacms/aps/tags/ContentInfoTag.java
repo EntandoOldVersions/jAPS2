@@ -30,7 +30,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentVi
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
 
 /**
- * Returns the authorization information of the specified content.
+ * Return an information of a specified content.
  * The content can will be extracted by id from showlet parameters or from request parameter.
  * The tag extract any specific parameter (by "param" attribute) 
  * or entire {@link ContentAuthorizationInfo} object (setting "var" attribute and anything on "param" attribute).
@@ -39,9 +39,9 @@ import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthoriza
  * "mainGroup" returns the code main (owner) group.
  * @author E.Santoboni
  */
-public class ContentAuthorizationInfoTag extends OutSupport {
+public class ContentInfoTag extends OutSupport {
 	
-	public ContentAuthorizationInfoTag() {
+	public ContentInfoTag() {
 		super();
 		this.release();
 	}
