@@ -110,7 +110,7 @@
 		<s:if test="null != #concreteShowletType.typeParameters && #concreteShowletType.typeParameters.size() > 0">
 			<a href="<s:url namespace="/do/Portal/ShowletType" action="newShowletType"><s:param name="parentShowletTypeCode" value="#showletType.key" /></s:url>" title="<s:text name="label.userShowlet.new.from" />: <s:property value="#showletType.value" />" ><img src="<wp:resourceURL/>administration/common/img/icons/22x22/showlet-user-new.png" alt="<s:text name="label.userShowlet.new" />" /></a>
 		</s:if>
-		<s:if test="#firstType.groupCode == 'userShowletCode' && !#concreteShowletType.isLocked() && (#showletUtilizers == null || #showletUtilizers.size() == 0)">
+		<s:if test="#firstType.optgroup == 'userShowletCode' && !#concreteShowletType.isLocked() && (#showletUtilizers == null || #showletUtilizers.size() == 0)">
 			<a href="<s:url namespace="/do/Portal/ShowletType" action="trashShowletType"><s:param name="showletTypeCode" value="#showletType.key" /></s:url>" title="<s:text name="label.remove" />: <s:property value="#showletType.value" />" ><img src="<wp:resourceURL/>administration/common/img/icons/delete.png" alt="<s:text name="label.remove" />" /></a>
 		</s:if>
 		</td>
