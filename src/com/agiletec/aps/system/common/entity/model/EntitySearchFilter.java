@@ -155,7 +155,7 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		param.append(KEY_PARAM).append("=").append(this.getKey()).append(SEPARATOR);
 		param.append(FILTER_TYPE_PARAM).append("=").append(Boolean.toString(this.isAttributeFilter()));
 		this.appendParamValue(param, this.getValue(), VALUE_PARAM);
-		this.appendParamValue(param, this.getOrder(), LIKE_OPTION_PARAM);
+		this.appendParamValue(param, this.getOrder(), ORDER_PARAM);
 		if (this.getValue() instanceof String) {
 			this.appendParamValue(param, this.isLikeOption(), LIKE_OPTION_PARAM);
 		}
