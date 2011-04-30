@@ -40,7 +40,7 @@ import com.agiletec.plugins.jacms.aps.system.services.renderer.IContentRenderer;
  * Il compito del servizio, in fase di richiesta di un contenuto formattato, è quello di 
  * controllare preliminarmente le autorizzazzioni dell'utente corrente all'accesso al contenuto;
  * successivamente (in caso di autorizzazioni valide) restituisce il contenuto formattato.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public class BaseContentDispenser extends AbstractService implements IContentDispenser {
 	
@@ -146,7 +146,6 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 			String finalRenderedContent = this._linkResolver.resolveLinks(renderInfo.getTempRenderedContent(), reqCtx);
 			renderInfo.setRenderedContent(finalRenderedContent);
 		} catch (Throwable t) {
-			t.printStackTrace();
 			ApsSystemUtils.logThrowable(t, this, "getRenderedContent", "Error while rendering content " + contentId);
 			return null;
 		}
@@ -163,7 +162,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 	 * @param langCode Codice della lingua di renderizzazione richiesta.
 	 * @param reqCtx Il contesto della richiesta.
 	 * @return Il contenuto renderizzato.
-	 * @deprecated use getRenderizationInfo method
+	 * @deprecated From jAPS 2.0 version 2.0.12, use getRenderizationInfo method
 	 */
 	protected String getRenderedContent(ContentAuthorizationInfo authInfo, Content contentToRender, String contentId, long modelId, String langCode, RequestContext reqCtx) {
 		String renderedContent = null;
@@ -202,7 +201,18 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 		return renderedContent;
 	}
 	
-	@Deprecated
+	/**
+	 * Costruisce il contenuto renderizzato.
+	 * @param authInfo Le informazioni di autorizzazione sul contenuto.
+	 * @param contentToRender Il contenuto da renderizzare.
+	 * @param contentId L'Identificativo del contenuto da renderizzare. 
+	 * Il parametro viene utilizzato nel caso il parametro contenuto sia nullo.
+	 * @param modelId Identificatore del modello di contenuto.
+	 * @param langCode Codice della lingua di renderizzazione richiesta.
+	 * @param reqCtx Il contesto della richiesta.
+	 * @return Il contenuto renderizzato.
+	 * @deprecated From jAPS 2.0 version 2.0.12
+	 */
 	protected String buildRenderedContent(Content contentToRender, String contentId, long modelId, String langCode, RequestContext reqCtx) {
 		String renderedContent = null;
 		boolean ok = false;
