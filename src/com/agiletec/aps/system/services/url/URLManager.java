@@ -104,7 +104,7 @@ public class URLManager extends AbstractURLManager {
 		url.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
 		if (!this.isUrlStyleBreadcrumbs()) {
 			url.append(requiredLang.getCode()).append('/');
-			url.append(requiredPage.getCode()).append(".wp");
+			url.append(requiredPage.getCode()).append(".page");
 		} else {
 			url.append("pages/");
 			url.append(requiredLang.getCode()).append('/');

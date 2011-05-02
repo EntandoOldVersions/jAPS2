@@ -121,6 +121,16 @@ public class RequestValidator extends AbstractControlService {
 				String sect2 = matcher.group(2);
 				lang = getLangManager().getLang(sect1);
 				page = this.getPageManager().getPage(sect2);
+			} else {
+				//to preserve url with ".wp" suffix
+				matcher = this._oldPattern.matcher(resourcePath);
+				if (matcher.lookingAt()) {
+					ok = true;
+					String sect1 = matcher.group(1);
+					String sect2 = matcher.group(2);
+					lang = getLangManager().getLang(sect1);
+					page = this.getPageManager().getPage(sect2);
+				}
 			}
 		}
 		if (!ok) return false;
@@ -204,7 +214,10 @@ public class RequestValidator extends AbstractControlService {
 	private IPageManager _pageManager;
 	private ConfigInterface configManager;
 	
-	protected Pattern _pattern = Pattern.compile("^/(\\w+)/(\\w+)\\Q.wp\\E");
+	@Deprecated
+	protected Pattern _oldPattern = Pattern.compile("^/(\\w+)/(\\w+)\\Q.wp\\E");
+	
+	protected Pattern _pattern = Pattern.compile("^/(\\w+)/(\\w+)\\Q.page\\E");
 	
 	protected Pattern _patternFullPath = Pattern.compile("^/pages/(\\w+)((/\\w+)*)");
 	
