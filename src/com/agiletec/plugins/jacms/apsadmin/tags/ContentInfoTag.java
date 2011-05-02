@@ -17,12 +17,20 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.tags;
 
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.tags.AbstractObjectInfoTag;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Returns a content (or one of its property) through the code.
@@ -38,13 +46,45 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 public class ContentInfoTag extends AbstractObjectInfoTag {
 	
 	@Override
+	public int doStartTag() throws JspException {
+		int result = super.doStartTag();
+		try {
+			if (null != this.getMasterObject()) {
+				HttpSession session = this.pageContext.getSession();
+				UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+				IContentAuthorizationHelper contentAuthHelper = (IContentAuthorizationHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_AUTHORIZATION_HELPER, this.pageContext);
+				boolean isAuthOnEdit = false;
+				if (this.isRecord()) {
+					//PENSARE ALL'OPPORTUNITA'... meno prestante nel caso di oggetto contenuto!
+					String keyValue = (String) super.findValue(this.getKey(), String.class);
+					isAuthOnEdit = contentAuthHelper.isAuthToEdit(currentUser, keyValue, false);
+				} else {
+					isAuthOnEdit = contentAuthHelper.isAuthToEdit(currentUser, (Content) this.getMasterObject());
+				}
+				if (isAuthOnEdit) {
+					if (null != this.getAuthToEditVar()) {
+						ValueStack stack = this.getStack();
+						stack.getContext().put(this.getAuthToEditVar(), isAuthOnEdit);
+						stack.setValue("#attr['" + this.getAuthToEditVar() + "']", isAuthOnEdit, false);
+					}
+					result = EVAL_BODY_INCLUDE;
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "doStartTag", "Error on doStartTag");
+			throw new JspException("Error on doStartTag", t);
+		}
+		return result;
+	}
+	
+	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
 		try {
 			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER, this.pageContext);
 			if (this.isRecord()) {
-				return contentManager.loadContentVO(keyValue);
+				this.setMasterObject(contentManager.loadContentVO(keyValue));
 			} else {
-				return contentManager.loadContent(keyValue, !this.isWorkVersion());
+				this.setMasterObject(contentManager.loadContent(keyValue, !this.isWorkVersion()));
 			}
 		} catch (Throwable t) {
 			String message = "Error extracting content : id '" + keyValue + "' - " +
@@ -52,6 +92,7 @@ public class ContentInfoTag extends AbstractObjectInfoTag {
 			ApsSystemUtils.logThrowable(t, this, "getMasterObject", message);
 			throw new ApsSystemException(message, t);
 		}
+		return this.getMasterObject();
 	}
 	
 	public void setContentId(String contentId) {
@@ -89,7 +130,25 @@ public class ContentInfoTag extends AbstractObjectInfoTag {
 		this._workVersion = workVersion;
 	}
 	
+	protected Object getMasterObject() {
+		return _masterObject;
+	}
+	protected void setMasterObject(Object masterObject) {
+		this._masterObject = masterObject;
+	}
+	
+	public String getAuthToEditVar() {
+		return _authToEditVar;
+	}
+	public void setAuthToEditVar(String authToEditVar) {
+		this._authToEditVar = authToEditVar;
+	}
+	
 	private boolean _record;
 	private boolean _workVersion;
+	
+	private Object _masterObject;
+	
+	private String _authToEditVar;
 	
 }

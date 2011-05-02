@@ -55,6 +55,11 @@ public class JacmsSystemConstants {
 	public static final String SEARCH_ENGINE_MANAGER = "jacmsSearchEngineManager";
 	
 	/**
+	 * Name of the bean of Content Authorization Helper.
+	 */
+	public static final String CONTENT_AUTHORIZATION_HELPER = "jacmsContentAuthorizationHelper";
+	
+	/**
 	 * Name of the service for handling content page mapping.
 	 */
 	public static final String CONTENT_PAGE_MAPPER_MANAGER = "jacmsContentPageMapperManager";
@@ -90,5 +95,9 @@ public class JacmsSystemConstants {
 	public static final String CONTENTS_TYPE_CACHE_GROUP_PREFIX = "jacms_ContentsTypeCacheGroup_";
 	
 	public static final String ATTRIBUTE_ROLE_TITLE = "jacms:title";
+
+	public static final String PERMISSION_EDIT_CONTENTS = "editContents";
+	
+	public static final String PERMISSION_CONTENT_SUPERVISION = "validateContents";
 	
 }

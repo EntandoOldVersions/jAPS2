@@ -2,7 +2,7 @@
 <%@ taglib prefix="wpsa" uri="apsadmin-core.tld" %>
 <%@ taglib prefix="wp" uri="aps-core.tld" %>
 <%@ taglib prefix="c" uri="c.tld" %>
-<%@ taglib prefix="jacms" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
+<%@ taglib prefix="jacmswpsa" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
 
 <h3><s:text name="title.referencedContent" /></h3>
 
@@ -18,7 +18,7 @@
 <caption><span><s:text name="title.contentList" /></span></caption>
 	<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/contentReferencesTable_header.jsp" />
 	<s:iterator var="currentContentIdVar" value="#referencingContentsId">
-		<jacms:content contentId="%{currentContentIdVar}" record="true" var="currentContentRecordVar" />
+		<jacmswpsa:content contentId="%{currentContentIdVar}" record="true" var="currentContentRecordVar" />
 		<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/contentReferencesTable_row.jsp" />
 	</s:iterator>
 </table>

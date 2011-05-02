@@ -30,8 +30,8 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityFinderAction;
-import com.agiletec.apsadmin.util.SelectItem;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
@@ -305,8 +305,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 	}
 	
 	protected boolean isUserAllowed(Content content) {
-		String group = content.getMainGroup();
-		return this.isCurrentUserMemberOf(group);
+		return this.getContentActionHelper().isUserAllowed(content, this.getCurrentUser());
 	}
 	
 	private void addConfirmMessage(String key, List<Content> deletedContents) {

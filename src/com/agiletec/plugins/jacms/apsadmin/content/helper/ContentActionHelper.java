@@ -37,6 +37,7 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.entity.EntityActionHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
 import com.opensymphony.xwork2.ActionSupport;
@@ -147,8 +148,12 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
      */
 	@Override
 	public boolean isUserAllowed(Content content, UserDetails currentUser) {
-		String group = content.getMainGroup();
-		return this.getAuthorizationManager().isAuthOnGroup(currentUser, group);
+		try {
+			return this.getContentAuthorizationHelper().isAuthToEdit(currentUser, content);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "isUserAllowed");
+			throw new RuntimeException("Error checking user authority", t);
+		}
 	}
 	
 	@Override
@@ -231,14 +236,23 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 		this._contentManager = contentManager;
 	}
 	
-	public IPageManager getPageManager() {
+	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
 	
+	protected IContentAuthorizationHelper getContentAuthorizationHelper() {
+		return _contentAuthorizationHelper;
+	}
+	public void setContentAuthorizationHelper(IContentAuthorizationHelper contentAuthorizationHelper) {
+		this._contentAuthorizationHelper = contentAuthorizationHelper;
+	}
+	
 	private IContentManager _contentManager;
 	private IPageManager _pageManager;
+	
+	private IContentAuthorizationHelper _contentAuthorizationHelper;
 	
 }

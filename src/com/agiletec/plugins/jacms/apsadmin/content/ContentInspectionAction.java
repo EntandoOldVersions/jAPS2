@@ -48,12 +48,32 @@ public class ContentInspectionAction extends AbstractContentAction {
 		return referencingPages;
 	}
 	
-	public List<ContentRecordVO> getReferencingContents() {
-		List<ContentRecordVO> referencingContents = null;
+	/**
+	 * Return the list of the id of the referencing contents
+	 * @return The list of content id.
+	 */
+	public List<String> getReferencingContentsId() {
+		List<String> referencingContentsId = null;
 		try {
-			List<String> referencingContentsId = ((ContentUtilizer) this.getContentManager()).getContentUtilizers(this.getContentId());
+			referencingContentsId = ((ContentUtilizer) this.getContentManager()).getContentUtilizers(this.getContentId());
+		} catch (Throwable t) {
+			String msg = "Error getting referencing contents id by content " + this.getContentId();
+			ApsSystemUtils.logThrowable(t, this, "getReferencingContentsId", msg );
+			throw new RuntimeException(msg, t);
+		}
+		return referencingContentsId;
+	}
+	
+	/**
+	 * Return the list of the referencing contents.
+	 * @return the list of the referencing contents.
+	 * @deprecated use getReferencingContentsId() method
+	 */
+	public List<ContentRecordVO> getReferencingContents() {
+		List<ContentRecordVO> referencingContents = new ArrayList<ContentRecordVO>();
+		try {
+			List<String> referencingContentsId = this.getReferencingContentsId();
 			if (null != referencingContentsId) {
-				referencingContents = new ArrayList<ContentRecordVO>();
 				for (int i = 0; i < referencingContentsId.size(); i++) {
 					ContentRecordVO currentReferencedContent = this.getContentManager().loadContentVO(referencingContentsId.get(i));
 					referencingContents.add(currentReferencedContent);
@@ -67,11 +87,15 @@ public class ContentInspectionAction extends AbstractContentAction {
 		return referencingContents;
 	}
 	
-	public List<ContentRecordVO> getReferencedContents() {
-		List<ContentRecordVO> referencedContents = new ArrayList<ContentRecordVO>();
+	/**
+	 * Return the list of the id of the referenced contents
+	 * @return The list of content id.
+	 */
+	public List<String> getReferencedContentsId() {
+		List<String> referencedContentsId = new ArrayList<String>();
 		try {
 			Content content = this.getContent();
-			if (null == content) return referencedContents;
+			if (null == content) return referencedContentsId;
 			EntityAttributeIterator attributeIter = new EntityAttributeIterator(content);
 			while (attributeIter.hasNext()) {
 				AttributeInterface currAttribute = (AttributeInterface) attributeIter.next();
@@ -80,14 +104,33 @@ public class ContentInspectionAction extends AbstractContentAction {
 					List<CmsAttributeReference> refs = cmsAttribute.getReferences(this.getLangs());
 					for (int scanRefs = 0; scanRefs < refs.size(); scanRefs++) {
 						CmsAttributeReference ref = refs.get(scanRefs);
-						if (null == ref.getRefContent()) continue; 
-						ContentRecordVO currentReferencedContent = 
-							this.getContentManager().loadContentVO(ref.getRefContent());
-						if (null == currentReferencedContent) continue; 
-						if (!referencedContents.contains(currentReferencedContent)) {
-							referencedContents.add(currentReferencedContent);
-						}
+						String contentId = ref.getRefContent();
+						if (null == contentId) continue; 
+						if (!referencedContentsId.contains(contentId)) referencedContentsId.add(contentId);
 					}
+				}
+			}
+		} catch (Throwable t) {
+			String msg = "Error getting referenced contents id by content " + this.getContentId();
+			ApsSystemUtils.logThrowable(t, this, "getReferencedContents", msg );
+			throw new RuntimeException(msg, t);
+		}
+		return referencedContentsId;
+	}
+	
+	/**
+	 * Return the list of the referenced contents.
+	 * @return the list of the referenced contents.
+	 * @deprecated use getReferencedContentsId() method
+	 */
+	public List<ContentRecordVO> getReferencedContents() {
+		List<ContentRecordVO> referencedContents = new ArrayList<ContentRecordVO>();
+		try {
+			List<String> referencedContentsId = this.getReferencedContentsId();
+			if (null != referencedContentsId) {
+				for (int i = 0; i < referencedContentsId.size(); i++) {
+					ContentRecordVO currentReferencedContent = this.getContentManager().loadContentVO(referencedContentsId.get(i));
+					referencedContents.add(currentReferencedContent);
 				}
 			}
 		} catch (Throwable t) {

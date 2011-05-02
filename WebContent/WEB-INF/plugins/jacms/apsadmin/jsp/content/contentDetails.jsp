@@ -3,7 +3,7 @@
 <%@ taglib uri="apsadmin-core.tld" prefix="wpsa" %>
 <%@ taglib uri="apsadmin-form.tld" prefix="wpsf" %>
 <%@ taglib uri="c.tld" prefix="c" %>
-<%@ taglib prefix="jacms" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
+<%@ taglib prefix="jacmswpsa" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
 
 <s:set var="targetNS" value="%{'/do/jacms/Content'}" />
 <h1><s:text name="jacms.menu.contentAdmin" /><s:include value="/WEB-INF/apsadmin/jsp/common/inc/operations-context-general.jsp" /></h1>
@@ -34,7 +34,7 @@
 	
 	<p class="noscreen" id="jpcontentinspection_metadata"><s:text name="title.metadata" /></p>
 	
-	<jacms:content contentId="%{content.id}" record="true" var="contentRecordVar"/>
+	<jacmswpsa:content contentId="%{content.id}" record="true" var="contentRecordVar" />
 	<dl class="table-display">
 		<dt><s:text name="label.key" /></dt>
 			<dd><s:property value="content.id" /></dd>
@@ -84,15 +84,13 @@
 <fieldset><legend><s:text name="title.references" /></legend>
 	<p class="important" id="jpcontentinspection_referral_contents"><s:text name="title.referencedContents" /></p>
 	
-	<s:set var="referencedContentsVar" value="referencedContents" ></s:set>
-	<s:if test="!#referencedContentsVar.empty">
+	<s:set var="referencedContentsIdVar" value="referencedContentsId" ></s:set>
+	<s:if test="!#referencedContentsIdVar.empty">
 		<ul class="noBullet">
-			<s:iterator var="curReferencedContent" value="#referencedContentsVar">
+			<s:iterator var="curReferencedContentId" value="#referencedContentsIdVar">
 				<li>
-					<s:set var="canEdit" value="%{false}" />
-					<c:set var="curReferencedContentMainGroupCode"><s:property value="#curReferencedContent.mainGroupCode" escape="false"/></c:set>
-					<wp:ifauthorized groupName="${curReferencedContentMainGroupCode}" permission="editContents"><s:set var="canEdit" value="%{true}" /></wp:ifauthorized>
-					<s:if test="#canEdit">	
+					<jacmswpsa:content contentId="%{#curReferencedContentId}" var="curReferencedContent" authToEditVar="isAuthToEditVar" workVersion="true" />
+					<s:if test="#isAuthToEditVar">
 						<s:url var="contentEditActionURL" action="edit" namespace="/do/jacms/Content"><s:param name="contentId" value="#curReferencedContent.id" /></s:url>
 						<a href="<s:property value="#contentEditActionURL" />" title="<s:text name="label.edit" />:&#32;<s:property value="#curReferencedContent.descr" />"><s:property value="#curReferencedContent.descr" />&#32;(<s:property value="#curReferencedContent.id" />)</a>
 					</s:if>
@@ -139,16 +137,14 @@
 	
 	<p class="important" id="jpcontentinspection_referring_conts"><s:text name="title.referencingContents" /></p>
 	
-	<s:set var="referencingContentsVar" value="referencingContents" ></s:set>
+	<s:set var="referencingContentsIdVar" value="referencingContentsId" ></s:set>
 	
-	<s:if test="!#referencingContentsVar.empty">
+	<s:if test="!#referencingContentsIdVar.empty">
 		<ul class="noBullet">
-			<s:iterator var="curReferencingContent" value="#referencingContentsVar">
+			<s:iterator var="curReferencingContentId" value="#referencingContentsIdVar">
+				<jacmswpsa:content contentId="%{#curReferencingContentId}" var="curReferencingContent" authToEditVar="isAuthToEditVar" workVersion="true" />
 				<li>
-					<s:set var="canEdit" value="%{false}" />
-					<c:set var="curReferencingContentMainGroupCode"><s:property value="#curReferencingContent.mainGroupCode" escape="false"/></c:set>
-					<wp:ifauthorized groupName="${curReferencingContentMainGroupCode}" permission="editContents"><s:set var="canEdit" value="%{true}" /></wp:ifauthorized> 
-					<s:if test="#canEdit">
+					<s:if test="#isAuthToEditVar">
 						<s:url var="contentEditActionURL" action="edit" namespace="/do/jacms/Content"><s:param name="contentId" value="#curReferencingContent.id" /></s:url>
 						<a href="<s:property value="#contentEditActionURL" />" title="<s:text name="label.edit" />:&#32;<s:property value="#curReferencingContent.descr" />"><s:property value="#curReferencingContent.descr" />&#32;(<s:property value="#curReferencingContent.id" />)</a>
 					</s:if>

@@ -2,7 +2,7 @@
 <%@ taglib uri="aps-core.tld" prefix="wp" %>
 <%@ taglib uri="apsadmin-core.tld" prefix="wpsa" %>
 <%@ taglib uri="apsadmin-form.tld" prefix="wpsf" %>
-<%@ taglib prefix="wpsacms" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
+<%@ taglib prefix="jacmswpsa" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
 
 <s:if test="#attribute.symbolicLink != null">
 	
@@ -10,7 +10,7 @@
 		<wpsa:page key="%{#attribute.symbolicLink.pageDest}" var="linkedPage" />
 	</s:if>
 	<s:if test="#attribute.symbolicLink.destType == 3 || #attribute.symbolicLink.destType == 4">
-		<wpsacms:content contentId="%{#attribute.symbolicLink.contentDest}" record="true" var="linkedContent" />
+		<jacmswpsa:content contentId="%{#attribute.symbolicLink.contentDest}" record="true" var="linkedContent" />
 	</s:if>
 	<s:set name="validLink" value="true"></s:set>
 	<s:if test="(#attribute.symbolicLink.destType == 2 || #attribute.symbolicLink.destType == 4) && #linkedPage == null">

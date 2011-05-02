@@ -47,11 +47,12 @@
 			"attributeMap" (map of attributes indexed by the name), "attributeList" (list of attributes), "status" (code), 
 			"viewPage" (page code), "listModel", "defaultModel", "version", "lastEditor" (username of last editor).
 			The names of the available property of "Content" (Record Object): "id", "typeCode", "descr", "status" (code), 
-			"create" (Creation Date), "modify" (last modity date), "mainGroupCode", "version", "lastEditor" (username of last editor).]]>
+			"create" (Creation Date), "modify" (last modity date), "mainGroupCode", "version", "lastEditor" (username of last editor).
+			If the current user has the authorization for edit the content, the tag presents the body included.]]>
 		</description>
 		<name>content</name>
 		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentInfoTag</tag-class>
-		<body-content>empty</body-content>
+		<body-content>JSP</body-content>
 		<attribute>
 			<description><![CDATA[The code of the content to return]]></description>
 			<name>contentId</name>
@@ -80,6 +81,12 @@
 		<attribute>
 			<description><![CDATA[The name of the property to return. It can be one of those indicated in the declaration of the tag.]]></description>
 			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the boolean of the "edit authorization" pushed into the Value Stack.]]></description>
+			<name>authToEditVar</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

@@ -1,7 +1,7 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="wpsa" uri="apsadmin-core.tld" %>
 <%@ taglib prefix="wpsf" uri="apsadmin-form.tld" %>
-<%@ taglib prefix="jacms" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
+<%@ taglib prefix="jacmswpsa" uri="/WEB-INF/plugins/jacms/apsadmin/tld/jacms-apsadmin-core.tld" %>
 
 <s:form>
 <p class="noscreen">
@@ -25,7 +25,7 @@
 <caption><span><s:text name="title.contentList" /></span></caption>
 	<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/contentReferencesTable_header.jsp" />
 	<s:iterator var="currentContentVar" value="#publishedContents">
-	<jacms:content contentId="%{#currentContentVar.id}" var="currentContentRecordVar" record="true" />
+	<jacmswpsa:content contentId="%{#currentContentVar.id}" var="currentContentRecordVar" record="true" />
 	<s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/contentReferencesTable_row.jsp" />
 	</s:iterator>
 </table>

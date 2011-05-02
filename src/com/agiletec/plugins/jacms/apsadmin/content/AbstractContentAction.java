@@ -25,8 +25,8 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.system.BaseAction;
-import com.agiletec.apsadmin.util.SelectItem;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
@@ -63,8 +63,7 @@ public abstract class AbstractContentAction extends BaseAction {
 	 * false in caso contrario.
 	 */
 	protected boolean isUserAllowed(Content content) {
-		String group = content.getMainGroup();
-		return this.isCurrentUserMemberOf(group);
+		return this.getContentActionHelper().isUserAllowed(content, this.getCurrentUser());
 	}
 	
 	/**

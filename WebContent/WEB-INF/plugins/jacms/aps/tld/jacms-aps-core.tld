@@ -245,7 +245,9 @@
 		</attribute>
 		<attribute>
 			<description>
-				<![CDATA[Currently it can be 'contentId' or 'mainGroup'.]]>
+				<![CDATA[Admitted values for "param" attribute are: 'contentId' (returns the code of content id), 
+				'mainGroup' (returns the code of owner group), 
+				'authToEdit' (returns true if the current user can edit the content, else false).]]>
 			</description>
 			<name>param</name>
 			<required>no</required>

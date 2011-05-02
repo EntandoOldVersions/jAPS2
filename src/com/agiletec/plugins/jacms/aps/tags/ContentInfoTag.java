@@ -18,14 +18,18 @@
 package com.agiletec.plugins.jacms.aps.tags;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentViewerHelper;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
 
@@ -34,9 +38,10 @@ import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthoriza
  * The content can will be extracted by id from showlet parameters or from request parameter.
  * The tag extract any specific parameter (by "param" attribute) 
  * or entire {@link ContentAuthorizationInfo} object (setting "var" attribute and anything on "param" attribute).
- * Key of the desired parameter, admitted values are:<br/>
+ * Admitted values for "param" attribute are:<br/>
  * "contentId" returns the code of content id,
- * "mainGroup" returns the code main (owner) group.
+ * "mainGroup" returns the code main (owner) group,
+ * "authToEdit" returns true if the current user can edit the content (else false).
  * @author E.Santoboni
  */
 public class ContentInfoTag extends OutSupport {
@@ -57,11 +62,17 @@ public class ContentInfoTag extends OutSupport {
 			if (null == this.getParam() && null != this.getVar()) {
 				this.pageContext.setAttribute(this.getVar(), authInfo);
 			} else if (null != this.getParam()) {
-				String value = null;
+				Object value = null;
 				if ("contentId".equals(this.getParam())) {
 					value = authInfo.getContentId();
 				} else if ("mainGroup".equals(this.getParam())) {
 					value = authInfo.getMainGroup();
+				} else if ("authToEdit".equals(this.getParam())) {
+					IContentAuthorizationHelper contentAuthHelper = (IContentAuthorizationHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_AUTHORIZATION_HELPER, this.pageContext);
+					HttpSession session = this.pageContext.getSession();
+					UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+					boolean isAuth = contentAuthHelper.isAuthToEdit(currentUser, authInfo);
+					value = new Boolean(isAuth);
 				}
 				if (null != value) {
 					String var = this.getVar();
