@@ -59,7 +59,7 @@ public class TestRequestValidator extends BaseTestCase {
 		int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
 		assertEquals(ControllerManager.REDIRECT, status);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-		assertEquals("/japs/it/notfound.wp?redirectflag=1", redirectUrl);
+		assertEquals("/japs/it/notfound.page?redirectflag=1", redirectUrl);
 	}
 	
 	public void testServiceFailure_2() throws ApsSystemException {
@@ -68,7 +68,7 @@ public class TestRequestValidator extends BaseTestCase {
 		int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
 		assertEquals(ControllerManager.REDIRECT, status);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-		assertEquals("/japs/it/errorpage.wp?redirectflag=1", redirectUrl);
+		assertEquals("/japs/it/errorpage.page?redirectflag=1", redirectUrl);
 	}
 	
 	public void testServiceFailure_3() throws ApsSystemException {
@@ -77,7 +77,7 @@ public class TestRequestValidator extends BaseTestCase {
 		int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
 		assertEquals(ControllerManager.REDIRECT, status);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-		assertEquals("/japs/it/errorpage.wp?redirectflag=1", redirectUrl);
+		assertEquals("/japs/it/errorpage.page?redirectflag=1", redirectUrl);
 	}
 	
 	private void init() throws Exception {

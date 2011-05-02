@@ -67,7 +67,7 @@ public class TestRequestAuthorizator extends BaseTestCase {
 		int status = _authorizator.service(reqCtx, ControllerManager.CONTINUE);
 		assertEquals(status, ControllerManager.REDIRECT);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-		assertEquals("/japs/it/login.wp?redirectflag=1", redirectUrl);
+		assertEquals("/japs/it/login.page?redirectflag=1", redirectUrl);
 	}
 	
 	public void testServiceFailure_2() throws Throwable {

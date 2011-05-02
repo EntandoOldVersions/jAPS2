@@ -46,7 +46,7 @@ public class TestURLManager extends BaseTestCase {
 		pageURL.setPageCode("homepage");
 		try {
 			String url = this._urlManager.getURLString(pageURL, reqCtx);
-			assertEquals("/japs/it/homepage.wp", url);
+			assertEquals("/japs/it/homepage.page", url);
 			this.changeUrlStyle(SystemConstants.CONFIG_PARAM_URL_STYLE_BREADCRUMBS);
 			url = this._urlManager.getURLString(pageURL, reqCtx);
 			assertEquals("/japs/pages/it/homepage/", url);
@@ -64,7 +64,7 @@ public class TestURLManager extends BaseTestCase {
 		pageURL.setPageCode("pagina_11");
 		try {
 			String url = this._urlManager.getURLString(pageURL, reqCtx);
-			assertEquals("/japs/en/pagina_11.wp", url);
+			assertEquals("/japs/en/pagina_11.page", url);
 			this.changeUrlStyle(SystemConstants.CONFIG_PARAM_URL_STYLE_BREADCRUMBS);
 			url = this._urlManager.getURLString(pageURL, reqCtx);
 			assertEquals("/japs/pages/en/homepage/pagina_1/pagina_11/", url);

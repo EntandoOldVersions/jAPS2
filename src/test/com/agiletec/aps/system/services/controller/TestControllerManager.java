@@ -64,17 +64,17 @@ public class TestControllerManager extends BaseTestCase {
 		RequestContext reqCtx = this.getRequestContext();
 		ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
-		request.setServletPath("/it/administrators_page.wp");
+		request.setServletPath("/it/administrators_page.page");
 		int status = controller.service(reqCtx);
 		assertEquals(ControllerManager.REDIRECT, status);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-		assertEquals("/japs/it/login.wp?redirectflag=1", redirectUrl);
+		assertEquals("/japs/it/login.page?redirectflag=1", redirectUrl);
 		
 		request.setParameter(RequestContext.PAR_REDIRECT_FLAG, "1");
 		status = controller.service(reqCtx);
 		assertEquals(ControllerManager.REDIRECT, status);
 		redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-		assertEquals("/japs/it/errorpage.wp", redirectUrl);
+		assertEquals("/japs/it/errorpage.page", redirectUrl);
 	}
 	
 }

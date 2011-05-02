@@ -62,7 +62,7 @@ public class TestLinkResolverManager extends BaseTestCase {
 		SymbolicLink link = new SymbolicLink();
 		link.setDestinationToPage("primapagina");
 		String text = "Qui c'è un link: '" + link.getSymbolicDestination() + "'; fine";		
-		String expected = "Qui c'è un link: '/japs/it/primapagina.wp'; fine";
+		String expected = "Qui c'è un link: '/japs/it/primapagina.page'; fine";
 		String resolvedText = _resolver.resolveLinks(text, _reqCtx);
 		assertEquals(expected, resolvedText);
 	}
@@ -80,7 +80,7 @@ public class TestLinkResolverManager extends BaseTestCase {
 		SymbolicLink link = new SymbolicLink();
 		link.setDestinationToContentOnPage("ART1", "homepage");
 		String text = "Qui c'è un link: '" + link.getSymbolicDestination() + "'; fine";
-		String expected = "Qui c'è un link: '/japs/it/homepage.wp?contentId=ART1'; fine";
+		String expected = "Qui c'è un link: '/japs/it/homepage.page?contentId=ART1'; fine";
 		String resolvedText = _resolver.resolveLinks(text, _reqCtx);
 		assertEquals(expected, resolvedText);
 	}
@@ -89,7 +89,7 @@ public class TestLinkResolverManager extends BaseTestCase {
 		SymbolicLink link = new SymbolicLink();
 		link.setDestinationToContent("ART1");
 		String text = "Qui c'è un link: '" + link.getSymbolicDestination() + "'; fine";
-		String expected = "Qui c'è un link: '/japs/it/homepage.wp'; fine";
+		String expected = "Qui c'è un link: '/japs/it/homepage.page'; fine";
 		String resolvedText = _resolver.resolveLinks(text, _reqCtx);
 		assertEquals(expected, resolvedText);
 	}
@@ -102,7 +102,7 @@ public class TestLinkResolverManager extends BaseTestCase {
 			+ " - Qui c'è un link: ''" + link.getSymbolicDestination() + "'; "
 			+ "altro Trabocchetto: " + SymbolicLink.SYMBOLIC_DEST_POSTFIX + " fine";
 		String expected = "Trabocchetto: " + SymbolicLink.SYMBOLIC_DEST_PREFIX
-			+" - Qui c'è un link: ''/japs/it/homepage.wp?contentId=ART1'; "
+			+" - Qui c'è un link: ''/japs/it/homepage.page?contentId=ART1'; "
 			+ "altro Trabocchetto: " + SymbolicLink.SYMBOLIC_DEST_POSTFIX + " fine";
 		String resolvedText = _resolver.resolveLinks(text, _reqCtx);
 		assertEquals(expected, resolvedText);
@@ -113,7 +113,7 @@ public class TestLinkResolverManager extends BaseTestCase {
 		assertEquals(expected, resolvedText);
 	}
 	
-	public void testResolveMix(){
+	public void testResolveMix() {
 		SymbolicLink link = new SymbolicLink();
 		link.setDestinationToContentOnPage("ART1", "homepage");
 		String one = link.getSymbolicDestination();
@@ -124,9 +124,9 @@ public class TestLinkResolverManager extends BaseTestCase {
 			+ "altro Trabocchetto: " + SymbolicLink.SYMBOLIC_DEST_POSTFIX 
 			+ " " + two	+ " fine";
 		String expected = "Trabocchetto: " + SymbolicLink.SYMBOLIC_DEST_PREFIX
-			+" - Qui c'è un link: ''/japs/it/homepage.wp?contentId=ART1'; "
+			+" - Qui c'è un link: ''/japs/it/homepage.page?contentId=ART1'; "
 			+ "altro Trabocchetto: " + SymbolicLink.SYMBOLIC_DEST_POSTFIX 
-			+ " /japs/it/primapagina.wp fine";
+			+ " /japs/it/primapagina.page fine";
 		String resolvedText = _resolver.resolveLinks(text, _reqCtx);
 		assertEquals(expected, resolvedText);
 		text = text + text;
@@ -139,25 +139,25 @@ public class TestLinkResolverManager extends BaseTestCase {
 		SymbolicLink link = new SymbolicLink();
 		link.setDestinationToContent("ART187");
 		String text = "Qui c'è un link: '" + link.getSymbolicDestination() + "'; fine";
-		String expected = "Qui c'è un link: '/japs/it/contentview.wp?contentId=ART187'; fine";
+		String expected = "Qui c'è un link: '/japs/it/contentview.page?contentId=ART187'; fine";
 		String resolvedText = _resolver.resolveLinks(text, _reqCtx);
 		assertEquals(expected, resolvedText);
 		
 		this.setUserOnSession("editorCustomers");
 		text = "Qui c'è un link: '" + link.getSymbolicDestination() + "'; fine";
-		expected = "Qui c'è un link: '/japs/it/contentview.wp?contentId=ART187'; fine";
+		expected = "Qui c'è un link: '/japs/it/contentview.page?contentId=ART187'; fine";
 		resolvedText = _resolver.resolveLinks(text, _reqCtx);
 		assertEquals(expected, resolvedText);
 		
 		this.setUserOnSession("editorCoach");
 		text = "Qui c'è un link: '" + link.getSymbolicDestination() + "'; fine";
-		expected = "Qui c'è un link: '/japs/it/coach_page.wp'; fine";
+		expected = "Qui c'è un link: '/japs/it/coach_page.page'; fine";
 		resolvedText = _resolver.resolveLinks(text, _reqCtx);
 		assertEquals(expected, resolvedText);
 		
 		this.setUserOnSession("admin");
 		text = "Qui c'è un link: '" + link.getSymbolicDestination() + "'; fine";
-		expected = "Qui c'è un link: '/japs/it/coach_page.wp'; fine";
+		expected = "Qui c'è un link: '/japs/it/coach_page.page'; fine";
 		resolvedText = _resolver.resolveLinks(text, _reqCtx);
 		assertEquals(expected, resolvedText);
 	}
