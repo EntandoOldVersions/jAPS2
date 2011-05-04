@@ -92,9 +92,10 @@
 </p>
 
 <s:if test="getStrutsAction() == 2">
-<h3><s:text name="title.referencingContent" /></h3>
+<div class="subsection-light">
 <s:set var="referencingContentsId" value="references['jacmsContentManagerUtilizers']" />
 <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/portal/include/referencingContents.jsp" />
+</div>
 </s:if>
 
 </fieldset>
