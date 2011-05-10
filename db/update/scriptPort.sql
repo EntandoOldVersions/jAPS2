@@ -1,5 +1,3 @@
--- 27/04/2011 
-
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('YES', 'en', 'Yes');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('YES', 'it', 'Si');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('NO', 'en', 'No');
@@ -14,9 +12,6 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ERRORS', 'en'
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ERRORS', 'it', 'Errori');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('LIST_VIEWER_EMPTY', 'en', 'No results found. Check your search filters.');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('LIST_VIEWER_EMPTY', 'it', 'Nessun risultato trovato. Controlla i tuoi filtri di ricerca.');
-
--- 
-
 
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('DATE_FROM', 'en', 'From');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('DATE_FROM', 'it', 'Da');
@@ -45,5 +40,9 @@ UPDATE showletcatalog SET parameters='<config>
 	<action name="listViewerConfig"/>
 </config>' WHERE code='content_viewer_list';
 
-
-	
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('END', 'en', 'To');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('END', 'it', 'Fino a');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('START', 'en', 'From');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('START', 'it', 'Da');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_INVALID_FORMAT', 'en', 'The format is not valid, ensure that is dd/mm/yyyy');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_INVALID_FORMAT', 'it', 'Il formato risulta non valido, controlla che sia dd/mm/aaaa');

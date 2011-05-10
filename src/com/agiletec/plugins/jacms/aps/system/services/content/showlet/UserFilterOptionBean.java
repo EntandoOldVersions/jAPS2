@@ -60,7 +60,8 @@ public class UserFilterOptionBean {
 		}
 	}
 	
-	public UserFilterOptionBean(Properties properties, IApsEntity prototype, Integer currentFrame, Lang currentLang, HttpServletRequest request) throws Throwable {
+	public UserFilterOptionBean(Properties properties, IApsEntity prototype, 
+			Integer currentFrame, Lang currentLang, HttpServletRequest request) throws Throwable {
 		this(properties, prototype);
 		this.setCurrentLang(currentLang);
 		this.setCurrentFrame(currentFrame);
@@ -127,16 +128,18 @@ public class UserFilterOptionBean {
 				AttributeInterface attribute = this.getAttribute();
 				if (attribute instanceof ITextAttribute) {
 					String[] fieldsSuffix = {"_textFieldName"};
-					formFieldNames = this.extractAttributeParams(null, fieldsSuffix, frameIdSuffix, request);
+					formFieldNames = this.extractAttributeParams(fieldsSuffix, frameIdSuffix, request);
 				} else if (attribute instanceof DateAttribute) {
 					String[] fieldsSuffix = {"_dateStartFieldName", "_dateEndFieldName"};
-					formFieldNames = this.extractAttributeParams(attribute.getType(), fieldsSuffix, frameIdSuffix, request);
+					formFieldNames = this.extractAttributeParams(fieldsSuffix, frameIdSuffix, request);
+					this.checkRange(formFieldNames);
 				} else if (attribute instanceof BooleanAttribute) {
 					String[] fieldsSuffix = {"_booleanFieldName", "_booleanFieldName_ignore", "_booleanFieldName_control"};
-					formFieldNames = this.extractAttributeParams(null, fieldsSuffix, frameIdSuffix, request);
+					formFieldNames = this.extractAttributeParams(fieldsSuffix, frameIdSuffix, request);
 				} else if (attribute instanceof NumberAttribute) {
 					String[] fieldsSuffix = {"_numberStartFieldName", "_numberEndFieldName"};
-					formFieldNames = this.extractAttributeParams(attribute.getType(), fieldsSuffix, frameIdSuffix, request);
+					formFieldNames = this.extractAttributeParams(fieldsSuffix, frameIdSuffix, request);
+					this.checkRange(formFieldNames);
 				}
 			}
 		} catch (Throwable t) {
@@ -146,7 +149,27 @@ public class UserFilterOptionBean {
 		this.setFormFieldNames(formFieldNames);
 	}
 	
-	private String[] extractAttributeParams(String noTextType, String[] fieldsSuffix, String frameIdSuffix, HttpServletRequest request) {
+	private void checkRange(String[] formFieldNames) {
+		if (!this.isAttributeFilter() || null != this.getFormFieldErrors() || 
+				null == this.getFormFieldValues() || this.getFormFieldValues().size() < 2) return;
+		boolean check = false;
+		if (this.getAttribute() instanceof DateAttribute) {
+			Date start = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[0]), "dd/MM/yyyy");
+			Date end = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[1]), "dd/MM/yyyy");
+			check = (!start.equals(end) && start.after(end));
+		} else if (this.getAttribute() instanceof NumberAttribute) {
+			Integer start = Integer.parseInt(this.getFormFieldValues().get(formFieldNames[0]));
+			Integer end = Integer.parseInt(this.getFormFieldValues().get(formFieldNames[1]));
+			check = (!start.equals(end) && start.intValue() > end.intValue());
+		}
+		if (check) {
+			this.setFormFieldErrors(new HashMap<String, AttributeFieldError>(2));
+			AttributeFieldError error = new AttributeFieldError(this.getAttribute().getName(), formFieldNames[1], AttributeFieldError.INVALID_RANGE_KEY, null);
+			this.getFormFieldErrors().put(formFieldNames[1], error);
+		}
+	}
+	
+	protected String[] extractAttributeParams(String[] fieldsSuffix, String frameIdSuffix, HttpServletRequest request) {
 		String[] formFieldNames = new String[fieldsSuffix.length];
 		for (int i = 0; i < fieldsSuffix.length; i++) {
 			String fieldSuffix = fieldsSuffix[i];
@@ -154,23 +177,25 @@ public class UserFilterOptionBean {
 			formFieldNames[i] = fieldName;
 			String value = request.getParameter(fieldName);
 			this.addFormValue(fieldName, value, fieldsSuffix.length);
-			if (null != noTextType) {
-				boolean isDateAttribute = (noTextType.equals("Date"));
-				this.checkNoTextAttributeFormValue(isDateAttribute, value, fieldName, this.getAttribute().getName() + fieldSuffix);
+			String attributeType = this.getAttribute().getType();
+			if (attributeType.equals("Date") || attributeType.equals("Number")) {
+				boolean isDateAttribute = attributeType.equals("Date");
+				String rangeField = (i==0) ? AttributeFieldError.FIELD_TYPE_RANGE_START : AttributeFieldError.FIELD_TYPE_RANGE_END;
+				this.checkNoTextAttributeFormValue(isDateAttribute, value, fieldName, rangeField);
 			}
 		}
 		return formFieldNames;
 	}
 	
-	private void checkNoTextAttributeFormValue(boolean isDateAttribute, String value, String formFieldName, String errorKey) {
-		if (value != null && value.trim().length() > 0) {
-			boolean check = (isDateAttribute) ? CheckFormatUtil.isValidDate(value.trim()) : CheckFormatUtil.isValidNumber(value.trim());
-			if (!check) {
-				if (null == this.getFormFieldErrors()) {
-					this.setFormFieldErrors(new HashMap<String, String>(2));
-				}
-				this.getFormFieldErrors().put(formFieldName, errorKey);
+	private void checkNoTextAttributeFormValue(boolean isDateAttribute, String value, String fieldName, String rangeField) {
+		if (value == null || value.trim().length() == 0) return;
+		boolean check = (isDateAttribute) ? CheckFormatUtil.isValidDate(value.trim()) : CheckFormatUtil.isValidNumber(value.trim());
+		if (!check) {
+			if (null == this.getFormFieldErrors()) {
+				this.setFormFieldErrors(new HashMap<String, AttributeFieldError>(2));
 			}
+			AttributeFieldError error = new AttributeFieldError(this.getAttribute().getName(), fieldName, AttributeFieldError.INVALID_FORMAT_KEY, rangeField);
+			this.getFormFieldErrors().put(fieldName, error);
 		}
 	}
 	
@@ -246,10 +271,10 @@ public class UserFilterOptionBean {
 		this._formFieldValues = formFieldValues;
 	}
 	
-	public Map<String, String> getFormFieldErrors() {
+	public Map<String, AttributeFieldError> getFormFieldErrors() {
 		return _formFieldErrors;
 	}
-	public void setFormFieldErrors(Map<String, String> formFieldErrors) {
+	public void setFormFieldErrors(Map<String, AttributeFieldError> formFieldErrors) {
 		this._formFieldErrors = formFieldErrors;
 	}
 	
@@ -263,7 +288,7 @@ public class UserFilterOptionBean {
 	
 	private String[] _formFieldNames;
 	private Map<String, String> _formFieldValues;
-	private Map<String, String> _formFieldErrors;
+	private Map<String, AttributeFieldError> _formFieldErrors;
 	
 	public static final String PARAM_TYPE = "type";
 	public static final String PARAM_KEY = "key";
@@ -274,5 +299,40 @@ public class UserFilterOptionBean {
 	
 	public static final String KEY_FULLTEXT = "fulltext";
 	public static final String KEY_CATEGORY = "category";
+	
+	public class AttributeFieldError {
+		
+		public AttributeFieldError(String attributeName, String fieldName, String errorKey, String rangeFieldType) {
+			this._attributeName = attributeName;
+			this._fieldName = fieldName;
+			this._errorKey = errorKey;
+			this._rangeFieldType = rangeFieldType;
+		}
+		
+		public String getAttributeName() {
+			return _attributeName;
+		}
+		public String getFieldName() {
+			return _fieldName;
+		}
+		public String getErrorKey() {
+			return _errorKey;
+		}
+		public String getRangeFieldType() {
+			return _rangeFieldType;
+		}
+		
+		private String _attributeName;
+		private String _fieldName;
+		private String _errorKey;
+		private String _rangeFieldType;
+		
+		public static final String INVALID_FORMAT_KEY = "jacms_LIST_VIEWER_INVALID_FORMAT";
+		public static final String INVALID_RANGE_KEY = "jacms_LIST_VIEWER_INVALID_RANGE";
+		
+		public static final String FIELD_TYPE_RANGE_START = "START";
+		public static final String FIELD_TYPE_RANGE_END = "END";
+		
+	}
 	
 }
