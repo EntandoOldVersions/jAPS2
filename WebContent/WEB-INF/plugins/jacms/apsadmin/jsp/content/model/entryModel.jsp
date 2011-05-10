@@ -70,11 +70,11 @@
 <p class="centerText"><wpsf:submit value="%{getText('label.save')}" cssClass="button" /></p>
 
 </s:form>
-
-
+<s:if test="#myClient == 'advanced'">
 <p>
 	<a href="#jacms-content-model-detail-shortcut" id="jacms-content-model-detail-shortcut">
 		jacms-content-model-detail-shortcut
 	</a>
 </p>
+</s:if>
 </div>

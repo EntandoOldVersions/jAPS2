@@ -29,3 +29,8 @@ form .CodeMirror {
     -moz-box-shadow: 1px 1px 1px #545454 inset;
     background-color: #F3F3F3;
 }
+
+
+.CodeMirror {
+	color: #000;
+}

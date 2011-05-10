@@ -22,13 +22,12 @@ This converter shall always return a json object like this:
 		};
 */%>
 <s:set var="contentPrototype" value="contentPrototype" />
-var ENTANDO_MODEL_VOCABULARY = {
 	"$content": {
 	<s:if test="#contentPrototype != null">
 		"categories()": null,
 	<s:iterator value="#contentPrototype.attributeList" var="attribute" status="attributeStatus">
 		<s:set var="allowedMethods" value="%{getAllowedAttributeMethods(#contentPrototype, #attribute.name)}" />
-		'<s:property value="#attribute.name" />': <s:if test="#allowedMethods.empty">null</s:if><s:else>{
+		"<s:property value="#attribute.name" />": <s:if test="#allowedMethods.empty">null</s:if><s:else>{
 		<s:iterator value="#allowedMethods" var="method" status="status"> 
 			"<s:property value="#method" escapeJavaScript="false" escape="false" />": null<s:if test="!#status.last">,</s:if>
 		</s:iterator>
@@ -38,6 +37,5 @@ var ENTANDO_MODEL_VOCABULARY = {
 	</s:if>
 	},
 	"$i18n": {
-		'getLabel("")': null 
+		"getLabel(\"\")": null 
 	}
-};
