@@ -229,6 +229,8 @@ public class Content extends ApsEntity {
 	
 	public static final String STATUS_READY = "READY";
 	
+	public static final String STATUS_PUBLIC = "PUBLIC";
+	
 	/**
 	 * L'array delle descrizioni assegnabili 
 	 * direttamente da utenti redattori di contenuti.

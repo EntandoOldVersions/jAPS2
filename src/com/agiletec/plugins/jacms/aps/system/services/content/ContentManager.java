@@ -224,6 +224,12 @@ public class ContentManager extends ApsEntityManager
 	public void saveContent(Content content) throws ApsSystemException {
 		try {
 			content.incrementVersion(false);
+			String status = content.getStatus();
+			if (null == status) {
+				content.setStatus(Content.STATUS_DRAFT);
+			} else if (status.equals(Content.STATUS_PUBLIC)) {
+				content.setStatus(Content.STATUS_READY);
+			}
 			if (null == content.getId()) {
 				IKeyGeneratorManager keyGenerator = (IKeyGeneratorManager) this.getService(SystemConstants.KEY_GENERATOR_MANAGER);
 				int key = keyGenerator.getUniqueKeyCurrentValue();
@@ -251,6 +257,7 @@ public class ContentManager extends ApsEntityManager
 				this.saveContent(content);
 			}
 			content.incrementVersion(true);
+			content.setStatus(Content.STATUS_PUBLIC);
 			this.getContentDAO().insertOnLineContent(content);
 			int operationEventCode = -1;
 			if (content.isOnLine()) {
@@ -321,11 +328,14 @@ public class ContentManager extends ApsEntityManager
 	 * the content itself is not deleted.
 	 * @param content the content to unpublish.
 	 * @throws ApsSystemException in case of error
-	 */	
+	 */
 	@Override
 	public void removeOnLineContent(Content content) throws ApsSystemException {
 		try {
 			content.incrementVersion(false);
+			if (null != content.getStatus() && content.getStatus().equals(Content.STATUS_PUBLIC)) {
+				content.setStatus(Content.STATUS_READY);
+			}
 			this.getContentDAO().removeOnLineContent(content);
 			this.notifyPublicContentChanging(content, PublicContentChangedEvent.REMOVE_OPERATION_CODE);
 		} catch (Throwable t) {
