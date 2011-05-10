@@ -9,6 +9,14 @@
 	font-size: 0.9em;
 }
 
+#header ul.menu {
+	width: 15.4em;
+}
+
+#header ul.menu li {
+	width: 98%;
+}
+
 ul.menu li {
 	margin: 0.5em 0;
 }
@@ -39,136 +47,3 @@ ul.vertical li.openmenu div.menuToggler {
 	margin-top: -1.8em;
 	border: 3px double #d68609;
 }
-
-/****
-
-ul.menu {
-	margin: 0;
-	padding: 0;
-}
-
-ul.menu li {
-	padding: 0;
-	list-style-type: none;	
-}
-
-ul.menu a:link, ul.menu a:visited {
-	border-bottom: none;
-	text-decoration: none; 
-}
-
-ul.horizontal li {
-	margin: 0 0.5em 0 0;
-	display: inline;
-}
-
-ul.vertical {
-	margin: 0 0.5em 0 0;
-	padding: 4px 2px 4px 4px;
-	background-color: #ffffff;
-}
-
-ul.vertical ul {
-	margin: 0;
-	padding: 0;
-}
-
-ul.vertical li {
-	margin: 0.5em 0;
-}
-
-ul.vertical li.openmenu {
-	background-position: 100% 0;
-	background-repeat: no-repeat;	
-	background-image: url("../img/icons/16x16/emblem-close.png");
-}
-
-ul.vertical li.closedmenu {
-	background-position: 100% 0;
-	background-repeat: no-repeat;	
-	background-image: url("../img/icons/16x16/emblem-open.png");
-}
-
-ul.vertical li a {
-	display: block;
-	min-height: 22px;
-	line-height: 22px;
-	padding: 0 0 0 24px;
-	background-position: 0 50%;
-	background-repeat: no-repeat;
-}
-
-ul.vertical li a#menu_utenze {
-	background-image: url("../img/icons/users.png");
-}
-
-ul.vertical li a#menu_gruppi {
-	background-image: url("../img/icons/groups.png");
-}
-
-ul.vertical li a#menu_risorse {
-	background-image: url("../img/icons/resources.png");
-}
-
-ul.vertical li a#menu_categorie {
-	background-image: url("../img/icons/categories.png");
-}
-
-ul.vertical li a#menu_contenuti {
-	background-image: url("../img/icons/edit-content.png");
-}
-
-ul.vertical li a#menu_pagine {
-	background-image: url("../img/icons/pages.png");
-}
-
-ul.vertical li a#menu_servizi {
-	background-image: url("../img/icons/services.png");
-}
-
-ul.vertical li a#menu_lingue {
-	background-image: url("../img/icons/languages.png");
-}
-
-ul.vertical li a#menu_configura {
-	background-image: url("../img/icons/settings.png");
-}
-
-ul.vertical li a#menu_ricarica_configurazione {
-	background-image: url("../img/icons/reload.png");
-}
-
-ul.vertical li a#menu_entita {
-	background-image: url("../img/icons/entities.png");
-}
-
-ul.vertical li a#menu_plugins {
-	background-image: url("../img/icons/plugins.png");
-}
-
-ul.tab-toggle-bar {
-	margin: 0 0 1px 0;
-	padding: 0;
-}
-
-ul.tab-toggle-bar li {
-	margin: 0 0.25em;
-	padding: 0;
-}
-
-ul.tab-toggle-bar li a {
-	border-top: 1px solid #dedede;
-	border-left: 1px solid #dedede;
-	border-right: 1px solid #dedede;
-	padding: 0.2em 0.5em;
-	font-weight: normal;
-}
-
-ul.tab-toggle-bar li a.tab-current {
-	background-color: #ffffff;
-	outline: none;
-	font-weight: bold;
-}
-
-
-***/

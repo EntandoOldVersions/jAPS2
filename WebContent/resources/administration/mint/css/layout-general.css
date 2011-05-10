@@ -42,7 +42,7 @@ body {
 }
 
 #header-2 {
-	width: 630px;
+	width: 550px;
 }
 
 #header-2 p {
@@ -55,12 +55,12 @@ body {
 }
 
 #header-3 {
-	margin-left: 728px;
+	margin-left: 650px;
 }
 
 #header-3 p.welcome {
 	display: inline-block;
-	min-width: 127px;
+	width: 204px;
 	height: 27px;
 	line-height: 27px;
 	font-size: 13px;
@@ -74,7 +74,7 @@ body {
 
 #header-3 p.welcome span {
 	display: inline-block;
-	min-width: 127px;
+	width: 204px;
 	height: 27px;
 	line-height: 27px;
 	font-size: 13px;
@@ -87,7 +87,7 @@ body {
 #header-3 span#welcome-cap {
 	cursor: pointer;
 	display: inline-block;
-	width: 26px;	
+	width: 38px;	
 	height: 27px;
 	line-height: 27px;
 	font-size: 13px;	
