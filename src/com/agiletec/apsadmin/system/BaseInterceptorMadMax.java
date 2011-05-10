@@ -55,6 +55,7 @@ public abstract class BaseInterceptorMadMax extends AbstractInterceptor {
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "intercept", "Error occurred verifying authority of current user");
+			return BaseAction.FAILURE;
 		}
 		return this.getErrorResultName();
 	}
