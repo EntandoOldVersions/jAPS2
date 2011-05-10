@@ -75,6 +75,14 @@ public interface IAuthorizationManager {
 	public boolean isAuthOnGroup(UserDetails user, String groupName);
 	
 	/**
+	 * Verifica se l'utente specificato appartiene al ruolo specificato.
+	 * @param user L'utente di cui verificare l'autorizzazione.
+	 * @param roleName Il nome del ruolo da verificare.
+	 * @return True se l'utente possiede il ruolo specificato, false in caso contrario.
+	 */
+	public boolean isAuthOnRole(UserDetails user, String roleName);
+	
+	/**
 	 * Verifica se l'utente specificato possiede il permesso richiesto.
 	 * @param user L'utente di cui verificare l'autorizzazione.
 	 * @param permissionName Il nome del permesso da verificare.

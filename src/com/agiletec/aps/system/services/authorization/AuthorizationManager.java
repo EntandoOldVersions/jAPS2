@@ -107,6 +107,12 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
 	}
 	
 	@Override
+	public boolean isAuthOnRole(UserDetails user, String roleName) {
+		Role role = this.getRoleManager().getRole(roleName);
+		return (this.isAuthOnPermission(user, Permission.SUPERUSER) || this.checkAuth(user, role));
+	}
+	
+	@Override
 	public boolean isAuthOnPermission(UserDetails user, String permissionName) {
 		boolean check = this.isAuthOnSinglePermission(user, permissionName);
 		if (check) return true;
