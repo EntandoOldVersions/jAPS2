@@ -45,6 +45,11 @@
 	<th><s:text name="label.date.registration" /></th>
 	<th><s:text name="label.date.lastLogin" /></th>
 	<th><s:text name="label.date.lastPasswordChange" /></th>
+<wpsa:hookPoint key="core.userFinding.list.table.th" objectName="hookPointElements_core_userFinding_list_table_th">
+<s:iterator value="#hookPointElements_core_userFinding_list_table_th" var="hookPointElement">
+	<wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
+</s:iterator>
+</wpsa:hookPoint>
 	<th class="icon"><abbr title="<s:text name="label.state" />">S</abbr></th>	
 	<th class="icon"><abbr title="<s:text name="label.authorizations" />">A</abbr></th>	
 	<th class="icon"><abbr title="<s:text name="label.remove" />">&ndash;</abbr></th>	
@@ -93,6 +98,11 @@
 		</s:if>
 		<s:else><abbr title="<s:text name="label.none" />">&ndash;</abbr></s:else>
 	</td>
+<wpsa:hookPoint key="core.userFinding.list.table.td" objectName="hookPointElements_core_userFinding_list_table_td">
+<s:iterator value="#hookPointElements_core_userFinding_list_table_td" var="hookPointElement">
+	<wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
+</s:iterator>
+</wpsa:hookPoint>
 	<td class="icon"><img src="<s:property value="#statusIconImagePath" />" alt="<s:property value="#statusIconText" />" title="<s:property value="#statusIconText" />" /></td>
 	<td class="icon"><a href="<s:url namespace="/do/User/Auth" action="edit"><s:param name="username" value="#user.username"/></s:url>" title="<s:text name="note.configureAuthorizationsFor" />: <s:property value="#user.username" />"><img src="<wp:resourceURL />administration/common/img/icons/authorizations.png" alt="<s:text name="note.configureAuthorizationsFor" />: <s:property value="#user.username" />" /></a></td>
 	<td class="icon"><a href="<s:url action="trash"><s:param name="username" value="#user.username"/></s:url>" title="<s:text name="label.remove" />: <s:property value="#user.username" />"><img src="<wp:resourceURL />administration/common/img/icons/delete.png" alt="<s:text name="label.alt.clear" />" /></a></td>

@@ -1,5 +1,15 @@
 *******************************************  CORE  *******************************************
 
+User List - table, th
+/WEB-INF/apsadmin/jsp/user/userFinding.jsp
+key="core.userFinding.list.table.th"
+
+------------------
+
+user List - table, td
+/WEB-INF/apsadmin/jsp/user/userFinding.jsp
+key="core.userFinding.list.table.td"
+
 ------------------
 
 Config system parameter interface - configuration of extra params
