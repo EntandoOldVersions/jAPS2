@@ -29,7 +29,11 @@
 		<c:forEach var="userFilterOptionVar" items="${userFilterOptionsVar}">
 			<c:if test="${null != userFilterOptionVar.formFieldErrors}">
 			<c:forEach var="formFieldError" items="${userFilterOptionVar.formFieldErrors}">
-			<li><c:out value="${formFieldError.value}" /></li>
+			<li>
+			<c:out value="${formFieldError.value.attributeName}" /> - 
+			<c:if test="${formFieldError.value.rangeFieldType != null}"><wp:i18n key="${formFieldError.value.rangeFieldType}" /> - </c:if>
+			<wp:i18n key="${formFieldError.value.errorKey}" />
+			</li>
 			</c:forEach>
 			</c:if>
 		</c:forEach>
