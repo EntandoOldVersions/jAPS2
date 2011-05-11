@@ -17,6 +17,7 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -240,13 +241,15 @@ public class UserFilterOptionBean {
 			} else if (attribute instanceof NumberAttribute) {
 				String start = this.getFormFieldValues().get(this.getFormFieldNames()[0]);
 				String end = this.getFormFieldValues().get(this.getFormFieldNames()[1]);
-				Integer startNumber = null;
+				BigDecimal startNumber = null;
 				try {
-					startNumber = Integer.parseInt(start);
+					Integer startNumberInt = Integer.parseInt(start);
+					startNumber = new BigDecimal(startNumberInt);
 				} catch (Throwable t) {}
-				Integer endNumber = null;
+				BigDecimal endNumber = null;
 				try {
-					endNumber = Integer.parseInt(end);
+					Integer endNumberInt = Integer.parseInt(end);
+					endNumber = new BigDecimal(endNumberInt);
 				} catch (Throwable t) {}
 				filter = new EntitySearchFilter(attribute.getName(), true, startNumber, endNumber);
 			}

@@ -44,5 +44,10 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('END', 'en', '
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('END', 'it', 'Fino a');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('START', 'en', 'From');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('START', 'it', 'Da');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_INVALID_FORMAT', 'en', 'The format is not valid, ensure that is dd/mm/yyyy');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_INVALID_FORMAT', 'it', 'Il formato risulta non valido, controlla che sia dd/mm/aaaa');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_INVALID_FORMAT', 'en', 'has a format that is not valid.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_INVALID_FORMAT', 'it', 'ha un formato che risulta non valido.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_INVALID_RANGE', 'en', 'has a value not consistent. Check and start a new search.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_INVALID_RANGE', 'it', 'ha un valore non coerente. Ricontrolla ed effettua una nuova ricerca.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_FIELD', 'en', 'The field');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('jacms_LIST_VIEWER_FIELD', 'it', 'Il campo');
+

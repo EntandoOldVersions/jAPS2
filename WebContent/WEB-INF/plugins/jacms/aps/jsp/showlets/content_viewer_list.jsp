@@ -30,9 +30,7 @@
 			<c:if test="${null != userFilterOptionVar.formFieldErrors}">
 			<c:forEach var="formFieldError" items="${userFilterOptionVar.formFieldErrors}">
 			<li>
-			<c:out value="${formFieldError.value.attributeName}" /> - 
-			<c:if test="${formFieldError.value.rangeFieldType != null}"><wp:i18n key="${formFieldError.value.rangeFieldType}" /> - </c:if>
-			<wp:i18n key="${formFieldError.value.errorKey}" />
+			<wp:i18n key="jacms_LIST_VIEWER_FIELD" />&#32;<em><c:out value="${formFieldError.value.attributeName}" /></em><c:if test="${formFieldError.value.rangeFieldType != null}">:&#32;<em><wp:i18n key="${formFieldError.value.rangeFieldType}" /></em></c:if>&#32;<wp:i18n key="${formFieldError.value.errorKey}" />
 			</li>
 			</c:forEach>
 			</c:if>
