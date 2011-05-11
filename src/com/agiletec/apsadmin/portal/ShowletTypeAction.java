@@ -49,7 +49,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 	}
 	
 	@Override
-	public String newShowlet() {
+	public String newUserShowlet() {
 		try {
 			String check = this.checkNewShowlet();
 			if (null != check) return check;
@@ -62,7 +62,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 	}
 	
 	@Override
-	public String copyShowlet() {
+	public String copy() {
 		try {
 			String check = this.checkShowletToCopy();
 			if (null != check) return check;
@@ -75,7 +75,25 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 	}
 	
 	@Override
-	public String saveUserShowlet() {
+	public String save() {
+		try {
+			if (this.getStrutsAction() != ApsAdminSystemConstants.EDIT) {
+				return this.saveUserShowlet();
+			}
+			String check = this.checkShowletType();
+			if (null != check) return check;
+			ApsProperties titles = new ApsProperties();
+			titles.put("it", this.getItalianTitle());
+			titles.put("en", this.getEnglishTitle());
+			this.getShowletTypeManager().updateShowletTypeTitles(this.getShowletTypeCode(), titles);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "saveShowletTitles");
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+	
+	protected String saveUserShowlet() {
 		try {
 			boolean isCopy = (null != this.getPageCode() && this.getPageCode().trim().length() > 0);
 			String check = (isCopy) ? this.checkShowletToCopy() : this.checkNewShowlet();
@@ -87,7 +105,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 				newType = this.createNewShowletType();
 				ShowletType parentType = this.getShowletTypeManager().getShowletType(this.getParentShowletTypeCode());
 				newType.setParentType(parentType);
-				this.valueShowletType(newType);
+				this.valueShowletTypeParameters(newType);
 			} else {
 				newType = this.createCopiedShowlet(showletToCopy);
 			}
@@ -177,7 +195,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 		return type;
 	}
 	
-	private void valueShowletType(ShowletType newType) throws Exception {
+	private void valueShowletTypeParameters(ShowletType newType) throws Exception {
 		ApsProperties config = new ApsProperties();
 		List<ShowletTypeParameter> parameters = newType.getParentType().getTypeParameters();
 		for (int i=0; i<parameters.size(); i++) {
@@ -192,7 +210,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 	}
 	
 	@Override
-	public String editShowletTitles() {
+	public String edit() {
 		try {
 			String check = this.checkShowletType();
 			if (null != check) return check;
@@ -203,22 +221,6 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 			this.setEnglishTitle(titles.getProperty("en"));
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "editShowletTitles");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-	
-	@Override
-	public String saveShowletTitles() {
-		try {
-			String check = this.checkShowletType();
-			if (null != check) return check;
-			ApsProperties titles = new ApsProperties();
-			titles.put("it", this.getItalianTitle());
-			titles.put("en", this.getEnglishTitle());
-			this.getShowletTypeManager().updateShowletTypeTitles(this.getShowletTypeCode(), titles);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveShowletTitles");
 			return FAILURE;
 		}
 		return SUCCESS;

@@ -46,7 +46,7 @@
 	<td class="<wp:ifauthorized permission="superuser">tinyColumn60 rightText</wp:ifauthorized>">
 		<wp:ifauthorized permission="superuser">
 		<s:if test="!#showletType.isLogic() && null != #showletType.typeParameters && #showletType.typeParameters.size() > 0">
-			<a href="<s:url namespace="/do/Portal/ShowletType" action="copyShowletType"><s:param name="pageCode" value="currentPage.code" /><s:param name="framePos" value="#rowstatus.index" /></s:url>" title="<s:text name="label.userShowlet.new.from" />: <s:property value="%{getTitle(#showletType.getCode(), #showletType.getTitles())}" />"><img src="<wp:resourceURL/>administration/common/img/icons/22x22/showlet-user-new.png" alt="<s:text name="label.userShowlet.new" />" /></a>
+			<a href="<s:url namespace="/do/Portal/ShowletType" action="copy"><s:param name="pageCode" value="currentPage.code" /><s:param name="framePos" value="#rowstatus.index" /></s:url>" title="<s:text name="label.userShowlet.new.from" />: <s:property value="%{getTitle(#showletType.getCode(), #showletType.getTitles())}" />"><img src="<wp:resourceURL/>administration/common/img/icons/22x22/showlet-user-new.png" alt="<s:text name="label.userShowlet.new" />" /></a>
 		</s:if>
 		</wp:ifauthorized>
 		<s:if test="null != #showletType.code">

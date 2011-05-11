@@ -95,7 +95,7 @@
 		<td class="tinyColumn60 centerText"><abbr title="<s:text name="label.none" />">&ndash;</abbr></td>
 	</s:else>
 		<td>
-		<a href="<s:url namespace="/do/Portal/ShowletType" action="editShowletTitles"><s:param name="showletTypeCode" value="#showletType.key" /></s:url>" ><s:property value="#showletType.value" /></a>
+		<a href="<s:url namespace="/do/Portal/ShowletType" action="edit"><s:param name="showletTypeCode" value="#showletType.key" /></s:url>" ><s:property value="#showletType.value" /></a>
 		</td>
 
 <wpsa:hookPoint key="core.showletType.list.table.td" objectName="hookPointElements_core_showletType_list_table_td">
@@ -108,10 +108,10 @@
 		<td class="icon">
 		<s:set var="concreteShowletType" value="%{getShowletType(#showletType.key)}"></s:set>
 		<s:if test="null != #concreteShowletType.typeParameters && #concreteShowletType.typeParameters.size() > 0">
-			<a href="<s:url namespace="/do/Portal/ShowletType" action="newShowletType"><s:param name="parentShowletTypeCode" value="#showletType.key" /></s:url>" title="<s:text name="label.userShowlet.new.from" />: <s:property value="#showletType.value" />" ><img src="<wp:resourceURL/>administration/common/img/icons/22x22/showlet-user-new.png" alt="<s:text name="label.userShowlet.new" />" /></a>
+			<a href="<s:url namespace="/do/Portal/ShowletType" action="new"><s:param name="parentShowletTypeCode" value="#showletType.key" /></s:url>" title="<s:text name="label.userShowlet.new.from" />: <s:property value="#showletType.value" />" ><img src="<wp:resourceURL/>administration/common/img/icons/22x22/showlet-user-new.png" alt="<s:text name="label.userShowlet.new" />" /></a>
 		</s:if>
 		<s:if test="#firstType.optgroup == 'userShowletCode' && !#concreteShowletType.isLocked() && (#showletUtilizers == null || #showletUtilizers.size() == 0)">
-			<a href="<s:url namespace="/do/Portal/ShowletType" action="trashShowletType"><s:param name="showletTypeCode" value="#showletType.key" /></s:url>" title="<s:text name="label.remove" />: <s:property value="#showletType.value" />" ><img src="<wp:resourceURL/>administration/common/img/icons/delete.png" alt="<s:text name="label.remove" />" /></a>
+			<a href="<s:url namespace="/do/Portal/ShowletType" action="trash"><s:param name="showletTypeCode" value="#showletType.key" /></s:url>" title="<s:text name="label.remove" />: <s:property value="#showletType.value" />" ><img src="<wp:resourceURL/>administration/common/img/icons/delete.png" alt="<s:text name="label.remove" />" /></a>
 		</s:if>
 		</td>
 		</wp:ifauthorized>

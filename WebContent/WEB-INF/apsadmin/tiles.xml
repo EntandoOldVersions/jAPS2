@@ -184,11 +184,6 @@
 		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/portal/showlet-list-using.jsp" />
 	</definition>
     
-	<definition extends="main.layout" name="admin.Portal.showletType.editTitles">
-		<put-attribute name="title" value="title.showletManagement" />
-		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/portal/showlet-edit.jsp" />
-	</definition>
-    
 	<definition extends="main.layout" name="admin.Portal.showletType.trash">
 		<put-attribute name="title" value="title.showletManagement" />
 		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/portal/showlet-delete-confirm.jsp" />
@@ -196,7 +191,7 @@
 	
 	<definition extends="main.layout" name="admin.Portal.showletType.entry">
 		<put-attribute name="title" value="title.showletManagement" />
-		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/portal/showletType-user-entry.jsp" />
+		<put-attribute name="body" value="/WEB-INF/apsadmin/jsp/portal/showlet-entry.jsp" />
 	</definition>
     
     <!-- ********* FINE Area Gestione Servizi Portale ********* -->

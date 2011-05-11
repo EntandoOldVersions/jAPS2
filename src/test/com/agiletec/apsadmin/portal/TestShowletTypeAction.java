@@ -193,7 +193,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 	
 	private String executeUpdateTitle(String showletTypeCode, String italianTitle, String englishTitle, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/ShowletType", "saveShowletTitles");
+		this.initAction("/do/Portal/ShowletType", "save");
 		this.addParameter("showletTypeCode", showletTypeCode);
 		this.addParameter("italianTitle", italianTitle);
 		this.addParameter("englishTitle", englishTitle);
@@ -203,14 +203,14 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 
 	private String executeTrash(String showletTypeCode, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/ShowletType", "trashShowletType");
+		this.initAction("/do/Portal/ShowletType", "trash");
 		this.addParameter("showletTypeCode", showletTypeCode);
 		return this.executeAction();
 	}
 
 	private String executeDelete(String showletTypeCode, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/ShowletType", "deleteShowletType");
+		this.initAction("/do/Portal/ShowletType", "delete");
 		this.addParameter("showletTypeCode", showletTypeCode);
 		return this.executeAction();
 	}
@@ -257,7 +257,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
     
 	private String executeCopyShowletType(String username, String pageCode, String framePos) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/ShowletType", "copyShowletType");
+		this.initAction("/do/Portal/ShowletType", "copy");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("framePos", framePos);
 		this.addParameter("strutsAction", ApsAdminSystemConstants.PASTE);
@@ -283,7 +283,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
     
 	private String executeNewShowletType(String username, String parentShowletTypeCode) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/ShowletType", "newShowletType");
+		this.initAction("/do/Portal/ShowletType", "new");
 		this.addParameter("parentShowletTypeCode", parentShowletTypeCode);
 		this.addParameter("strutsAction", ApsAdminSystemConstants.ADD);
 		return this.executeAction();
@@ -422,7 +422,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 			this._pageManager.updatePage(page);
 			
 			this.setUserOnSession("admin");
-			this.initAction("/do/Portal/ShowletType", "saveUserShowlet");
+			this.initAction("/do/Portal/ShowletType", "save");
 			this.addParameter("showletTypeCode", showletTypeCode);
 			this.addParameter("englishTitle", "en");
 			this.addParameter("italianTitle", "it");
@@ -458,7 +458,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 		String showletTypeCode = "randomShowletCode_3";
 		try {
 			this.setUserOnSession("admin");
-			this.initAction("/do/Portal/ShowletType", "saveUserShowlet");
+			this.initAction("/do/Portal/ShowletType", "save");
 			this.addParameter("showletTypeCode", showletTypeCode);
 			this.addParameter("englishTitle", "en");
 			this.addParameter("italianTitle", "it");
@@ -484,7 +484,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 	
 	private String executePasteShowletType(String username, String code, String englishTitle, String italianTitle, String pageCode, String framePos) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/ShowletType", "saveUserShowlet");
+		this.initAction("/do/Portal/ShowletType", "save");
 		this.addParameter("showletTypeCode", code);
 		this.addParameter("englishTitle", englishTitle);
 		this.addParameter("italianTitle", italianTitle);
@@ -496,7 +496,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 	
 	private String executeAddShowletType(String username, String code, String englishTitle, String italianTitle, String parentShowletTypeCode) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/ShowletType", "saveUserShowlet");
+		this.initAction("/do/Portal/ShowletType", "save");
 		this.addParameter("showletTypeCode", code);
 		this.addParameter("englishTitle", englishTitle);
 		this.addParameter("italianTitle", italianTitle);

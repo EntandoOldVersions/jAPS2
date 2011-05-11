@@ -26,32 +26,26 @@ public interface IShowletTypeAction {
 	 * Create of new user showlet.
 	 * @return The result code.
 	 */
-	public String newShowlet();
+	public String newUserShowlet();
 	
 	/**
 	 * Copy an exist showlet (physic and with parameters) and value the form 
 	 * of creation of new user showlet.
 	 * @return The result code.
 	 */
-	public String copyShowlet();
+	public String copy();
 	
 	/**
-	 * Add a new user showlet type.
+	 * Edit an exist showlet type.
 	 * @return The result code.
 	 */
-	public String saveUserShowlet();
+	public String edit();
 	
 	/**
-	 * Edit the titles of an exist showlet type.
+	 * Update an exist showlet type.
 	 * @return The result code.
 	 */
-	public String editShowletTitles();
-	
-	/**
-	 * Update the titles of an exist showlet type.
-	 * @return The result code.
-	 */
-	public String saveShowletTitles();
+	public String save();
 	
 	/**
 	 * Start the deletion operations for the given showlet type.

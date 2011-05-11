@@ -44,30 +44,24 @@
 			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
 		</action>
 		
-		<action name="editShowletTitles" class="showletTypeAction" method="editShowletTitles">
-			<result type="tiles">admin.Portal.showletType.editTitles</result>
+		<!-- edit/create/delete showlet Type - start section -->
+		
+		<action name="edit" class="showletTypeAction" method="edit">
+			<result type="tiles">admin.Portal.showletType.entry</result>
 			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
 		</action>
 		
-		<action name="saveShowletTitles" class="showletTypeAction" method="saveShowletTitles">
-			<result type="tiles" name="input">admin.Portal.showletType.editTitles</result>
-			<result type="redirectAction">viewShowlets</result>
-			<interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
-		</action>
-		
-		<!-- create/delete user showlet - start section -->
-		
-		<action name="newShowletType" class="showletTypeAction" method="newShowlet">
+		<action name="new" class="showletTypeAction" method="newUserShowlet">
 			<result type="tiles">admin.Portal.showletType.entry</result>
 			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
 		</action>
 		
-		<action name="copyShowletType" class="showletTypeAction" method="copyShowlet">
+		<action name="copy" class="showletTypeAction" method="copy">
 			<result type="tiles">admin.Portal.showletType.entry</result>
 			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
 		</action>
 		
-		<action name="saveUserShowlet*" class="showletTypeAction" method="saveUserShowlet">
+		<action name="save*" class="showletTypeAction" method="save">
 			<result name="input" type="tiles">admin.Portal.showletType.entry</result>
 			<result name="replaceOnPage" type="redirectAction">
 				<param name="namespace">/do/Page</param>
@@ -78,12 +72,12 @@
 			<interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
 		</action>
 		
-		<action name="trashShowletType" class="showletTypeAction" method="trash">
+		<action name="trash" class="showletTypeAction" method="trash">
 			<result type="tiles">admin.Portal.showletType.trash</result>
 			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
 		</action>
 		
-		<action name="deleteShowletType" class="showletTypeAction" method="delete">
+		<action name="delete" class="showletTypeAction" method="delete">
 			<result type="redirectAction">
 				<param name="actionName">viewShowlets</param>
 			</result>

@@ -42,14 +42,8 @@ key="core.groupReferences"
 
 ------------------
 
-New user showlet - section after parameters fieldset
-/WEB-INF/apsadmin/jsp/portal/showletType-user-entry.jsp
-key="core.showletType.user.entry"
-
-------------------
-
-Edit showlet - section after parameters fieldset
-/WEB-INF/apsadmin/jsp/portal/showlet-edit.jsp
+Edit showlet type - section after parameters fieldset
+/WEB-INF/apsadmin/jsp/portal/showlet-entry.jsp
 key="core.showletType.entry"
 
 ------------------

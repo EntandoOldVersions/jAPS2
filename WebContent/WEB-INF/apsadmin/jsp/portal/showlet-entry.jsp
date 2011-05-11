@@ -2,9 +2,17 @@
 <%@ taglib uri="apsadmin-form.tld" prefix="wpsf" %>
 <%@ taglib uri="apsadmin-core.tld" prefix="wpsa" %>
 
-<h1><s:text name="title.newShowletType" /></h1>
-
+<h1>
+<s:if test="strutsAction == 2"><a href="<s:url action="viewShowlets" namespace="/do/Portal/ShowletType" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.showletManagement" />"><s:text name="title.showletManagement" /></a></s:if>
+<s:else><s:text name="title.newShowletType" /></s:else>
+</h1>
 <div id="main">
+
+<s:if test="strutsAction == 2">
+<wpsa:showletType key="%{showletTypeCode}" var="showletTypeVar" />
+<h2><s:text name="title.showletManagement.edit" />:&#32;<s:property value="#showletTypeVar.titles[currentLang.code]" /></h2>
+</s:if>
+<s:else>
 <h2><s:text name="title.newShowletType.from" />:&#32;
 <s:if test="strutsAction == 1">
 <wpsa:showletType var="parentShowletTypeVar" key="%{parentShowletTypeCode}" />
@@ -14,15 +22,15 @@
 <em><s:property value="%{getTitle(showletToCopy.type.code, showletToCopy.type.titles)}" /></em>
 </s:elseif>
 </h2>
-
 <s:if test="strutsAction == 3">
 	<wpsa:page var="pageVar" key="%{pageCode}" />
 	<p>
 		<s:text name="note.showletType.page"/>:&#32;<em class="important"><s:property value="%{getTitle(#pageVar.code, #pageVar.titles)}" /></em>,&#32;<s:text name="note.showletType.position" />:&#32;<em class="important"><s:property value="framePos" /></em>
 	</p>
 </s:if>
+</s:else>
 
-<s:form action="saveUserShowlet" namespace="/do/Portal/ShowletType" >
+<s:form action="save" namespace="/do/Portal/ShowletType" >
 <s:if test="hasActionErrors()">
 	<div class="message message_error">
 	<h3><s:text name="message.title.ActionErrors" /></h3>	
@@ -50,6 +58,9 @@
 	<s:if test="strutsAction == 1">
 	<wpsf:hidden name="parentShowletTypeCode" />
 	</s:if>
+	<s:elseif test="strutsAction == 2">
+	<wpsf:hidden name="showletTypeCode" />
+	</s:elseif>
 	<s:elseif test="strutsAction == 3">
 	<wpsf:hidden name="pageCode" />
 	<wpsf:hidden name="framePos" />
@@ -57,11 +68,12 @@
 </p>
 
 <fieldset class="margin-more-top"><legend><s:text name="label.info" /></legend>
+	<s:if test="strutsAction != 2">
 	<p>
 		<label for="showletTypeCode" class="basic-mint-label"><s:text name="label.code" />:</label>
 		<wpsf:textfield id="showletTypeCode" name="showletTypeCode" cssClass="text" />
 	</p>
-	
+	</s:if>
 	<p>
 		<label for="showlet-title-en" class="basic-mint-label"><span class="monospace">(en)</span> <s:text name="label.title" />:</label>
 		<wpsf:textfield id="showlet-title-en" name="englishTitle" cssClass="text" />
@@ -73,6 +85,7 @@
 	</p>
 </fieldset>
 
+<s:if test="strutsAction != 2 || #showletTypeVar.logic">
 <fieldset><legend><s:text name="title.showletType.settings" /></legend>
 	<s:if test="strutsAction == 1">
 		<s:set var="parentShowletType" value="%{getShowletType(parentShowletTypeCode)}" />
@@ -86,6 +99,17 @@
 			</p>
 		</s:iterator>
 	</s:if>
+	<s:elseif test="strutsAction == 2">
+		<s:iterator value="#showletTypeVar.parentType.typeParameters" id="showletParam" >
+		<p>
+			<s:if test="#showletParam.descr != ''">
+				<em><s:property value="#showletParam.descr" />:</em><br />
+			</s:if>
+			<em class="important"><s:property value="#showletParam.name" /></em>:&#32;
+			<s:property value="%{#showletTypeVar.config[#showletParam.name]}" />
+		</p>
+		</s:iterator>
+	</s:elseif>
 	<s:elseif test="strutsAction == 3">
 		<s:iterator value="showletToCopy.type.typeParameters" id="showletParam" >
 		<p>
@@ -98,22 +122,22 @@
 		</s:iterator>
 	</s:elseif>
 </fieldset>
+</s:if>
 
-<wpsa:hookPoint key="core.showletType.user.entry" objectName="hookPointElements_core_showletType_user_entry">
-<s:iterator value="#hookPointElements_core_showletType_user_entry" var="hookPointElement">
+<wpsa:hookPoint key="core.showletType.entry" objectName="hookPointElements_core_showlet_entry">
+<s:iterator value="#hookPointElements_core_showlet_entry" var="hookPointElement">
 	<wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
 </s:iterator>
 </wpsa:hookPoint>
 
 <p class="centerText"><wpsf:submit value="%{getText('label.save')}" cssClass="button" />
-
 <s:if test="strutsAction == 3">
-<wpsa:actionParam action="saveUserShowlet" var="actionName" >
+<wpsa:actionParam action="save" var="actionName" >
 	<wpsa:actionSubParam name="replaceOnPage" value="true" />
 </wpsa:actionParam>
-<wpsf:submit action="%{#actionName}" value="%{getText('label.save.replace')}" cssClass="button"/></p>
+<wpsf:submit action="%{#actionName}" value="%{getText('label.save.replace')}" cssClass="button"/>
 </s:if>
-<s:else></p></s:else>
+</p>
 
 </s:form>
 </div>
