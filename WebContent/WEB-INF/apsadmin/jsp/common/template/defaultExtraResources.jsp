@@ -93,7 +93,7 @@ window.addEvent('domready', function(){
 	$$('.accordion_toggler').each(function(cToggler) {
 		cToggler.appendText(' ');
 		var poba = myAnchor.clone();
-		//poba.addEvent("click",function(ev){ev.preventDefault();}); //prevent from un-wanted page scroll
+		poba.addEvent("click",function(ev){ev.preventDefault();}); //prevent from un-wanted page scroll
 		poba.injectBottom(cToggler);
 	});
 
