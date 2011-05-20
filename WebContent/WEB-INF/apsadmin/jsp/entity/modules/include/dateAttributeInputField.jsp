@@ -7,7 +7,7 @@
 <s:else>
 <s:set name="dateAttributeValue" value="#attribute.failedDateString"></s:set>
 </s:else>
-<wpsf:textfield id="%{#attributeTracer.getFormFieldName(#attribute) + '_cal'}" 
+<wpsf:textfield id="%{#attributeTracer.getFormFieldName(#attribute)}" 
 		name="%{#attributeTracer.getFormFieldName(#attribute)}" value="%{#dateAttributeValue}"
 		maxlength="254" cssClass="text"></wpsf:textfield>
 
