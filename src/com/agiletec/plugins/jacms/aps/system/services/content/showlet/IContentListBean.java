@@ -17,6 +17,8 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 
+import java.util.List;
+
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 
 /**
@@ -66,6 +68,18 @@ public interface IContentListBean {
 	 * @return La lista di filtri definita nel bean.
 	 */
 	public EntitySearchFilter[] getFilters();
+	
+	/**
+	 * Aggiunge una opzione filtro utente in coda alla lista di filtri definita nel bean.
+	 * @param filter L'opzione filtro utente da aggiungere.
+	 */
+	public void addUserFilterOption(UserFilterOptionBean filter);
+	
+	/**
+	 * Restituisce la lista di opzioni filtro utente definita.
+	 * @return La lista di opzioni filtro utente definita nel bean.
+	 */
+	public List<UserFilterOptionBean> getUserFilterOptions();
 	
 	/**
 	 * Indica se nel recupero della lista deve essere utilizzata la cache di sistema.

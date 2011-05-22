@@ -254,14 +254,13 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 		Properties properties = new Properties();
 		try {
 			if (filterKey.equals(UserFilterOptionBean.KEY_FULLTEXT) || filterKey.equals(UserFilterOptionBean.KEY_CATEGORY)) {
-				properties.put(UserFilterOptionBean.PARAM_TYPE, UserFilterOptionBean.TYPE_METADATA);
 				properties.put(UserFilterOptionBean.PARAM_KEY, filterKey);
+				properties.put(UserFilterOptionBean.PARAM_IS_ATTRIBUTE_FILTER, String.valueOf(false));
 			} else if (filterKey.startsWith(UserFilterOptionBean.TYPE_ATTRIBUTE + "_")) {
-				properties.put(UserFilterOptionBean.PARAM_TYPE, UserFilterOptionBean.TYPE_ATTRIBUTE);
 				properties.put(UserFilterOptionBean.PARAM_KEY, filterKey.substring((UserFilterOptionBean.TYPE_ATTRIBUTE + "_").length()));
 				properties.put(UserFilterOptionBean.PARAM_IS_ATTRIBUTE_FILTER, String.valueOf(true));
 			}
-			if (null == properties.getProperty(UserFilterOptionBean.PARAM_TYPE)) return null;
+			if (properties.isEmpty()) return null;
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addUserFilter");
 			throw new ApsSystemException("Error creating user filter", t);

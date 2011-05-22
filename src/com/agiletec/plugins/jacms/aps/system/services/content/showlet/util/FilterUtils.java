@@ -25,6 +25,8 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -116,6 +118,23 @@ public class FilterUtils {
 				filter.setLangCode(langCode);
 			}
 		}
+	}
+	
+	public UserFilterOptionBean getUserFilter(String contentType, 
+			IContentListFilterBean bean, IContentManager contentManager, RequestContext reqCtx) {
+		UserFilterOptionBean filter = null;
+		try {
+			IApsEntity prototype = contentManager.createContentType(contentType);
+			Properties props = new Properties();
+			props.setProperty(UserFilterOptionBean.PARAM_KEY, bean.getKey());
+			props.setProperty(UserFilterOptionBean.PARAM_IS_ATTRIBUTE_FILTER, String.valueOf(bean.isAttributeFilter()));
+			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
+			filter = new UserFilterOptionBean(props, prototype, currentFrame, currentLang, reqCtx.getRequest());
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, FilterUtils.class, "getUserFilter", "Error creating user filter");
+		}
+		return filter;
 	}
 	
 	/**

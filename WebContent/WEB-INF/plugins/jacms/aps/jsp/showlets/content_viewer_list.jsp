@@ -16,103 +16,23 @@
 	<h2><span><c:out value="${titleVar}" /></span></h2>
 </c:if>
 
-<c:if test="${null != userFilterOptionsVar && !empty userFilterOptionsVar}">
-
-<c:set var="hasUserFilterError" value="${false}" />
-<c:forEach var="userFilterOptionVar" items="${userFilterOptionsVar}">
-<c:if test="${null != userFilterOptionVar.formFieldErrors && !empty userFilterOptionVar.formFieldErrors}"><c:set var="hasUserFilterError" value="${true}" /></c:if>
-</c:forEach>
-
-<c:if test="${hasUserFilterError}">
-	<h3><wp:i18n key="ERRORS" /></h3>
-	<ul>
-		<c:forEach var="userFilterOptionVar" items="${userFilterOptionsVar}">
-			<c:if test="${null != userFilterOptionVar.formFieldErrors}">
-			<c:forEach var="formFieldError" items="${userFilterOptionVar.formFieldErrors}">
-			<li>
-			<wp:i18n key="jacms_LIST_VIEWER_FIELD" />&#32;<em><c:out value="${formFieldError.value.attributeName}" /></em><c:if test="${formFieldError.value.rangeFieldType != null}">:&#32;<em><wp:i18n key="${formFieldError.value.rangeFieldType}" /></em></c:if>&#32;<wp:i18n key="${formFieldError.value.errorKey}" />
-			</li>
-			</c:forEach>
-			</c:if>
-		</c:forEach>
-	</ul>
-</c:if>
-<c:set var="hasUserFilterError" value="${false}" />
-
-<%-- search form with user filters --%>
-<form action="<wp:url />" method="post">
-	<c:forEach var="userFilterOptionVar" items="${userFilterOptionsVar}">
-		<c:set var="userFilterOptionVar" value="${userFilterOptionVar}" scope="request" />
-		<c:choose>
-			<c:when test="${userFilterOptionVar.type == 'metadata' && (userFilterOptionVar.key == 'fulltext' || userFilterOptionVar.key == 'category')}">
-				<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/userFilter-module-${userFilterOptionVar.key}.jsp" />
-			</c:when>
-			<c:when test="${userFilterOptionVar.type == 'attribute'}">
-				<c:choose>
-					<c:when test="${userFilterOptionVar.attribute.type == 'Monotext' || userFilterOptionVar.attribute.type == 'Text' || userFilterOptionVar.attribute.type == 'Longtext' || userFilterOptionVar.attribute.type == 'Hypertext'}">
-						<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/userFilter-module-entity-Text.jsp" />
-					</c:when>
-					<c:when test="${userFilterOptionVar.attribute.type == 'Enumerator' }">
-						<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/userFilter-module-entity-Enumerator.jsp" />
-					</c:when>
-					<c:when test="${userFilterOptionVar.attribute.type == 'Number'}">
-						<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/userFilter-module-entity-Number.jsp" />
-					</c:when>
-					<c:when test="${userFilterOptionVar.attribute.type == 'Date'}">
-						<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/userFilter-module-entity-Date.jsp" />
-					</c:when>
-					<c:when test="${userFilterOptionVar.attribute.type == 'Boolean' }">
-						<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/userFilter-module-entity-Boolean.jsp" />
-					</c:when>
-					<c:when test="${userFilterOptionVar.attribute.type == 'CheckBox'}">
-						<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/userFilter-module-entity-CheckBox.jsp" />
-					</c:when>
-					<c:when test="${userFilterOptionVar.attribute.type == 'ThreeState'}">
-						<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/userFilter-module-entity-ThreeState.jsp" />
-					</c:when>
-				</c:choose>
-			</c:when>
-		</c:choose>
-	</c:forEach>
-	<p>
-		<input type="submit" value="<wp:i18n key="SEARCH" />" class="button" />
-	</p>
-</form>
-</c:if>
+<c:set var="userFilterOptionsVar" value="${userFilterOptionsVar}" scope="request" />
+<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/userFilter-module.jsp" />
 
 <c:choose>
 <c:when test="${contentList != null && !empty contentList}">
-	<wp:pager listName="contentList" objectName="groupContent" pagerIdFromFrame="true" >
+	<wp:pager listName="contentList" objectName="groupContent" pagerIdFromFrame="true" advanced="true" offset="5">
+		<c:set var="group" value="${groupContent}" scope="request" />
 		<ul>
 		<c:forEach var="contentId" items="${contentList}" begin="${groupContent.begin}" end="${groupContent.end}">
 			<li><jacms:content contentId="${contentId}" /></li>
 		</c:forEach>	
 		</ul>
-		<c:if test="${groupContent.size > groupContent.max}">
-			<p class="paginazione">
-				<c:choose>
-				<c:when test="${'1' == groupContent.currItem}">&lt;&lt; <wp:i18n key="PREV" /></c:when>
-				<c:otherwise><a href="<wp:url paramRepeat="true" ><wp:parameter name="${groupContent.paramItemName}" ><c:out value="${groupContent.prevItem}"/></wp:parameter></wp:url>">&lt;&lt; <wp:i18n key="PREV" /></a></c:otherwise>					
-				</c:choose>
-				<c:forEach var="item" items="${groupContent.items}">
-					<c:choose>
-					<c:when test="${item == groupContent.currItem}">&#32;[<c:out value="${item}"/>]&#32;</c:when>
-					<c:otherwise>&#32;<a href="<wp:url paramRepeat="true" ><wp:parameter name="${groupContent.paramItemName}" ><c:out value="${item}"/></wp:parameter></wp:url>"><c:out value="${item}"/></a>&#32;</c:otherwise>
-					</c:choose>
-				</c:forEach>
-				<c:choose>
-				<c:when test="${groupContent.maxItem == groupContent.currItem}"><wp:i18n key="NEXT" /> &gt;&gt;</c:when>
-				<c:otherwise><a href="<wp:url paramRepeat="true" ><wp:parameter name="${groupContent.paramItemName}" ><c:out value="${groupContent.nextItem}"/></wp:parameter></wp:url>"><wp:i18n key="NEXT" /> &gt;&gt;</a></c:otherwise>					
-				</c:choose>
-			</p>
-		</c:if>
-		
+		<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/pagerBlock.jsp" />
 	</wp:pager>
 </c:when>
 <c:otherwise><p><wp:i18n key="LIST_VIEWER_EMPTY" /></p></c:otherwise>
 </c:choose>
-
-
 
 <c:if test="${null != pageLinkVar && null != pageLinkDescriptionVar}">
 	<p><a href="<wp:url page="${pageLinkVar}"/>"><c:out value="${pageLinkDescriptionVar}" /></a></p>

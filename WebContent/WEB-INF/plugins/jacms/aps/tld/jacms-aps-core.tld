@@ -69,25 +69,25 @@
 		<attribute>
 			<description><![CDATA[Inserts the title on a variable of the page context with the name provided.]]></description>
       		<name>titleVar</name>
-      		<required>no</required>
+      		<required>false</required>
       		<rtexprvalue>true</rtexprvalue>
     	</attribute>
     	<attribute>
       		<description><![CDATA[Inserts the code of the page to link on a variable of the page context with the name provided.]]></description>
       		<name>pageLinkVar</name>
-      		<required>no</required>
+      		<required>false</required>
       		<rtexprvalue>true</rtexprvalue>
     	</attribute>
     	<attribute>
       		<description><![CDATA[Inserts the description of the page to link on a variable of the page context with the name provided.]]></description>
       		<name>pageLinkDescriptionVar</name>
-      		<required>no</required>
+      		<required>false</required>
       		<rtexprvalue>true</rtexprvalue>
     	</attribute>
     	<attribute>
       		<description><![CDATA[Name of the variable in the page context that holds the user filter options]]></description>
       		<name>userFilterOptionsVar</name>
-      		<required>no</required>
+      		<required>false</required>
       		<rtexprvalue>true</rtexprvalue>
     	</attribute>
 	</tag>
@@ -113,7 +113,7 @@
 				 - "modified" allows sorting by date of modification of content.]]>
 			</description>
 			<name>key</name>
-			<required>yes</required>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -123,13 +123,13 @@
 				The "key" attribute will be checked for validity if the filter is going to be applied to a metadata]]>
 			</description>
 			<name>attributeFilter</name>
-			<required>yes</required>
+			<required>true</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[The filtering value.]]></description>
 			<name>value</name>
-			<required>no</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -147,7 +147,7 @@
 				with a date greater or equal to the one inserted.]]>
 			</description>
 			<name>start</name>
-			<required>no</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -155,7 +155,7 @@
 				<![CDATA[Similar the the "start" attribute but with the opposite behaviur.]]>
 			</description>
 			<name>end</name>
-			<required>no</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -164,7 +164,7 @@
 				By default no ordering is performed.]]>
 			</description>
 			<name>order</name>
-			<required>no</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -173,7 +173,41 @@
 				The option is available for metadata and on Text Content attributes.]]>
 			</description>
 			<name>likeOption</name>
-			<required>no</required>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>
+			<![CDATA["ContentListTag" sub-tag, it creates a custom user filter 
+			to restrict the result of the content search by front-end user.]]>
+		</description>
+		<name>contentListUserFilterOption</name>
+		<tag-class>com.agiletec.plugins.jacms.aps.tags.ContentListUserFilterOptionTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				<![CDATA[The key of the filter.<br/>
+				This string can be:<br/>
+				 - the name of a content attribute compatible with the type declared in the "contentListTag" (it requires the "attributeFilter" attribute to be "true")<br/>
+				 - the ID of one of the content metadata (the "attributeFilter" must be false)<br/>
+				The allowed filter key that can be applied to content metadata are:<br/>
+				 - "fulltext" allows filter by full-text search<br />
+				 - "category" allows filter by a system category.]]>
+			</description>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				<![CDATA[Decides whether the filter must be applied to an attribute or to a 
+				content metadata, admitted values are (true|false).<br/>
+				The "key" attribute will be checked for validity if the filter is going to be applied to a metadata.]]>
+			</description>
+			<name>attributeFilter</name>
+			<required>true</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
@@ -212,7 +246,7 @@
 				Admitted values are (true|false), default 'false'.]]>
 			</description>
 			<name>publishExtraTitle</name>
-			<required>no</required>
+			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -220,7 +254,7 @@
 				<![CDATA[Inserts the rendered content in a variable of the page context with the name provided.]]>
 			</description>
 			<name>var</name>
-			<required>no</required>
+			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
@@ -250,7 +284,7 @@
 				'authToEdit' (returns true if the current user can edit the content, else false).]]>
 			</description>
 			<name>param</name>
-			<required>no</required>
+			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -259,7 +293,7 @@
 				in a variable of the page context with the name provided.]]>
 			</description>
 			<name>var</name>
-			<required>no</required>
+			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>

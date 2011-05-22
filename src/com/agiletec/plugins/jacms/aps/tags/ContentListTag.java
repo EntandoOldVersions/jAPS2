@@ -17,6 +17,7 @@
 */
 package com.agiletec.plugins.jacms.aps.tags;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletRequest;
@@ -44,34 +45,13 @@ import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilter
  */
 public class ContentListTag extends TagSupport implements IContentListBean {
 	
+	public ContentListTag() {
+		super();
+		this.release();
+	}
+	
 	@Override
 	public int doStartTag() throws JspException {
-		ServletRequest request =  this.pageContext.getRequest();
-		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
-		try {
-			IContentListHelper helper = (IContentListHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
-			boolean hasUserfilters = false;
-			if (null != this.getUserFilterOptionsVar()) {
-				List<UserFilterOptionBean> userFilters = helper.getUserFilters(reqCtx);
-				if (null != userFilters && userFilters.size() > 0) {
-					hasUserfilters = true;
-					this.setUserFilterOptions(userFilters);
-					this.pageContext.setAttribute(this.getUserFilterOptionsVar(), userFilters);
-				}
-			}
-			if (!this.isCacheable() || hasUserfilters) {
-				return EVAL_BODY_INCLUDE;
-			}
-			List<String> contentsId = helper.searchInCache(this.getListName(), reqCtx);
-			if (contentsId != null && !contentsId.isEmpty()) {
-				this.pageContext.setAttribute(this.getListName(), contentsId);
-				this.setListEvaluated(true);
-				return SKIP_BODY;
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
-			throw new JspException("Error detected while initialising the tag", t);
-		}
 		return EVAL_BODY_INCLUDE;
 	}
 	
@@ -80,20 +60,21 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
-			this.extractExtraShowletParameters(reqCtx);
-			if (this.isListEvaluated()) {
-				this.release();
-				return super.doEndTag();
-			}
 			IContentListHelper helper = (IContentListHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
-			List<String> contents = helper.getContentsId(this, this.getUserFilterOptions(), reqCtx);
+			List<UserFilterOptionBean> defaultUserFilterOptions = helper.getConfiguredUserFilters(this, reqCtx);
+			this.addUserFilterOptions(defaultUserFilterOptions);
+			this.extractExtraShowletParameters(reqCtx);
+			if (null != this.getUserFilterOptions() && null != this.getUserFilterOptionsVar()) {
+				this.pageContext.setAttribute(this.getUserFilterOptionsVar(), this.getUserFilterOptions());
+			}
+			List<String> contents = helper.getContentsId(this, reqCtx);
 			this.pageContext.setAttribute(this.getListName(), contents);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "doEndTag");
 			throw new JspException("Error detected while finalising the tag", t);
 		}
 		this.release();
-		return super.doEndTag();
+		return EVAL_PAGE;
 	}
 	
 	private void extractExtraShowletParameters(RequestContext reqCtx) {
@@ -155,6 +136,22 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 		this._filters = newFilters;
 	}
 	
+	private void addUserFilterOptions(List<UserFilterOptionBean> userFilterOptions) {
+		if (null == userFilterOptions) return;
+		for (int i = 0; i < userFilterOptions.size(); i++) {
+			this.addUserFilterOption(userFilterOptions.get(i));
+		}
+	}
+	
+	@Override
+	public void addUserFilterOption(UserFilterOptionBean userFilterOption) {
+		if (null == userFilterOption) return;
+		if (null == this.getUserFilterOptions()) {
+			this.setUserFilterOptions(new ArrayList<UserFilterOptionBean>());
+		}
+		this.getUserFilterOptions().add(userFilterOption);
+	}
+	
 	@Override
 	public EntitySearchFilter[] getFilters() {
 		return this._filters;
@@ -214,12 +211,19 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 	}
 	
 	/**
-	 * Checks if the list if the list has been previously stored in the cache.
-	 * @return
+	 * Checks if the list if the list has been previously stored in the startTag method.
+	 * @return true if the list wad evalued into start tag
+	 * @deprecated the startTag method isn't extended
 	 */
 	protected boolean isListEvaluated() {
 		return _listEvaluated;
 	}
+	
+	/**
+	 * Set if the list if the list has been previously stored in the startTag method.
+	 * @param listEvaluated true if the list wad evalued into start tag
+	 * @deprecated the startTag method isn't extended
+	 */
 	protected void setListEvaluated(boolean listEvaluated) {
 		this._listEvaluated = listEvaluated;
 	}
@@ -241,7 +245,8 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 		this._cacheable = cacheable;
 	}
 	
-	protected List<UserFilterOptionBean> getUserFilterOptions() {
+	@Override
+	public List<UserFilterOptionBean> getUserFilterOptions() {
 		return _userFilterOptions;
 	}
 	protected void setUserFilterOptions(List<UserFilterOptionBean> userFilterOptions) {
@@ -285,6 +290,7 @@ public class ContentListTag extends TagSupport implements IContentListBean {
 	
 	private List<UserFilterOptionBean> _userFilterOptions;
 	
+	@Deprecated
 	private boolean _listEvaluated;
 	
 	private String _titleVar;

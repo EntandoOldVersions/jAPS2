@@ -69,6 +69,12 @@ public class ContentListHelper implements IContentListHelper {
 	}
 	
 	@Override
+	public UserFilterOptionBean getUserFilterOption(String contentType, IContentListFilterBean bean, RequestContext reqCtx) {
+		FilterUtils dom = new FilterUtils();
+		return dom.getUserFilter(contentType, bean, this.getContentManager(), reqCtx);
+	}
+	
+	@Override
 	public String getShowletParam(EntitySearchFilter[] filters) {
 		FilterUtils dom = new FilterUtils();
 		return dom.getShowletParam(filters);
@@ -76,12 +82,43 @@ public class ContentListHelper implements IContentListHelper {
 	
 	@Override
 	public List<String> getContentsId(IContentListBean bean, RequestContext reqCtx) throws Throwable {
-		List<UserFilterOptionBean> userFilters = null;
-		return this.getContentsId(bean, userFilters, reqCtx);
+		List<String> contentsId = null;
+		try {
+			List<UserFilterOptionBean> userFilterOptions = bean.getUserFilterOptions();
+			UserFilterOptionBean fullTextUserFilter = null;
+			boolean isUserFilterExecuted = false;
+			if (null != userFilterOptions) {
+				for (int i = 0; i < userFilterOptions.size(); i++) {
+					UserFilterOptionBean userFilter = userFilterOptions.get(i);
+					if (null != userFilter.getFormFieldValues() && userFilter.getFormFieldValues().size() > 0) {
+						if (userFilter.isAttributeFilter() || 
+								(!userFilter.isAttributeFilter() 
+										&& !userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT))) {
+							//if executed full-text search filter... it's not important here
+							isUserFilterExecuted = true;
+						} else if (!userFilter.isAttributeFilter() 
+										&& userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT)) {
+							fullTextUserFilter = userFilter;
+						}
+					}
+				}
+			}
+			if (!isUserFilterExecuted) {
+				contentsId = this.searchInCache(bean.getListName(), reqCtx);
+			}
+			if (null == contentsId) {
+				contentsId = this.extractContentsId(bean, userFilterOptions, reqCtx, isUserFilterExecuted);
+			}
+			contentsId = this.executeFullTextSearch(reqCtx, contentsId, fullTextUserFilter);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getContentsId");
+			throw new ApsSystemException("Error extracting contents id", t);
+		}
+		return contentsId;
 	}
 	
-	@Override
-	public List<String> getContentsId(IContentListBean bean, List<UserFilterOptionBean> userFilters, RequestContext reqCtx) throws Throwable {
+	protected List<String> extractContentsId(IContentListBean bean, 
+			List<UserFilterOptionBean> userFilters, RequestContext reqCtx, boolean isUserFilterExecuted) throws ApsSystemException {
 		List<String> contentsId = null;
 		try {
 			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
@@ -96,13 +133,37 @@ public class ContentListHelper implements IContentListHelper {
 				bean.setCategory(config.getProperty(SHOWLET_PARAM_CATEGORY));
 			}
 			this.addShowletFilters(bean, config, SHOWLET_PARAM_FILTERS, reqCtx);
+			if (null != userFilters && userFilters.size() > 0) {
+				for (int i = 0; i < userFilters.size(); i++) {
+					UserFilterOptionBean userFilter = userFilters.get(i);
+					EntitySearchFilter filter = userFilter.getEntityFilter();
+					if (null != filter) bean.addFilter(filter);
+				}
+			}
 			String[] categories = this.getCategories(bean.getCategory(), config, userFilters);
-			contentsId = this.getContentsId(bean, userFilters, categories, reqCtx);
+			Collection<String> userGroupCodes = this.getAllowedGroups(reqCtx);
+			contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), categories, bean.getFilters(), userGroupCodes);
+			if (!isUserFilterExecuted && bean.isCacheable()) {
+				String cacheKey = this.buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
+				this.putListInCache(bean.getContentType(), reqCtx, contentsId, cacheKey);
+			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentsId");
-			throw new ApsSystemException("Error extracting contenut list", t);
+			ApsSystemUtils.logThrowable(t, this, "extractContentsId");
+			throw new ApsSystemException("Error extracting contents id", t);
 		}
 		return contentsId;
+	}
+	
+	protected List<String> executeFullTextSearch(RequestContext reqCtx, 
+			List<String> masterContentsId, UserFilterOptionBean fullTextUserFilter) throws ApsSystemException {
+		if (fullTextUserFilter != null && null != fullTextUserFilter.getFormFieldValues()) {
+			String word = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[0]);
+			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+			List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(currentLang.getCode(), word, this.getAllowedGroups(reqCtx));
+			return ListUtils.intersection(fullTextResult, masterContentsId);
+		} else {
+			return masterContentsId;
+		}
 	}
 	
 	protected String[] getCategories(String category, ApsProperties config) {
@@ -124,7 +185,7 @@ public class ContentListHelper implements IContentListHelper {
 		if (null != userFilters) {
 			for (int i = 0; i < userFilters.size(); i++) {
 				UserFilterOptionBean userFilterBean = userFilters.get(i);
-				if (userFilterBean.getType().equals(UserFilterOptionBean.TYPE_METADATA) 
+				if (!userFilterBean.isAttributeFilter() 
 						&& userFilterBean.getKey().equals(UserFilterOptionBean.KEY_CATEGORY) 
 						&& null != userFilterBean.getFormFieldValues()) {
 					codes.add(userFilterBean.getFormFieldValues().get(userFilterBean.getFormFieldNames()[0]));
@@ -151,41 +212,9 @@ public class ContentListHelper implements IContentListHelper {
 		}
 	}
 	
+	@Deprecated
 	protected List<String> getContentsId(IContentListBean bean, String[] categories, RequestContext reqCtx) throws Throwable {
-		Collection<String> userGroupCodes = this.getAllowedGroups(reqCtx);
-		List<String> contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), categories, bean.getFilters(), userGroupCodes);
-		if (bean.isCacheable()) {
-			String cacheKey = this.buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
-			this.putListInCache(bean.getContentType(), reqCtx, contentsId, cacheKey);
-		}
-		return contentsId;
-	}
-	
-	protected List<String> getContentsId(IContentListBean bean, List<UserFilterOptionBean> userFilters, String[] categories, RequestContext reqCtx) throws Throwable {
-		UserFilterOptionBean fullTextUserFilter = null;
-		if (null == userFilters || userFilters.size() == 0) {
-			return this.getContentsId(bean, categories, reqCtx);
-		} else {
-			for (int i = 0; i < userFilters.size(); i++) {
-				UserFilterOptionBean userFilter = userFilters.get(i);
-				if (userFilter.getType().equals(UserFilterOptionBean.TYPE_METADATA) 
-						&& userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT)) {
-					fullTextUserFilter = userFilter;
-				}
-				EntitySearchFilter filter = userFilter.getEntityFilter();
-				if (null != filter) bean.addFilter(filter);
-			}
-		}
-		Collection<String> userGroupCodes = this.getAllowedGroups(reqCtx);
-		List<String> contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), categories, bean.getFilters(), userGroupCodes);
-		if (fullTextUserFilter != null && null != fullTextUserFilter.getFormFieldValues()) {
-			String word = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[0]);
-			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-			List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(currentLang.getCode(), word, this.getAllowedGroups(reqCtx));
-			return ListUtils.intersection(fullTextResult, contentsId);
-		} else {
-			return contentsId;
-		}
+		return this.getContentsId(bean, reqCtx);
 	}
 	
 	private void putListInCache(String contentType, RequestContext reqCtx, List<String> contentsId, String cacheKey) {
@@ -285,15 +314,18 @@ public class ContentListHelper implements IContentListHelper {
 	}
 	
 	@Override
-	public List<UserFilterOptionBean> getUserFilters(RequestContext reqCtx) throws ApsSystemException {
+	public List<UserFilterOptionBean> getConfiguredUserFilters(IContentListBean bean, RequestContext reqCtx) throws ApsSystemException {
 		List<UserFilterOptionBean> userEntityFilters = null;
 		try {
 			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 			ApsProperties config = showlet.getConfig();
-			String typeCode = config.getProperty(SHOWLET_PARAM_CONTENT_TYPE);
-			IApsEntity prototype = this.getContentManager().getEntityPrototype(typeCode);
+			if (null == config || null == config.getProperty(SHOWLET_PARAM_CONTENT_TYPE)) {
+				return null;
+			}
+			String contentTypeCode = config.getProperty(SHOWLET_PARAM_CONTENT_TYPE);
+			IApsEntity prototype = this.getContentManager().getEntityPrototype(contentTypeCode);
 			if (null == prototype) {
-				ApsSystemUtils.getLogger().severe("Null content type by code '" + typeCode + "'");
+				ApsSystemUtils.getLogger().severe("Null content type by code '" + contentTypeCode + "'");
 				return null;
 			}
 			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);

@@ -12,53 +12,23 @@
 	</c:when>
 	<c:otherwise>
 	
-<wp:pager listName="result" objectName="groupContent" max="10" pagerIdFromFrame="true" >
+<wp:pager listName="result" objectName="groupContent" max="10" pagerIdFromFrame="true" advanced="true" offset="5">
+	<c:set var="group" value="${groupContent}" scope="request" />
+	
 	<p><em><wp:i18n key="SEARCH_RESULTS_INTRO" /> <!-- infamous whitespace hack -->
 	<c:out value="${groupContent.size}" /> <!-- infamous whitespace hack -->
 	<wp:i18n key="SEARCH_RESULTS_OUTRO" /> [<c:out value="${groupContent.begin + 1}" /> &ndash; <c:out value="${groupContent.end + 1}" />]:</em></p>
-	<c:if test="${groupContent.size > groupContent.max}">
-		<p class="paginazione">
-			<c:choose>
-			<c:when test="${'1' == groupContent.currItem}">&laquo; <wp:i18n key="PREV" /></c:when>
-			<c:otherwise><a href="<wp:url paramRepeat="true" ><wp:parameter name="${groupContent.paramItemName}" ><c:out value="${groupContent.prevItem}"/></wp:parameter></wp:url>">&laquo; <wp:i18n key="PREV" /></a></c:otherwise>					
-			</c:choose>
-			<c:forEach var="item" items="${groupContent.items}">
-				<c:choose>
-				<c:when test="${item == groupContent.currItem}"> [<c:out value="${item}"/>] </c:when>
-				<c:otherwise> <a href="<wp:url paramRepeat="true" ><wp:parameter name="${groupContent.paramItemName}" ><c:out value="${item}"/></wp:parameter></wp:url>"><c:out value="${item}"/></a> </c:otherwise>
-				</c:choose>
-			</c:forEach>
-			<c:choose>
-			<c:when test="${groupContent.maxItem == groupContent.currItem}"><wp:i18n key="NEXT" /> &raquo;</c:when>
-			<c:otherwise><a href="<wp:url paramRepeat="true" ><wp:parameter name="${groupContent.paramItemName}" ><c:out value="${groupContent.nextItem}"/></wp:parameter></wp:url>"><wp:i18n key="NEXT" /> &raquo;</a></c:otherwise>					
-			</c:choose>
-		</p>
-	</c:if>		
+	
+	<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/pagerBlock.jsp" />
+	
 	<ul>
 		<c:forEach var="contentId" items="${result}" begin="${groupContent.begin}" end="${groupContent.end}">
 			<li><jacms:content contentId="${contentId}" modelId="list" /></li>
 		</c:forEach>
 	</ul>
 	
-	<c:if test="${groupContent.size > groupContent.max}">
-		<p class="paginazione">
-			<c:choose>
-			<c:when test="${'1' == groupContent.currItem}">&laquo; <wp:i18n key="PREV" /></c:when>
-			<c:otherwise><a href="<wp:url paramRepeat="true" ><wp:parameter name="${groupContent.paramItemName}" ><c:out value="${groupContent.prevItem}"/></wp:parameter></wp:url>">&laquo; <wp:i18n key="PREV" /></a></c:otherwise>					
-			</c:choose>
-			<c:forEach var="item" items="${groupContent.items}">
-				<c:choose>
-				<c:when test="${item == groupContent.currItem}"> [<c:out value="${item}"/>] </c:when>
-				<c:otherwise> <a href="<wp:url paramRepeat="true" ><wp:parameter name="${groupContent.paramItemName}" ><c:out value="${item}"/></wp:parameter></wp:url>"><c:out value="${item}"/></a> </c:otherwise>
-				</c:choose>
-			</c:forEach>
-			<c:choose>
-			<c:when test="${groupContent.maxItem == groupContent.currItem}"><wp:i18n key="NEXT" /> &raquo;</c:when>
-			<c:otherwise><a href="<wp:url paramRepeat="true" ><wp:parameter name="${groupContent.paramItemName}" ><c:out value="${groupContent.nextItem}"/></wp:parameter></wp:url>"><wp:i18n key="NEXT" /> &raquo;</a></c:otherwise>					
-			</c:choose>
-		</p>
-	</c:if>	
-		
+	<c:import url="/WEB-INF/plugins/jacms/aps/jsp/showlets/inc/pagerBlock.jsp" />
+	
 </wp:pager>	
 	
 </c:otherwise>

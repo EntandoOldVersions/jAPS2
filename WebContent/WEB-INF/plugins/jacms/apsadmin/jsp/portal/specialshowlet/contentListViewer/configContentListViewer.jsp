@@ -250,7 +250,7 @@
 		<td>
 			<s:text name="label.filterBy" />
 			<strong>
-				<s:if test="#userFilter['type'] == 'metadata'">
+				<s:if test="#userFilter['attributeFilter'] == 'false'">
 					<s:if test="#userFilter['key'] == 'fulltext'">
 						<s:text name="label.fulltext" />			
 					</s:if>
@@ -258,7 +258,7 @@
 						<s:text name="label.category" />			
 					</s:elseif>
 				</s:if>
-				<s:elseif test="#userFilter['type'] == 'attribute'">
+				<s:elseif test="#userFilter['attributeFilter'] == 'true'">
 					<s:property value="#userFilter['key']" />
 				</s:elseif>
 			</strong>

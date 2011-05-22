@@ -53,8 +53,6 @@ public interface IContentListHelper {
 	 */
 	public List<String> getContentsId(IContentListBean bean, RequestContext reqCtx) throws Throwable;
 	
-	public List<String> getContentsId(IContentListBean bean, List<UserFilterOptionBean> userFilters, RequestContext reqCtx) throws Throwable;
-	
 	/**
 	 * Restituisce l'insieme dei filtri in base al parametro di configurazione della showlet detentore dei filtri.
 	 * Il parametro è nella forma di:
@@ -76,6 +74,8 @@ public interface IContentListHelper {
 	 */
 	public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, RequestContext reqCtx);
 	
+	public UserFilterOptionBean getUserFilterOption(String contentType, IContentListFilterBean bean, RequestContext reqCtx);
+	
 	/**
 	 * Restituisce il parametro da inserire nella configurazione della showlet.
 	 * Il parametro è nella forma di:
@@ -86,16 +86,20 @@ public interface IContentListHelper {
 	public String getShowletParam(EntitySearchFilter[] filters);
 	
 	/**
-	 * Return tle list of the front-end user filter options.
+	 * Return tle list of the front-end user filter options configured into showlet parameters.
+	 * @param bean The container of the base informations.
 	 * @param reqCtx The request context.
 	 * @return The list of the filter options.
 	 * @throws ApsSystemException in case of error.
 	 */
-	public List<UserFilterOptionBean> getUserFilters(RequestContext reqCtx) throws ApsSystemException;
+	public List<UserFilterOptionBean> getConfiguredUserFilters(IContentListBean bean, RequestContext reqCtx) throws ApsSystemException;
 	
 	public static final String[] allowedMetadataFilterKeys = 
 		{IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, IContentManager.CONTENT_DESCR_FILTER_KEY, IContentManager.CONTENT_STATUS_FILTER_KEY, 
 		IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY, IContentManager.CONTENT_ONLINE_FILTER_KEY};
+	
+	public static final String[] allowedMetadataUserFilterOptionKeys = 
+		{UserFilterOptionBean.KEY_CATEGORY, UserFilterOptionBean.KEY_FULLTEXT};
 	
 	public static final String CATEGORIES_SEPARATOR = ",";
 	

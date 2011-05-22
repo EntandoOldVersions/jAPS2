@@ -45,19 +45,19 @@ import com.agiletec.apsadmin.util.CheckFormatUtil;
 public class UserFilterOptionBean {
 	
 	public UserFilterOptionBean(Properties properties, IApsEntity prototype) throws Throwable {
-		this.setType(properties.getProperty(PARAM_TYPE));
-		String type = this.getType();
-		if (type == null || (!type.equals(TYPE_METADATA) && !type.equals(TYPE_ATTRIBUTE))) {
-			throw new RuntimeException("Wrong user filter type '" + type + "'");
-		}
 		this.setKey(properties.getProperty(PARAM_KEY));
+		if (null == this.getKey()) {
+			throw new ApsSystemException("Null option key");
+		}
 		String isAttributeFilter = properties.getProperty(PARAM_IS_ATTRIBUTE_FILTER);
 		this.setAttributeFilter(null != isAttributeFilter && isAttributeFilter.equalsIgnoreCase("true"));
-		if (this.getType().equals(TYPE_ATTRIBUTE) && null != this.getKey() && this.isAttributeFilter()) {
+		if (this.isAttributeFilter()) {
 			this.setAttribute((AttributeInterface) prototype.getAttribute(this.getKey()));
 			if (null == this.getAttribute()) {
 				throw new ApsSystemException("Null attribute by key '" + this.getKey() + "'");
 			}
+		} else if (!this.getKey().equals(KEY_FULLTEXT) && !this.getKey().equals(KEY_CATEGORY)) {
+			throw new ApsSystemException("Invalid metadata key '" + this.getKey() + "'");
 		}
 	}
 	
@@ -75,18 +75,12 @@ public class UserFilterOptionBean {
 	public void setKey(String key) {
 		this._key = key;
 	}
+	
 	public boolean isAttributeFilter() {
 		return _attributeFilter;
 	}
 	public void setAttributeFilter(boolean attributeFilter) {
 		this._attributeFilter = attributeFilter;
-	}
-
-	public void setType(String type) {
-		this._type = type;
-	}
-	public String getType() {
-		return _type;
 	}
 	
 	public void setAttribute(AttributeInterface attribute) {
@@ -114,7 +108,7 @@ public class UserFilterOptionBean {
 		String[] formFieldNames = null;
 		try {
 			String frameIdSuffix = (null != this.getCurrentFrame()) ? "_frame" + this.getCurrentFrame().toString() : "";
-			if (this.getType().equals(TYPE_METADATA)) {
+			if (!this.isAttributeFilter()) {
 				formFieldNames = new String[1];
 				String fieldName = null;
 				if (this.getKey().equals(KEY_FULLTEXT)) {
@@ -125,7 +119,7 @@ public class UserFilterOptionBean {
 				formFieldNames[0] = fieldName;
 				String value = request.getParameter(fieldName);
 				this.addFormValue(fieldName, value, formFieldNames.length);
-			} else if (this.getType().equals(TYPE_ATTRIBUTE)) {
+			} else {
 				AttributeInterface attribute = this.getAttribute();
 				if (attribute instanceof ITextAttribute) {
 					String[] fieldsSuffix = {"_textFieldName"};
@@ -212,7 +206,7 @@ public class UserFilterOptionBean {
 	public EntitySearchFilter getEntityFilter() throws ApsSystemException {
 		EntitySearchFilter filter = null;
 		try {
-			if (!this.getType().equals(TYPE_ATTRIBUTE) || null == this.getFormFieldValues()) {
+			if (!this.isAttributeFilter() || null == this.getFormFieldValues()) {
 				return null;
 			}
 			AttributeInterface attribute = this.getAttribute();
@@ -281,7 +275,6 @@ public class UserFilterOptionBean {
 		this._formFieldErrors = formFieldErrors;
 	}
 	
-	private String _type; //'metadata' || 'attribute'
 	private String _key; //'fulltext' || 'category' || a name of attribute
 	private boolean _attributeFilter;
 	private AttributeInterface _attribute;
@@ -293,7 +286,6 @@ public class UserFilterOptionBean {
 	private Map<String, String> _formFieldValues;
 	private Map<String, AttributeFieldError> _formFieldErrors;
 	
-	public static final String PARAM_TYPE = "type";
 	public static final String PARAM_KEY = "key";
 	public static final String PARAM_IS_ATTRIBUTE_FILTER = "attributeFilter";
 	
