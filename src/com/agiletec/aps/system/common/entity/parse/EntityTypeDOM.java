@@ -173,6 +173,7 @@ public class EntityTypeDOM implements IEntityTypeDOM {
 	 */
 	protected void fillEntityType(IApsEntity entityType, Element currentContentElem) throws ApsSystemException {
 		try {
+			if (null == currentContentElem.getChild("attributes")) return;
 			List<Element> attributeElements = currentContentElem.getChild("attributes").getChildren();
 			for (int j=0; j<attributeElements.size(); j++) {
 				Element currentAttrElem = attributeElements.get(j);
