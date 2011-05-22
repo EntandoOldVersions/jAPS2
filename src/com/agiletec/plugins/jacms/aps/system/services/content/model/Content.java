@@ -17,6 +17,7 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,8 +125,11 @@ public class Content extends ApsEntity {
 	@Override
 	protected IApsEntityDOM getBuildJDOM() {
 		ContentDOM contentDOM = (ContentDOM) super.getBuildJDOM();
-        contentDOM.setStatus(this.getStatus());
-        contentDOM.setVersion(this.getVersion());
+		contentDOM.setStatus(this.getStatus());
+		contentDOM.setVersion(this.getVersion());
+		contentDOM.setLastEditor(this.getLastEditor());
+        contentDOM.setCreationDate(this.getCreated());
+        contentDOM.setModifyDate(this.getLastModified());
         return contentDOM;
 	}
 	
@@ -143,6 +147,20 @@ public class Content extends ApsEntity {
 	 */
 	public void setOnLine(boolean onLine) {
 		this._onLine = onLine;
+	}
+	
+	public Date getCreated() {
+		return _created;
+	}
+	public void setCreated(Date created) {
+		this._created = created;
+	}
+	
+	public Date getLastModified() {
+		return _lastModified;
+	}
+	public void setLastModified(Date lastModified) {
+		this._lastModified = lastModified;
 	}
 	
 	public String getVersion() {
@@ -201,6 +219,9 @@ public class Content extends ApsEntity {
 	private String _viewPage;
 	private String _listModel;
 	private String _defaultModel;
+	
+	private Date _created;
+	private Date _lastModified;
 	
 	private String _version;
 	private String _lastEditor;

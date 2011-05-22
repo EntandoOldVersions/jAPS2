@@ -20,6 +20,7 @@ package com.agiletec.plugins.jacms.aps.system.services.content;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,9 +183,21 @@ public class ContentManager extends ApsEntityManager
 					content.setDescr(contentVo.getDescr());
 					content.setOnLine(contentVo.isOnLine());
 					content.setMainGroup(contentVo.getMainGroupCode());
-					content.setVersion(contentVo.getVersion());
-					content.setLastEditor(contentVo.getLastEditor());
-					content.setStatus(contentVo.getStatus());
+					if (null == content.getVersion()) {
+						content.setVersion(contentVo.getVersion());
+					}
+					if (null == content.getLastEditor()) {
+						content.setLastEditor(contentVo.getLastEditor());
+					}
+					if (null == content.getCreated()) {
+						content.setCreated(contentVo.getCreate());
+					}
+					if (null == content.getLastModified()) {
+						content.setLastModified(contentVo.getModify());
+					}
+					if (null == content.getStatus()) {
+						content.setStatus(contentVo.getStatus());
+					}
 				}
 			}
 		} catch (ApsSystemException e) {
@@ -223,6 +236,7 @@ public class ContentManager extends ApsEntityManager
 	@Override
 	public void saveContent(Content content) throws ApsSystemException {
 		try {
+			content.setLastModified(new Date());
 			content.incrementVersion(false);
 			String status = content.getStatus();
 			if (null == status) {
@@ -253,7 +267,9 @@ public class ContentManager extends ApsEntityManager
 	@Override
 	public void insertOnLineContent(Content content) throws ApsSystemException {
 		try {
+			content.setLastModified(new Date());
 			if (null == content.getId()) {
+				content.setCreated(new Date());
 				this.saveContent(content);
 			}
 			content.incrementVersion(true);
@@ -332,6 +348,7 @@ public class ContentManager extends ApsEntityManager
 	@Override
 	public void removeOnLineContent(Content content) throws ApsSystemException {
 		try {
+			content.setLastModified(new Date());
 			content.incrementVersion(false);
 			if (null != content.getStatus() && content.getStatus().equals(Content.STATUS_PUBLIC)) {
 				content.setStatus(Content.STATUS_READY);

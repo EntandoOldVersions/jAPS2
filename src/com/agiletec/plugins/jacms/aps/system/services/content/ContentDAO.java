@@ -37,6 +37,7 @@ import com.agiletec.aps.system.common.util.EntityAttributeIterator;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.util.DateConverter;
+import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.CmsAttributeReference;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
@@ -74,8 +75,8 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		contentVo.setDescr(res.getString(3));
 		contentVo.setStatus(res.getString(4));
 		String xmlWork = res.getString(5);
-		contentVo.setCreate(DateConverter.parseDate(res.getString(6), this.DATE_FORMAT));
-		contentVo.setModify(DateConverter.parseDate(res.getString(7), this.DATE_FORMAT));
+		contentVo.setCreate(DateConverter.parseDate(res.getString(6), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
+		contentVo.setModify(DateConverter.parseDate(res.getString(7), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
 		String xmlOnLine = res.getString(8);
 		contentVo.setOnLine(null != xmlOnLine && xmlOnLine.length() > 0);
 		contentVo.setSync(xmlWork.equals(xmlOnLine));
@@ -122,7 +123,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat.setString(3, content.getDescr());
 			stat.setString(4, content.getStatus());
 			stat.setString(5, content.getXML());
-			String currentDate = DateConverter.getFormattedDate(new Date(), this.DATE_FORMAT);
+			String currentDate = DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT);
 			stat.setString(6, currentDate);
 			stat.setString(7, currentDate);
 			stat.setString(8, content.getMainGroup());
@@ -171,7 +172,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(3, content.getDescr());
 		stat.setString(4, content.getStatus());
 		stat.setString(5, content.getXML());
-		String currentDate = DateConverter.getFormattedDate(new Date(), this.DATE_FORMAT);
+		String currentDate = DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT);
 		stat.setString(6, currentDate);
 		stat.setString(7, currentDate);
 		stat.setString(8, content.getMainGroup());
@@ -215,7 +216,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat.setString(2, content.getDescr());
 			stat.setString(3, content.getStatus());
 			stat.setString(4, content.getXML());
-			stat.setString(5, DateConverter.getFormattedDate(new Date(), this.DATE_FORMAT));
+			stat.setString(5, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
 			stat.setString(6, content.getMainGroup());
 			stat.setString(7, content.getVersion());
 			stat.setString(8, content.getLastEditor());
@@ -264,7 +265,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(2, content.getDescr());
 		stat.setString(3, content.getStatus());
 		stat.setString(4, content.getXML());
-		stat.setString(5, DateConverter.getFormattedDate(new Date(), this.DATE_FORMAT));
+		stat.setString(5, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
 		stat.setString(6, content.getMainGroup());
 		stat.setString(7, content.getVersion());
 		stat.setString(8, content.getLastEditor());
@@ -326,7 +327,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat.setString(3, content.getStatus());
 			String xml = content.getXML();
 			stat.setString(4, xml);
-			stat.setString(5, DateConverter.getFormattedDate(new Date(), this.DATE_FORMAT));
+			stat.setString(5, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
 			stat.setString(6, xml);
 			stat.setString(7, content.getMainGroup());
 			stat.setString(8, content.getVersion());
@@ -428,7 +429,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat.setString(1, null);
 			stat.setString(2, content.getStatus());
 			stat.setString(3, content.getXML());
-			stat.setString(4, DateConverter.getFormattedDate(new Date(), this.DATE_FORMAT));
+			stat.setString(4, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
 			stat.setString(5, content.getVersion());
 			stat.setString(6, content.getLastEditor());
 			stat.setString(7, content.getId());
@@ -700,7 +701,8 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		return LOAD_ALL_CONTENTS_ID;
 	}
 	
-	protected final String DATE_FORMAT = "yyyyMMddHHmmss";
+	@Deprecated
+	protected final String DATE_FORMAT = JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT;
 	
 	private final String DELETE_CONTENT =
 		"DELETE FROM contents WHERE contentid = ? ";

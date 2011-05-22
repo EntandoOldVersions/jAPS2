@@ -100,4 +100,6 @@ public class JacmsSystemConstants {
 	
 	public static final String PERMISSION_CONTENT_SUPERVISION = "validateContents";
 	
+	public static final String CONTENT_METADATA_DATE_FORMAT = "yyyyMMddHHmmss";
+	
 }

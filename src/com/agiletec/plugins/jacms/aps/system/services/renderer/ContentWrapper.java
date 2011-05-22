@@ -18,6 +18,7 @@
 package com.agiletec.plugins.jacms.aps.system.services.renderer;
 
 import com.agiletec.aps.system.common.renderer.EntityWrapper;
+import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 
@@ -43,7 +44,7 @@ public class ContentWrapper extends EntityWrapper {
 	 * tipo SymbolicLink.CONTENT_TYPE).
 	 * @return Un URL simbolico da utilizzare come href in un tag &lt;a&gt;
 	 */
-	public String getContentLink(){
+	public String getContentLink() {
 		SymbolicLink link = new SymbolicLink();
 		link.setDestinationToContent(this.getId());
 		return link.getSymbolicDestination();
@@ -55,10 +56,34 @@ public class ContentWrapper extends EntityWrapper {
 	 * @param pageCode Il codice della pagina su cui visualizzare il contenuto.
 	 * @return Un URL simbolico da utilizzare come href in un tag &lt;a&gt;
 	 */
-	public String getContentOnPageLink(String pageCode){
+	public String getContentOnPageLink(String pageCode) {
 		SymbolicLink symbLink = new SymbolicLink();
 		symbLink.setDestinationToContentOnPage(this.getId(), pageCode);
 		return symbLink.getSymbolicDestination();
+	}
+	
+	public String getCreated(String pattern) {
+		Content content = (Content) super.getEntity();
+		if (null != content.getCreated()) {
+			return DateConverter.getFormattedDate(content.getCreated(), pattern, this.getRenderingLang());
+		}
+		return null;
+	}
+	
+	public String getLastModified(String pattern) {
+		Content content = (Content) super.getEntity();
+		if (null != content.getLastModified()) {
+			return DateConverter.getFormattedDate(content.getLastModified(), pattern, this.getRenderingLang());
+		}
+		return null;
+	}
+	
+	public String getVersion() {
+		return ((Content) super.getEntity()).getVersion();
+	}
+	
+	public String getLastEditor() {
+		return ((Content) super.getEntity()).getLastEditor();
 	}
 	
 }

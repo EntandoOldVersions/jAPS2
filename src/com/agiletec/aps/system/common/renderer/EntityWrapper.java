@@ -93,7 +93,7 @@ public class EntityWrapper implements Map {
 	 */
 	public void setRenderingLang(String langCode) {
 		this._renderingLang = langCode;
-		this._entity.setRenderingLang(_renderingLang);
+		this._entity.setRenderingLang(this._renderingLang);
 	}
 	
 	@Override
@@ -161,8 +161,20 @@ public class EntityWrapper implements Map {
 		throw new UnsupportedOperationException("Operation not permitted");
 	}
 	
+	protected IApsEntity getEntity() {
+		return _entity;
+	}
+	
+	protected Map<String, AttributeInterface> getAttributeMap() {
+		return _attributeMap;
+	}
+	
+	protected String getRenderingLang() {
+		return _renderingLang;
+	}
+	
 	private IApsEntity _entity;
 	private Map<String, AttributeInterface> _attributeMap;
 	private String _renderingLang;
-
+	
 }
