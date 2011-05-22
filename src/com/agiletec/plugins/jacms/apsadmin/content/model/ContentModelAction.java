@@ -289,6 +289,13 @@ public class ContentModelAction extends BaseAction implements IContentModelActio
 		this._stylesheet = stylesheet;
 	}
 	
+	public List<String> getAllowedPublicContentMethods() {
+		return _allowedPublicContentMethods;
+	}
+	public void setAllowedPublicContentMethods(List<String> allowedPublicContentMethods) {
+		this._allowedPublicContentMethods = allowedPublicContentMethods;
+	}
+
 	public Properties getAllowedPublicAttributeMethods() {
 		return _allowedPublicAttributeMethods;
 	}
@@ -331,6 +338,7 @@ public class ContentModelAction extends BaseAction implements IContentModelActio
 	private String _contentShape;
 	private String _stylesheet;
 	
+	private List<String> _allowedPublicContentMethods;
 	private Properties _allowedPublicAttributeMethods;
 	
 	private Map _referencingPages;

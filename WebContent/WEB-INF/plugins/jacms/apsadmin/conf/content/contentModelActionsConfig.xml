@@ -17,8 +17,20 @@
 			class="com.agiletec.plugins.jacms.apsadmin.content.model.ContentModelAction" parent="abstractBaseAction" >
 		<property name="contentManager" ref="jacmsContentManager" />
 		<property name="contentModelManager" ref="jacmsContentModelManager" />
+		<property name="allowedPublicContentMethods" ref="jacmsAllowedPublicContentMethods" />
 		<property name="allowedPublicAttributeMethods" ref="jacmsAllowedPublicAttributeMethods" />
 	</bean>
+	
+	<util:list id="jacmsAllowedPublicContentMethods">
+		<value><![CDATA[getId()]]></value>
+		<value><![CDATA[getCategories()]]></value>
+		<value><![CDATA[getContentLink()]]></value>
+		<value><![CDATA[getContentOnPageLink(\"<PAGE_CODE>\")]]></value>
+		<value><![CDATA[getCreated(\"<DATE_PATTERN>\")]]></value>
+		<value><![CDATA[getLastModified(\"<DATE_PATTERN>\")]]></value>
+		<value><![CDATA[getVersion()]]></value>
+		<value><![CDATA[getLastEditor()]]></value>	
+	</util:list>
 	
 	<util:map id="jacmsAllowedPublicAttributeMethods" map-class="java.util.Properties">
 		<entry>
