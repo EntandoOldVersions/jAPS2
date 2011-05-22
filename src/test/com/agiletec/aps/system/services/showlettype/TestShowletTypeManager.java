@@ -36,7 +36,7 @@ import com.agiletec.aps.system.services.showlettype.ShowletTypeParameter;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
- * @author M.Diana
+ * @author M.Diana - E.Santoboni
  */
 public class TestShowletTypeManager extends BaseTestCase {
 	
@@ -163,7 +163,7 @@ public class TestShowletTypeManager extends BaseTestCase {
 			assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
 		}
     }
-    
+
     public void testUpdateTitles() throws Throwable {
     	String showletTypeCode = "test_showletType";
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
@@ -182,6 +182,39 @@ public class TestShowletTypeManager extends BaseTestCase {
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
 			assertEquals("Modified title", extracted.getTitles().get("en"));
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			if (null != this._showletTypeManager.getShowletType(showletTypeCode)) {
+				this._showletTypeManager.deleteShowletType(showletTypeCode);
+			}
+			assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+		}
+    }
+    
+    public void testUpdate() throws Throwable {
+    	String showletTypeCode = "test_showletType";
+    	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+    	try {
+			ShowletType type = this.createNewShowletType(showletTypeCode);
+			this._showletTypeManager.addShowletType(type);
+			ShowletType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			assertNotNull(extracted);
+			assertEquals("content_viewer", extracted.getParentType().getCode());
+			assertEquals("ART112", extracted.getConfig().get("contentId"));
+			
+			ApsProperties newProperties = new ApsProperties();
+	    	this._showletTypeManager.updateShowletType(showletTypeCode, extracted.getTitles(), newProperties);
+	    	extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			assertNotNull(extracted);
+			assertNotNull(extracted.getConfig());
+			assertEquals(0, extracted.getConfig().size());
+			
+			newProperties.put("contentId", "EVN103");
+			this._showletTypeManager.updateShowletType(showletTypeCode, extracted.getTitles(), newProperties);
+			extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			assertNotNull(extracted);
+			assertEquals("EVN103", extracted.getConfig().get("contentId"));
 		} catch (Throwable t) {
 			throw t;
 		} finally {

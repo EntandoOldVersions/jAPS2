@@ -22,6 +22,7 @@ import java.util.List;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Showlet;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.system.services.showlettype.ShowletTypeParameter;
 import com.agiletec.aps.util.ApsProperties;
@@ -78,6 +79,9 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 	public String save() {
 		try {
 			if (this.getStrutsAction() != ApsAdminSystemConstants.EDIT) {
+				if (!this.hasCurrentUserPermission(Permission.SUPERUSER)) {
+					return USER_NOT_ALLOWED;
+				}
 				return this.saveUserShowlet();
 			}
 			String check = this.checkShowletType();
@@ -85,9 +89,15 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 			ApsProperties titles = new ApsProperties();
 			titles.put("it", this.getItalianTitle());
 			titles.put("en", this.getEnglishTitle());
-			this.getShowletTypeManager().updateShowletTypeTitles(this.getShowletTypeCode(), titles);
+			ShowletType type = this.getShowletTypeManager().getShowletType(this.getShowletTypeCode());
+			if (type.isLogic() && type.isUserType() && !type.isLocked() && this.hasCurrentUserPermission(Permission.SUPERUSER)) {
+				ApsProperties config = this.extractShowletTypeConfig(type.getParentType().getTypeParameters());
+				this.getShowletTypeManager().updateShowletType(this.getShowletTypeCode(), titles, config);
+			} else {
+				this.getShowletTypeManager().updateShowletTypeTitles(this.getShowletTypeCode(), titles);
+			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveShowletTitles");
+			ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -105,7 +115,8 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 				newType = this.createNewShowletType();
 				ShowletType parentType = this.getShowletTypeManager().getShowletType(this.getParentShowletTypeCode());
 				newType.setParentType(parentType);
-				this.valueShowletTypeParameters(newType);
+				ApsProperties config = this.extractShowletTypeConfig(parentType.getTypeParameters());
+				newType.setConfig(config);
 			} else {
 				newType = this.createCopiedShowlet(showletToCopy);
 			}
@@ -195,9 +206,8 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 		return type;
 	}
 	
-	private void valueShowletTypeParameters(ShowletType newType) throws Exception {
+	private ApsProperties extractShowletTypeConfig(List<ShowletTypeParameter> parameters) throws Exception {
 		ApsProperties config = new ApsProperties();
-		List<ShowletTypeParameter> parameters = newType.getParentType().getTypeParameters();
 		for (int i=0; i<parameters.size(); i++) {
 			ShowletTypeParameter param = parameters.get(i);
 			String paramName = param.getName();
@@ -206,7 +216,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 				config.setProperty(paramName, value);
 			}
 		}
-		newType.setConfig(config);
+		return config;
 	}
 	
 	@Override

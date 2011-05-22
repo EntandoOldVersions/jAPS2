@@ -69,7 +69,7 @@
 				<param name="pageCode">${pageCode}</param>
 			</result>
 			<result type="redirectAction">viewShowlets</result>
-			<interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+			<interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
 		</action>
 		
 		<action name="trash" class="showletTypeAction" method="trash">

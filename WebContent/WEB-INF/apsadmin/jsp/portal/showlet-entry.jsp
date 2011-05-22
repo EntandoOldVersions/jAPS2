@@ -1,6 +1,7 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib uri="apsadmin-form.tld" prefix="wpsf" %>
-<%@ taglib uri="apsadmin-core.tld" prefix="wpsa" %>
+<%@ taglib prefix="wpsf" uri="apsadmin-form.tld" %>
+<%@ taglib prefix="wpsa" uri="apsadmin-core.tld" %>
+<%@ taglib prefix="wp" uri="aps-core.tld" %>
 
 <h1>
 <s:if test="strutsAction == 2"><a href="<s:url action="viewShowlets" namespace="/do/Portal/ShowletType" />" title="<s:text name="note.goToSomewhere" />: <s:text name="title.showletManagement" />"><s:text name="title.showletManagement" /></a></s:if>
@@ -89,7 +90,7 @@
 <fieldset><legend><s:text name="title.showletType.settings" /></legend>
 	<s:if test="strutsAction == 1">
 		<s:set var="parentShowletType" value="%{getShowletType(parentShowletTypeCode)}" />
-		<s:iterator value="#parentShowletType.typeParameters" id="showletParam" >
+		<s:iterator value="#parentShowletType.typeParameters" var="showletParam" >
 			<p>
 				<s:if test="#showletParam.descr != ''">
 					<em><s:property value="#showletParam.descr" />:</em><br />
@@ -100,18 +101,26 @@
 		</s:iterator>
 	</s:if>
 	<s:elseif test="strutsAction == 2">
-		<s:iterator value="#showletTypeVar.parentType.typeParameters" id="showletParam" >
+		<s:iterator value="#showletTypeVar.parentType.typeParameters" var="showletParam" >
 		<p>
 			<s:if test="#showletParam.descr != ''">
 				<em><s:property value="#showletParam.descr" />:</em><br />
 			</s:if>
+			<wp:ifauthorized permission="superuser"><s:set var="isSuperuserVar" value="%{true}" /></wp:ifauthorized>
+			<s:if test="#isSuperuserVar && #showletTypeVar.userType">
+			<label for="<s:property value="#showletParam.name" />" class="basic-mint-label"><s:property value="#showletParam.name" /></label>
+			<wpsf:textfield id="%{#showletParam.name}" name="%{#showletParam.name}" value="%{#showletTypeVar.config[#showletParam.name]}" cssClass="text" />
+			</s:if>
+			<s:else>
 			<em class="important"><s:property value="#showletParam.name" /></em>:&#32;
 			<s:property value="%{#showletTypeVar.config[#showletParam.name]}" />
+			</s:else>
 		</p>
 		</s:iterator>
+		<s:set var="isSuperuserVar" value="%{false}" />
 	</s:elseif>
 	<s:elseif test="strutsAction == 3">
-		<s:iterator value="showletToCopy.type.typeParameters" id="showletParam" >
+		<s:iterator value="showletToCopy.type.typeParameters" var="showletParam" >
 		<p>
 			<s:if test="#showletParam.descr != ''">
 				<em><s:property value="#showletParam.descr" />:</em><br />

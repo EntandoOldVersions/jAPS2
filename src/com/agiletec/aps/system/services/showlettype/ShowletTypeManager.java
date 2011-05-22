@@ -137,6 +137,27 @@ public class ShowletTypeManager extends AbstractService
 	}
 	
 	@Override
+	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig) throws ApsSystemException {
+		try {
+			ShowletType type = this._showletTypes.get(showletTypeCode);
+			if (null == type) {
+				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
+				return;
+			}
+			if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
+				this.updateShowletTypeTitles(showletTypeCode, titles);
+				return;
+			}
+			this.getShowletTypeDAO().updateShowletType(showletTypeCode, titles, defaultConfig);
+			type.setTitles(titles);
+			type.setConfig(defaultConfig);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
+			throw new ApsSystemException("Error updating Showlet type titles : type code" + showletTypeCode, t);
+		}
+	}
+	
+	@Override
 	public void updateShowletTypeTitles(String showletTypeCode, ApsProperties titles) throws ApsSystemException {
 		try {
 			ShowletType type = this._showletTypes.get(showletTypeCode);

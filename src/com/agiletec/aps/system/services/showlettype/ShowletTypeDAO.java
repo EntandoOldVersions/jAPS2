@@ -186,6 +186,31 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 		}
 	}
 	
+	@Override
+	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig) {
+		Connection conn = null;
+		PreparedStatement stat = null;
+		try {
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+			stat = conn.prepareStatement(UPDATE_SHOWLET_TYPE);
+			stat.setString(1, titles.toXml());
+			if (null == defaultConfig || defaultConfig.size() == 0) {
+				stat.setNull(2, Types.VARCHAR);
+			} else {
+				stat.setString(2, defaultConfig.toXml());
+			}
+			stat.setString(3, showletTypeCode);
+			stat.executeUpdate();
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Error updating showlet type", "updateShowletType");
+		} finally {
+			closeDaoResources(null, stat, conn);
+		}
+	}
+	
 	protected ILangManager getLangManager() {
 		return _langManager;
 	}
@@ -195,16 +220,19 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 	
 	private ILangManager _langManager;
 	
-	private final String ALL_SHOWLET_TYPES =
+	private final String ALL_SHOWLET_TYPES = 
 		"SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked FROM showletcatalog";
 	
-	private final String ADD_SHOWLET_TYPE =
+	private final String ADD_SHOWLET_TYPE = 
 		"INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	
-	private final String DELETE_SHOWLET_TYPE =
+	private final String DELETE_SHOWLET_TYPE = 
 		"DELETE FROM showletcatalog WHERE code = ? AND locked = ? ";
 	
-	private final String UPDATE_SHOWLET_TYPE_TITLES =
+	private final String UPDATE_SHOWLET_TYPE = 
+		"UPDATE showletcatalog SET titles = ? , defaultconfig = ? WHERE code = ? ";
+	
+	private final String UPDATE_SHOWLET_TYPE_TITLES = 
 		"UPDATE showletcatalog SET titles = ? WHERE code = ? ";
 	
 }

@@ -49,4 +49,6 @@ public interface IShowletTypeManager {
 	
 	public void updateShowletTypeTitles(String showletTypeCode, ApsProperties titles) throws ApsSystemException;
 	
+	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig) throws ApsSystemException;
+	
 }

@@ -39,4 +39,6 @@ public interface IShowletTypeDAO {
 	
 	public void updateShowletTypeTitles(String showletTypeCode, ApsProperties titles);
 	
+	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig);
+	
 }

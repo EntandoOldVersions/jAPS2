@@ -50,36 +50,70 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
     }
 	
 	public void testFailureUpdateTitles() throws Throwable {
-		String result = this.executeUpdateTitle("content_viewer", "italian title", "english title", "editorCustomers");
+		String result = this.executeUpdate("content_viewer", "italian title", "english title", "editorCustomers");
 		assertEquals("userNotAllowed", result);
 		
-		result = this.executeUpdateTitle("content_viewer", "italian title", "", "admin");
+		result = this.executeUpdate("content_viewer", "italian title", "", "admin");
 		assertEquals(Action.INPUT, result);
 		ActionSupport action = this.getAction();
 		assertEquals(1, action.getFieldErrors().size());
 		
-		result = this.executeUpdateTitle("invalidShowletTitles", "italian title", "english title", "admin");
+		result = this.executeUpdate("invalidShowletTitles", "italian title", "english title", "admin");
 		assertEquals("inputShowletTypes", result);
 		action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
 	}
-	
+
 	public void testUpdateTitles() throws Throwable {
     	String showletTypeCode = "test_showletType";
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
     	try {
 			ShowletType type = this.createNewShowletType(showletTypeCode);
 			this._showletTypeManager.addShowletType(type);
-			String result = this.executeUpdateTitle(showletTypeCode, "", "english title", "admin");
+			String result = this.executeUpdate(showletTypeCode, "", "english title", "admin");
 			assertEquals(Action.INPUT, result);
 			ActionSupport action = this.getAction();
 			assertEquals(1, action.getFieldErrors().size());
-			result = this.executeUpdateTitle(showletTypeCode, "Titolo modificato", "Modified title", "admin");
+			result = this.executeUpdate(showletTypeCode, "Titolo modificato", "Modified title", "admin");
 			assertEquals(Action.SUCCESS, result);
 			ShowletType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
 			assertEquals("Modified title", extracted.getTitles().get("en"));
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			if (null != this._showletTypeManager.getShowletType(showletTypeCode)) {
+				this._showletTypeManager.deleteShowletType(showletTypeCode);
+			}
+			assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+		}
+    }
+	
+	public void testUpdate() throws Throwable {
+    	String showletTypeCode = "test_showletType";
+    	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+    	try {
+			ShowletType type = this.createNewShowletType(showletTypeCode);
+			this._showletTypeManager.addShowletType(type);
+			ApsProperties newProperties = new ApsProperties();
+			newProperties.put("contentId", "EVN191");
+			String result = this.executeUpdate(showletTypeCode, "Titolo modificato", "Modified title", "admin", newProperties);
+			assertEquals(Action.SUCCESS, result);
+			ShowletType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			assertNotNull(extracted);
+			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
+			assertEquals("Modified title", extracted.getTitles().get("en"));
+			assertEquals("EVN191", extracted.getConfig().getProperty("contentId"));
+			
+			newProperties.put("contentId", "EVN194");
+			result = this.executeUpdate(showletTypeCode, "Titolo modificato 2", "Modified title 2", "pageManagerCoach", newProperties);
+			assertEquals(Action.SUCCESS, result);
+			extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			assertNotNull(extracted);
+			assertEquals("Titolo modificato 2", extracted.getTitles().get("it"));
+			assertEquals("Modified title 2", extracted.getTitles().get("en"));
+			assertEquals("EVN191", extracted.getConfig().getProperty("contentId"));
 		} catch (Throwable t) {
 			throw t;
 		} finally {
@@ -99,7 +133,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 		ActionSupport action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
 		
-		result = this.executeUpdateTitle("invalidShowletTitles", "italian title", "english title", "admin");
+		result = this.executeUpdate("invalidShowletTitles", "italian title", "english title", "admin");
 		assertEquals("inputShowletTypes", result);
 		action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
@@ -191,13 +225,21 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 		return this.executeAction();
 	}
 	
-	private String executeUpdateTitle(String showletTypeCode, String italianTitle, String englishTitle, String username) throws Throwable {
+	private String executeUpdate(String showletTypeCode, String italianTitle, String englishTitle, String username) throws Throwable {
+		return this.executeUpdate(showletTypeCode, italianTitle, englishTitle, username, null);
+	}
+	
+	private String executeUpdate(String showletTypeCode, String italianTitle, 
+			String englishTitle, String username, ApsProperties properties) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/ShowletType", "save");
 		this.addParameter("showletTypeCode", showletTypeCode);
 		this.addParameter("italianTitle", italianTitle);
 		this.addParameter("englishTitle", englishTitle);
 		this.addParameter("strutsAction", ApsAdminSystemConstants.EDIT);
+		if (null != properties) {
+			this.addParameters(properties);
+		}
 		return this.executeAction();
 	}
 
