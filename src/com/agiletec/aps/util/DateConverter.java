@@ -20,6 +20,7 @@ package com.agiletec.aps.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 
@@ -28,6 +29,23 @@ import com.agiletec.aps.system.ApsSystemUtils;
  * @author E.Santoboni
  */
 public class DateConverter {
+	
+	/**
+	 * Utility method. Return a formatted string representing the given date
+	 * @param date the date object to convert into a string
+	 * @param pattern the pattern to handle the date with
+	 * @param langCode The lang code
+	 * @return the string of the resulting date
+	 */
+	public static String getFormattedDate(Date date, String pattern, String langCode) {
+		if (null == langCode) return getFormattedDate(date, pattern);
+		String dateString = "";
+		if (null != date) {
+			SimpleDateFormat formatter = new SimpleDateFormat(pattern, new Locale(langCode, ""));
+			dateString = formatter.format(date);
+		}
+		return dateString;
+	}
 	
 	/**
 	 * Utility method. Return a formatted string representing the given date
