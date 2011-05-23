@@ -144,6 +144,9 @@ var CodeMirrorManager = new Class({
 					},
 					"keydown:relay(option)": function(ev) {
 						//console.log("keydown opt",ev.target);
+					},
+					"blur": function(ev) {
+						self.endAssist();
 					}
 				});
 			}
