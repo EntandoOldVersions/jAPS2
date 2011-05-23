@@ -79,6 +79,21 @@
 	list="%{getModelsForContent(showlet.config['contentId'])}" headerKey="" headerValue="%{getText('label.default')}" listKey="id" listValue="description" cssClass="text" />
 </p>
 </fieldset>
+
+<s:set var="showletTypeParameters" value="showlet.type.typeParameters"></s:set>
+<s:if test="#showletTypeParameters.size()>2">
+<fieldset><legend><s:text name="label.otherSettings" /></legend>
+	<s:iterator value="#showletTypeParameters" id="showletParam" >
+		<s:if test="!#showletParam.name.equals('contentId') && !#showletParam.name.equals('modelId')">
+			<p>
+				<label for="fagianoParam_<s:property value="#showletParam.name" />"><s:property value="#showletParam.descr" />:</label><br />
+				<wpsf:textfield cssClass="text" id="%{'fagianoParam_'+#showletParam.name}" name="%{#showletParam.name}" value="%{showlet.config[#showletParam.name]}" />
+			</p>
+		</s:if>
+	</s:iterator>
+</fieldset>
+</s:if>
+
 </s:if>
 <s:else>
 <p>
