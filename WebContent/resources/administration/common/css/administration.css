@@ -145,6 +145,11 @@ table.generic caption span {
 	padding: 6px 8px;
 }
 
+table.generic caption span span {
+	border: none;
+	padding: 0;
+}
+
 table.generic caption span img {
 	vertical-align: bottom;
 	border: 1px solid transparent;
