@@ -3,11 +3,13 @@
 description: 
 	-Velocity sintax Overlay for codemirror 2
 authors:
-	- Andrea Dessì <a.dessi@gmail.com>
+	- Andrea Dessì <a.dessi@agiletec.it>
 requires:
 	- codemirror2 
 	- overlay library
 	- xml mode
+changelog:
+	- 23 mag 2011: fixed velocity inline code when a comma is found
 ...
 */
 CodeMirror.defineMode("velocity", function(config, parserConfig) {
@@ -85,7 +87,7 @@ CodeMirror.defineMode("velocity", function(config, parserConfig) {
 			if (this.state_velocity.velocity == false) {
 				//check if it's a velocity variable starting with dollar sign $
 					if (/[\$]/.test(ch)) {
-						stream.eatWhile(/[\d\w_]/); //move forward until there's a number or a digit or an underscore
+						stream.eatWhile(/[\d\w_,]/); //move forward until there's a number or a digit or an underscore
 						this.state_velocity.velocity = true;
 						returnValue = this.VELOCITY_CSS_STATUES.inline;//say we're starting an inline velocity
 					}
@@ -97,7 +99,7 @@ CodeMirror.defineMode("velocity", function(config, parserConfig) {
 					returnValue = this.VELOCITY_CSS_STATUES.inline;
 					this.state_velocity.velocity = false;
 				}
-				else if (/[\w\d_\.\(\"\/\\']/.test(ch)) {
+				else if (/[\w\d_\.\(\"\/\\',]/.test(ch)) {
 					returnValue = this.VELOCITY_CSS_STATUES.inline;
 					this.state_velocity.velocity = true
 				}
