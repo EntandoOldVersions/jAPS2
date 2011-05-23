@@ -149,15 +149,15 @@ public class InternalServletTag extends TagSupport {
 	}
 	
 	protected void includeShowlet(RequestContext reqCtx, ResponseWrapper responseWrapper, Showlet showlet) throws ServletException, IOException {
-		String actionPath = this.extractIntroActionPath(reqCtx, showlet);
-		String requestActionPath = reqCtx.getRequest().getParameter(REQUEST_PARAM_ACTIONPATH);
-		String currentFrameActionPath = reqCtx.getRequest().getParameter(REQUEST_PARAM_FRAMEDEST);
-		Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
-		if (requestActionPath != null && currentFrameActionPath != null && currentFrame.toString().equals(currentFrameActionPath)) {
-			actionPath = requestActionPath;
-		}
 		HttpServletRequest request = reqCtx.getRequest();
 		try {
+			String actionPath = this.extractIntroActionPath(reqCtx, showlet);
+			String requestActionPath = request.getParameter(REQUEST_PARAM_ACTIONPATH);
+			String currentFrameActionPath = request.getParameter(REQUEST_PARAM_FRAMEDEST);
+			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
+			if (requestActionPath != null && currentFrameActionPath != null && currentFrame.toString().equals(currentFrameActionPath)) {
+				actionPath = requestActionPath;
+			}
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher(actionPath);
 			requestDispatcher.include(request, responseWrapper);
 		} catch (Throwable t) {
