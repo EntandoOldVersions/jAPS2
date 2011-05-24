@@ -109,6 +109,7 @@ public class ContentRenderizationInfo implements Serializable {
 	 * @return The final rendered content.
 	 */
 	public String getRenderedContent() {
+		if (null == this._renderedContent) return "";
 		return _renderedContent;
 	}
 	
@@ -135,9 +136,18 @@ public class ContentRenderizationInfo implements Serializable {
 		this._modelId = modelId;
 	}
 	
+	/**
+	 * Return the map of the attribute values indexed by the attribute role.
+	 * @return The map of the attribute values
+	 */
 	public Map<String, Object> getAttributeValues() {
 		return _attributeValues;
 	}
+	
+	/**
+	 * Set the map of the attribute values indexed by the attribute role.
+	 * @param attributeValues The map of the attribute values to set.
+	 */
 	public void setAttributeValues(Map<String, Object> attributeValues) {
 		this._attributeValues = attributeValues;
 	}

@@ -26,6 +26,7 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentViewerHelper;
+import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 
 /**
  * Displays the content given its ID.
@@ -36,18 +37,22 @@ public class ContentTag extends TagSupport {
 		super();
 		this.release();
 	}
-
+	
 	@Override
 	public int doStartTag() throws JspException {
 		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
 			IContentViewerHelper helper = (IContentViewerHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_VIEWER_HELPER, this.pageContext);
-			String renderedContent = helper.getRenderedContent(this.getContentId(), this.getModelId(), this.isPublishExtraTitle(), reqCtx);
+			ContentRenderizationInfo renderInfo = helper.getRenderizationInfo(this.getContentId(), this.getModelId(), this.isPublishExtraTitle(), reqCtx);
+			String renderedContent = (null != renderInfo) ? renderInfo.getRenderedContent() : "";
 			if (null != this.getVar()) {
 				this.pageContext.setAttribute(this.getVar(), renderedContent);
 			} else {
 				this.pageContext.getOut().print(renderedContent);
+			}
+			if (null != renderInfo && null != this.getAttributeValuesByRoleVar()) {
+				this.pageContext.setAttribute(this.getAttributeValuesByRoleVar(), renderInfo.getAttributeValues());
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "doStartTag");
@@ -62,6 +67,7 @@ public class ContentTag extends TagSupport {
 		this.setModelId(null);
 		this.setPublishExtraTitle(false);
 		this.setVar(null);
+		this.setAttributeValuesByRoleVar(null);
 	}
 
 	/**
@@ -127,9 +133,28 @@ public class ContentTag extends TagSupport {
 		this._var = var;
 	}
 	
+	/**
+	 * Inserts the map of the attribute values indexed by the attribute role, 
+	 * in a variable of the page context with the name provided.
+	 * @return The name of the variable.
+	 */
+	public String getAttributeValuesByRoleVar() {
+		return _attributeValuesByRoleVar;
+	}
+	
+	/**
+	 * Inserts the map of the attribute values indexed by the attribute role, 
+	 * in a variable of the page context with the name provided.
+	 * @param attributeValuesVar The name of the variable.
+	 */
+	public void setAttributeValuesByRoleVar(String attributeValuesByRoleVar) {
+		this._attributeValuesByRoleVar = attributeValuesByRoleVar;
+	}
+	
 	private String _contentId;
 	private String _modelId;
 	private boolean _publishExtraTitle;
 	private String _var;
+	private String _attributeValuesByRoleVar;
 	
 }

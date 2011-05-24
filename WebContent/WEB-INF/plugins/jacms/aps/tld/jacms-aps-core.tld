@@ -257,6 +257,15 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description>
+				<![CDATA[Inserts the map of the attribute values indexed by the attribute role, 
+				in a variable of the page context with the name provided.]]>
+			</description>
+			<name>attributeValuesByRoleVar</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
 	</tag>
 	
 	<tag>

@@ -58,9 +58,21 @@ public class ContentViewerHelper implements IContentViewerHelper {
      */
 	@Override
 	public String getRenderedContent(String contentId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException {
-		Logger log = ApsSystemUtils.getLogger();
-		String renderedContent = "";
+		String renderedContent = null;
+		ContentRenderizationInfo renderInfo = this.getRenderizationInfo(contentId, modelId, publishExtraTitle, reqCtx);
+		if (null != renderInfo) {
+			renderedContent = renderInfo.getRenderedContent();
+		}
+		if (null == renderedContent) renderedContent = ""; 
+        return renderedContent;
+    }
+	
+	@Override
+	public ContentRenderizationInfo getRenderizationInfo(String contentId,
+			String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException {
+		ContentRenderizationInfo renderizationInfo = null;
         try {
+        	Logger log = ApsSystemUtils.getLogger();
             Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
             String langCode = currentLang.getCode();
             Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
@@ -70,24 +82,21 @@ public class ContentViewerHelper implements IContentViewerHelper {
             if (contentId != null && modelId != null) {   
  	            long longModelId = new Long(modelId).longValue();
 	            this.setStylesheet(longModelId, reqCtx);
-	            ContentRenderizationInfo renderInfo = 
-	            	this.getContentDispenser().getRenderizationInfo(contentId, longModelId, langCode, reqCtx);
-	            if (null == renderInfo) {
+	            renderizationInfo = this.getContentDispenser().getRenderizationInfo(contentId, longModelId, langCode, reqCtx);
+	            if (null == renderizationInfo) {
 	            	log.warning("Null Renderization informations: content=" + contentId);
-	            	return "";
 	            }
-	            renderedContent = renderInfo.getRenderedContent();
-	            this.manageAttributeValues(renderInfo, publishExtraTitle, reqCtx);
+	            this.manageAttributeValues(renderizationInfo, publishExtraTitle, reqCtx);
             } else {
             	log.warning("Parametri visualizzazione contenuto incompleti: " +
             			"contenuto=" + contentId + " modello=" + modelId);
             }
         } catch (Throwable t) {
-        	ApsSystemUtils.logThrowable(t, this, "getRenderedContent");
-    		throw new ApsSystemException("Errore in fase di preparazione del contenuto", t);
+        	ApsSystemUtils.logThrowable(t, this, "getRenderizationInfo");
+    		throw new ApsSystemException("Error extracting renderization info", t);
     	}
-        return renderedContent;
-    }
+        return renderizationInfo;
+	}
 	
 	@Override
 	public ContentAuthorizationInfo getAuthorizationInfo(String contentId, RequestContext reqCtx) throws ApsSystemException {

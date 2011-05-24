@@ -20,6 +20,7 @@ package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
+import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 
 /**
  * Interfaccia base per le classi helper per le showlet erogatori contenuti.
@@ -38,6 +39,8 @@ public interface IContentViewerHelper {
 	public String getRenderedContent(String contentId, String modelId, RequestContext reqCtx) throws ApsSystemException;
 
 	public String getRenderedContent(String contentId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException;
+	
+	public ContentRenderizationInfo getRenderizationInfo(String contentId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException;
 	
 	public ContentAuthorizationInfo getAuthorizationInfo(String contentId, RequestContext reqCtx) throws ApsSystemException;
 	
