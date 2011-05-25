@@ -39,12 +39,12 @@ public class ContentRenderizationInfo implements Serializable {
 	protected ContentRenderizationInfo() {}
 	
 	public ContentRenderizationInfo(Content content, 
-			String tempRenderedContent, long modelId, String renderingLang, List<AttributeRole> roles) {
+			String cachedRenderedContent, long modelId, String renderingLang, List<AttributeRole> roles) {
 		if (null != content) {
 			this._contentId = content.getId();
 			this._contentType = content.getTypeCode();
 		}
-		this._tempRenderedContent = tempRenderedContent;
+		this._cachedRenderedContent = cachedRenderedContent;
 		this._renderingLang = renderingLang;
 		this._modelId = modelId;
 		if (null == roles) return;
@@ -63,7 +63,7 @@ public class ContentRenderizationInfo implements Serializable {
 		clone.setContentId(this.getContentId());
 		clone.setContentType(this.getContentType());
 		clone.setModelId(this.getModelId());
-		clone.setTempRenderedContent(this.getTempRenderedContent());
+		clone.setCachedRenderedContent(this.getCachedRenderedContent());
 		clone.setRenderingLang(this.getRenderingLang());
 		clone.getAttributeValues().putAll(this.getAttributeValues());
 		return clone;
@@ -89,20 +89,20 @@ public class ContentRenderizationInfo implements Serializable {
 	 * The symbolic links will be resolved by the manager LinkResolved.
 	 * @return The first rendered content.
 	 */
-	protected String getTempRenderedContent() {
-		return _tempRenderedContent;
+	public String getCachedRenderedContent() {
+		return _cachedRenderedContent;
 	}
 	
 	/**
 	 * Set the first rendered content.
 	 * This string contains all link in symbolic form. 
 	 * The symbolic links will be resolved by the manager LinkResolved.
-	 * @param tempRenderedContent The first rendered content.
+	 * @param cachedRenderedContent The first rendered content.
 	 */
-	protected void setTempRenderedContent(String tempRenderedContent) {
-		this._tempRenderedContent = tempRenderedContent;
+	protected void setCachedRenderedContent(String cachedRenderedContent) {
+		this._cachedRenderedContent = cachedRenderedContent;
 	}
-
+	
 	/**
 	 * Return the final rendered content.
 	 * This string contains all link resolved.
@@ -155,7 +155,7 @@ public class ContentRenderizationInfo implements Serializable {
 	private String _contentId;
 	private String _contentType;
 	
-	private String _tempRenderedContent;
+	private String _cachedRenderedContent;
 	private String _renderedContent;
 	private String _renderingLang;
 	private long _modelId;

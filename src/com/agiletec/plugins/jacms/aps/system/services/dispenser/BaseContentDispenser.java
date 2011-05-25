@@ -143,7 +143,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 				renderInfo.setRenderedContent(renderedContent);
 				return renderInfo;
 			}
-			String finalRenderedContent = this._linkResolver.resolveLinks(renderInfo.getTempRenderedContent(), reqCtx);
+			String finalRenderedContent = this._linkResolver.resolveLinks(renderInfo.getCachedRenderedContent(), reqCtx);
 			renderInfo.setRenderedContent(finalRenderedContent);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getRenderedContent", "Error while rendering content " + contentId);
