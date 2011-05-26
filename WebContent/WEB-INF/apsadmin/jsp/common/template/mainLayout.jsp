@@ -56,7 +56,12 @@
 </head>
 <body class="client-<s:property value="#myClient" />">
 
+<div id="topbar">
+<tiles:insertAttribute name="topbar"/>
+</div>
+
 <div id="header">
+<h1 class="noscreen" id="fagiano_start"><s:text name="title.mainFunctions" /></h1>
 <tiles:insertAttribute name="header"/>
 </div>
 <div id="corpo">

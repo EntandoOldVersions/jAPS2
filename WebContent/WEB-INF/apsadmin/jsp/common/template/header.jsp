@@ -2,7 +2,6 @@
 <%@ taglib uri="c.tld" prefix="c" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="wp" uri="aps-core.tld" %>
-<h1 class="noscreen" id="fagiano_start"><s:text name="title.mainFunctions" /></h1>
 
 <div id="header-1">
 	<a href="<s:url action="main" namespace="/do" />" class="noborder outlineNone" title="<s:text name="note.goToMainPage" />"><img src="<wp:resourceURL/>administration/common/img/menu-button-round.png" width="51" height="49" alt="<s:text name="note.goToMainPage" />" /></a>
