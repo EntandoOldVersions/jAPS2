@@ -66,7 +66,7 @@
 	<wpsa:set var="pluginPropertyName" value="%{getText(#firstType.optgroup + '.name')}" />	
 	<wpsa:set var="pluginPropertyCode" value="%{getText(#firstType.optgroup + '.code')}" />		
 	
-	<caption><span>(<s:text name="#pluginPropertyCode" />) <s:text name="#pluginPropertyName" /></span></caption>
+	<caption><span title="(<s:text name="#pluginPropertyCode" />) <s:text name="#pluginPropertyName" />"><s:text name="#pluginPropertyName" /></span></caption>
 </s:else>
 
 <tr>
