@@ -60,7 +60,7 @@
 <tiles:insertAttribute name="topbar"/>
 </div>
 
-<div id="header">
+<div id="header" class="clear">
 <h1 class="noscreen" id="fagiano_start"><s:text name="title.mainFunctions" /></h1>
 <tiles:insertAttribute name="header"/>
 </div>

@@ -4,6 +4,28 @@ body {
 	width: 960px;
 }
 
+#topbar {
+	font-size: 11px;
+}
+
+#topbar {
+	box-shadow: 0 0 4px #000000;
+	-moz-box-shadow: 0 0 4px #000000;
+	-webkit-box-shadow: 0 0 4px #000000;
+}
+
+#topbar img {
+	margin-right: 2px;	
+}
+
+#topbar li {
+	width: 94px;
+}
+
+#topbar li a span {
+	width: 70px;
+}
+
 #header {
 	box-shadow: 0 0 10px #000000;
 	-moz-box-shadow: 0 0 10px #000000;

@@ -7,6 +7,8 @@
 
 <script type="text/javascript" src="<wp:resourceURL />administration/common/js/moo-japs/moo-jAPS-0.2.js"></script>
 
+<script type="text/javascript" src="<wp:resourceURL />administration/common/js/ellipsis.js"></script>
+
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
 //menu
@@ -166,6 +168,13 @@ window.addEvent('domready', function(){
 	$$('.js_noscreen').each(function(delendum) {
 		delendum.removeClass("js_noscreen");
 		delendum.addClass("noscreen");
+	});
+});
+
+//ellipsis
+window.addEvent("domready",function(){
+	$$('.toggle-ellipsis').each(function(trimthis) {
+		trimthis.html = trimthis.ellipsis().html;
 	});
 });
 

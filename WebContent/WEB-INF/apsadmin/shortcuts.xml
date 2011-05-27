@@ -145,7 +145,7 @@
 		<shortcut id="core.portal.showletType" requiredPermission="managePages" menusection="portal" source="core">
 			<description key="core.shortcut.portal.showletType.shortDesc" >Showlets</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.portal.showletType.longDesc">
-				<![CDATA[Manage the Showlets.<br />See what Showlets are installed, grouped by component or Plugin]]>
+				<![CDATA[Manage the Showlets. See what Showlets are installed, grouped by component or Plugin]]>
 			</longdesc>
 			<url>
 				<param name="namespace">/do/Portal/ShowletType</param>

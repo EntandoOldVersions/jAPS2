@@ -5,6 +5,23 @@ body {
 	max-width: 1100px;
 }
 
+#topbar {
+	font-size: 0.7em;
+	width: 100%;
+}
+
+#topbar li {
+	width: 9.74%;
+}
+
+#topbar li a {
+	width: 100%;
+}
+
+#topbar li a span {
+	width: 55%;
+}
+
 #header {
 	background-color: #0d253c;	
 	border-bottom: 3px double #ffffff;
