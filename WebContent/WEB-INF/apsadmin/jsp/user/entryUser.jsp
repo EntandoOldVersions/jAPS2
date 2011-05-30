@@ -14,7 +14,7 @@
 	<h2 class="margin-more-bottom"><s:text name="title.userManagement.userEdit" /></h2>	
 </s:if>
 
-<s:form action="save" namespace="/do/User">
+<s:form action="save">
 	<s:if test="hasFieldErrors()">
 <div class="message message_error">	
 <h3><s:text name="message.title.FieldErrors" /></h3>
