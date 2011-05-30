@@ -155,7 +155,7 @@ public class ResourceManager extends AbstractService
     		resource.setCategories(bean.getCategories());
     		resource.setMasterFileName(bean.getFileName());
     		resource.saveResourceInstances(bean);
-    		if (null != bean.getResourceId()) {
+    		if (null != bean.getResourceId() && bean.getResourceId().trim().length() > 0) {
     			resource.setId(bean.getResourceId());
     			this.getResourceDAO().updateResource(resource);
     			this.notifyResourceChanging(resource);

@@ -58,7 +58,9 @@
 <s:iterator value="categoryCodes" id="categoryCode" status="rowstatus">
 <input type="hidden" name="categoryCodes" value="<s:property value="#categoryCode" />" id="categoryCodes-<s:property value="#rowstatus.index" />"/>
 </s:iterator>
+<s:if test="strutsAction != 1">
 	<wpsf:hidden name="resourceId" />
+</s:if>
 <s:if test="#categoryTreeStyleVar == 'request'">
 	<s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar"><wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"></wpsf:hidden></s:iterator>
 </s:if>
@@ -91,7 +93,7 @@
 	<wpsf:checkbox name="normalizeFileName" id="normalizeFileName" cssClass="radiocheck" />&#32;<label for="normalizeFileName"><s:text name="label.normalize" />&#32;<s:text name="label.filename" /></label>
 </p>
 
-<s:if test="getStrutsAction() == 2">
+<s:if test="strutsAction == 2">
 <div class="subsection-light">
 <s:set var="referencingContentsId" value="references['jacmsContentManagerUtilizers']" />
 <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/portal/include/referencingContents.jsp" />
