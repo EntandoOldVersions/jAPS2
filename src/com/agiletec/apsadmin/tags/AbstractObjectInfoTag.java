@@ -112,10 +112,10 @@ public abstract class AbstractObjectInfoTag extends StrutsBodyTagSupport {
 	public void setKey(String key) {
 		this._key = key;
 	}
-
+	
 	/**
 	 * Get the name of the property to return.
-	 * @return
+	 * @return The required property.
 	 */
 	protected String getProperty() {
 		return _property;
@@ -123,21 +123,22 @@ public abstract class AbstractObjectInfoTag extends StrutsBodyTagSupport {
 	
 	/**
 	 * Set the name of the property to return. It can be one of those indicated in the declaration of the tag.
-	 * @param property
+	 * @param property The required property. 
 	 */
 	public void setProperty(String property) {
 		this._property = property;
 	}
 	
 	/**
-	 * Get  the name used to reference the content (or one of its property) pushed into the Value Stack.
+	 * Return the name used to reference the required object (or one of its property) pushed into the Value Stack.
+	 * @return The name used to reference the required object.
 	 */
 	protected String getVar() {
 		return _var;
 	}
 	
 	/**
-	 * Set the name used to reference the content (or one of its property) pushed into the Value Stack.
+	 * Set the name used to reference the required object (or one of its property) pushed into the Value Stack.
 	 * @param var The name of the variable
 	 */
 	public void setVar(String var) {
