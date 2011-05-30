@@ -13,6 +13,7 @@
 <!--//--><![CDATA[//><!--
 //menu
 window.addEvent('domready', function(){
+
 	var myAccordion = new Fx.Accordion($$('.accordion_toggler-menu'), $$('.accordion_element-menu'), {
 		display: -1,
 	<s:if test="#myClient == 'advanced'">		
@@ -44,7 +45,15 @@ window.addEvent('domready', function(){
 		poba.injectBottom(cToggler);
 	});
 </s:if>	
+
+	//ellipsis
+	$$('.toggle-ellipsis').each(function(trimthis) {
+		trimthis.html = trimthis.ellipsis().html;
+	});
+
 });
+
+
 
 //accordion
 <s:if test="#myClient == 'normal'">	
@@ -168,13 +177,6 @@ window.addEvent('domready', function(){
 	$$('.js_noscreen').each(function(delendum) {
 		delendum.removeClass("js_noscreen");
 		delendum.addClass("noscreen");
-	});
-});
-
-//ellipsis
-window.addEvent("domready",function(){
-	$$('.toggle-ellipsis').each(function(trimthis) {
-		trimthis.html = trimthis.ellipsis().html;
 	});
 });
 

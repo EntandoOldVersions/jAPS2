@@ -50,7 +50,7 @@
             }
 
          }
-         console.log(this.get('html'));
+         //console.log(this.get('html'));
          return this;
 
       }
