@@ -162,7 +162,7 @@
 	
 	<tag>
 		<description>
-			<![CDATA[Returns a shortcut (or one of its property) through the code and the entity service name.
+			<![CDATA[Returns a shortcut (or one of its property) through the code.
 			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property using the "property" attribute.]]>
 		</description>
 		<name>shortcut</name>
