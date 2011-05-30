@@ -160,7 +160,52 @@
 		</attribute>
 	</tag>
 	
+	<tag>
+		<description>
+			<![CDATA[Returns a shortcut (or one of its property) through the code and the entity service name.
+			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property using the "property" attribute.]]>
+		</description>
+		<name>shortcut</name>
+		<tag-class>com.agiletec.apsadmin.tags.ShortcutInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The code of the shortcut to return.]]></description>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the shortcut (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The name of the property to return. It can be one of the following:<br/>
+				"id", "descriptionKey", "description", "longDescription", "longDescriptionKey", 
+				"requiredPermission", "menuSectionCode", "menuSection", "source", "namespace", "actionName", "parameters".]]></description>
+			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
 	<!--  INFO TAG DEFINITION - END -->
+	
+	<tag>
+		<description>
+			<![CDATA[Returns the configured shortcuts of the current user.]]>
+		</description>
+		<name>userShortcutsConfig</name>
+		<tag-class>com.agiletec.apsadmin.tags.UserShortcutsConfigTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[Name used to reference the configured shortcuts (of the current user) pushed into the Value Stack.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 	
 	<tag>
 		<description>
