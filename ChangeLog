@@ -1,4 +1,52 @@
 ------------------------------------------------------------------------------
+jAPS 2.0 version 2.2.2
+------------------------------------------------------------------------------
+jAPS 2.0 version 2.2.2 is released.
+The jAPSTeam is very pleased to finally announce the release of version 2.2.2
+This release contains a lot of new functionalities and performance 
+improvements.
+Look at the huge changelog for more information.
+
+Thanks to all involved!
+
+The jAPS Team
+
+Abbreviated Changelog from 2.2.0
+---------------------------------------
+
+New Features
+- Modified default url suffix; from ".wp" to ".page" 
+- New system event - System langs modified
+- New tag "shortcut info" for Struts2 environment
+- New tag "user shortcuts config" for Struts2 environment
+- New Admin Area Interface: Group Detail
+- New Admin Area Interface: Category Detail
+- New function for changing file for single cms resource
+- Function for reloading image resource instances
+- New front-end tag: wp:contentInfo
+
+Improvements
+- New function for changing the parameters of the user showlets 
+- New attribute for "wp:currentPage" and "wp:info" tag: "owner" and "childOf"
+- Added check for shortcuts config for current logged user
+- New attribute "pageId" into pager tag for Struts2 environment
+- Improvement of "edit Resource" interface; added content references interface
+- Improvement of content model gui interface
+- New methods into content wrapper for content models: creation date, last modified, version, last editor
+- Improvement of showlet type parameters: new dynamc parameters by system langs
+- Improvement of "content list" showlet; added new parameters: titles, extra link, user filter options 
+- Improvement of wp:content front-end tag: new function to return the content attribute values by role 
+- New front-end custom tag to return the list of the system categories
+- Improvement of content detail interface into Admin Area Interface: added referenced contents table
+
+Bug fixing
+- Enumerator item with blank spaces
+- Updating category references while save content
+- Help into editing content models gui interface
+
+
+
+------------------------------------------------------------------------------
 jAPS 2.0 version 2.2.0
 ------------------------------------------------------------------------------
 jAPS 2.0 version 2.2.0 is released.
