@@ -1,6 +1,6 @@
 <!DOCTYPE validators PUBLIC
         "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
-        "null">
+        "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
 
 <validators>
     <field name="username">
