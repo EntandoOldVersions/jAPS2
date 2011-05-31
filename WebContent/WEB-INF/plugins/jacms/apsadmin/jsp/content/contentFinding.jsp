@@ -215,7 +215,9 @@
 </div>
 </s:if>
 
-<wpsa:subset source="contents" count="10" objectName="groupContent" advanced="true" offset="5">
+<s:set var="contentIdsVar" value="contents" />
+
+<wpsa:subset source="#contentIdsVar" count="10" objectName="groupContent" advanced="true" offset="5">
 <s:set name="group" value="#groupContent" />
 
 <div class="pager">
@@ -223,7 +225,7 @@
 	<s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
 </div>
 
-<s:if test="%{getContents().size() > 0}">
+<s:if test="%{#contentIdsVar.size() > 0}">
 	
 	<table class="generic" id="contentListTable" summary="<s:text name="note.content.contentList.summary" />">
 	<caption><span><s:text name="title.contentList" />&nbsp;<a title="<s:text name="note.goToSomewhere" />: <s:text name="title.searchFilters" />" href="#content_list-changeContentType" name="content_list-search" id="content_list-search" class="noborder"><img src="<wp:resourceURL />administration/common/img/icons/16x16/go-up.png" width="16" height="16" alt=" " /></a></span></caption>
