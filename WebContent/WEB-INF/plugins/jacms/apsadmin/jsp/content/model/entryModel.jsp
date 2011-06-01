@@ -67,14 +67,12 @@
 		<wpsf:textfield name="stylesheet" id="newModel_stylesheet" cssClass="text" />
 	</p>
 </fieldset>
-<p class="centerText"><wpsf:submit value="%{getText('label.save')}" cssClass="button" /></p>
+<p class="centerText">
+	<wpsf:submit value="%{getText('label.save')}" cssClass="button" />
+</p>
+<s:if test="#myClient == 'advanced'">
+<p class="centerText"><s:text name="label.or" />&#32;<a href="#jacms-content-model-detail-shortcut" id="jacms-content-model-detail-shortcut"><s:text name="note.contentModel.detailsdownload" /></a></p>
+</s:if>	
 
 </s:form>
-<s:if test="#myClient == 'advanced'">
-<p>
-	<a href="#jacms-content-model-detail-shortcut" id="jacms-content-model-detail-shortcut">
-		jacms-content-model-detail-shortcut
-	</a>
-</p>
-</s:if>
 </div>
