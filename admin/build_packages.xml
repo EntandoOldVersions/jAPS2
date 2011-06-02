@@ -1,7 +1,7 @@
 <project name="jAPS 2.0 src - Package" default="package" basedir="..">
 	<description>jAPS 2.0 - Package build file</description>
 
-	<property name="version.jAPS" value="2.2.0"/>
+	<property name="version.jAPS" value="2.2.2"/>
 	<property name="version.package" value="0.1"/>
 	
 	<property name="package.name.prefix" value="jAPS2.0_entando" />

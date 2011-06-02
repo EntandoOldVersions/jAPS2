@@ -65,6 +65,6 @@
 	<property name="tomcat.deploy.path" location="${tomcat.home.path}/webapps" />
 	
 	<!-- Please do not touch this if you are not in the mantainer team :-) -->
-	<property name="version.jAPS" value="2.2.0"/>
+	<property name="version.jAPS" value="2.2.2"/>
 	
 </project>
