@@ -58,23 +58,19 @@ body {
 	border-top-style: solid;
 }
 
-#topbar li.topbar-menusection-cms {
-	border-top-color: #275A86;
+#topbar li.topbar-menusection-cms, #topbar li.topbar-menusection-plugins {
 	border-top-color: #6D97BA;
 }
 
 #topbar li.topbar-menusection-tools {
-	border-top-color: #424D76;
 	border-top-color: #808CBA;
 }
 
 #topbar li.topbar-menusection-components {
-	border-top-color: #855126;
 	border-top-color: #BF8759;
 }
 
 #topbar li.topbar-menusection-portal {
-	border-top-color: #3C566F;
 	border-top-color: #667B8E;
 }
 
