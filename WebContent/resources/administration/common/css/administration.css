@@ -368,9 +368,9 @@ a img {
 	background-image: url("../img/icons/node-leaf.png");
 }
 
-.node_root {
+/*.node_root {
 	background-color: gold;
-}
+}*/
 
 .node_open {
 	background-image: url("../img/icons/node-open.png");
