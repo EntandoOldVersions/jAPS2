@@ -34,16 +34,15 @@
 	
 	<p class="noscreen" id="jpcontentinspection_metadata"><s:text name="title.metadata" /></p>
 	
-	<jacmswpsa:content contentId="%{content.id}" record="true" var="contentRecordVar" />
 	<dl class="table-display">
 		<dt><s:text name="label.key" /></dt>
 			<dd><s:property value="content.id" /></dd>
 		<dt><s:text name="label.description" /></dt>
 			<dd><s:property value="content.descr" /></dd>
 		<dt><s:text name="label.lastEdit" /></dt>
-			<dd><s:date name="#contentRecordVar.modify" format="dd/MM/yyyy HH:mm" /></dd>
+			<dd><s:date name="content.lastModified" format="dd/MM/yyyy HH:mm" /></dd>
 		<dt><s:text name="label.creationDate" /></dt>
-			<dd><s:date name="#contentRecordVar.create" format="dd/MM/yyyy HH:mm" /></dd>
+			<dd><s:date name="content.created" format="dd/MM/yyyy HH:mm" /></dd>
 		<dt><s:text name="label.editor" /></dt>
 			<dd><s:property value="content.lastEditor" /></dd>
 		<dt><s:text name="name.version" /></dt>

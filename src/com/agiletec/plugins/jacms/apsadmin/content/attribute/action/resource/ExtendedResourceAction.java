@@ -63,8 +63,9 @@ public class ExtendedResourceAction extends ResourceAction {
 	@Override
 	public List<Group> getAllowedGroups() {
 		List<Group> groups = new ArrayList<Group>();
-		groups.add(this.getGroupManager().getGroup(Group.FREE_GROUP_NAME));
-		//TODO DA VERIFICARE SE CHIUNQUE PUO' AGGIUNGERE UNA RISORSA FREE
+		if (this.isCurrentUserMemberOf(Group.FREE_GROUP_NAME)) {
+			groups.add(this.getGroupManager().getGroup(Group.FREE_GROUP_NAME));
+		}
 		String contentMainGroup = this.getContent().getMainGroup();
 		if (contentMainGroup != null && !contentMainGroup.equals(Group.FREE_GROUP_NAME)) {
 			groups.add(this.getGroupManager().getGroup(contentMainGroup));

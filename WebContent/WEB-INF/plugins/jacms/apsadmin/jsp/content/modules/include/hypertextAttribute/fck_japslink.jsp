@@ -251,12 +251,12 @@ window.close();
 <!-- //URL Link -->
 
 <!-- //Page Link -->
-<s:action name="introPageLink" namespace="/do/jacms/Content/Hypertext" executeResult="true" ></s:action>
+<s:action name="introPageLink" executeResult="true" ></s:action>
 
 <!-- Content Link -->
 <s:if test="#request.activeTab == 2 && null != #request.internalActionName"><s:set var="introContentLinkActionName" value="#request.internalActionName" ></s:set></s:if>
 <s:else><s:set var="introContentLinkActionName" value="'introContentLink'" ></s:set></s:else>
-<s:action name="%{#introContentLinkActionName}" namespace="/do/jacms/Content/Hypertext" executeResult="true"></s:action>
+<s:action name="%{#introContentLinkActionName}" executeResult="true"></s:action>
 
 </div>
 
