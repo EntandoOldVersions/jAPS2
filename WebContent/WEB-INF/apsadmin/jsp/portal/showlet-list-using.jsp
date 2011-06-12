@@ -50,7 +50,7 @@
 		<s:if test="#showlet != null && #showlet.type != null && #showlet.type.code.equals(showletTypeCode)">
 			<li>
 			<s:if test="null != #showlet.type.typeParameters && #showlet.type.typeParameters.size() > 0">
-				<a href="<s:url namespace="/do/Portal/ShowletType" action="copyShowletType" ><s:param name="pageCode" value="#singlePage.code" /><s:param name="framePos" value="#rowstatus.index" /></s:url>" title="<s:text name="label.userShowlet.new" />" class="noborder"><img src="<wp:resourceURL/>administration/common/img/icons/16x16/showlet-user-new.png" alt="<s:text name="label.userShowlet.new" />" /></a>
+				<a href="<s:url namespace="/do/Portal/ShowletType" action="copy" ><s:param name="pageCode" value="#singlePage.code" /><s:param name="framePos" value="#rowstatus.index" /></s:url>" title="<s:text name="label.userShowlet.new" />" class="noborder"><img src="<wp:resourceURL/>administration/common/img/icons/16x16/showlet-user-new.png" alt="<s:text name="label.userShowlet.new" />" /></a>
 			</s:if>
 			<s:if test="%{isUserAllowed(#singlePage)}">
 				<a class="noborder" href="<s:url action="trashShowletFromPage" namespace="/do/Portal/ShowletType">
