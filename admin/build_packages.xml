@@ -6,7 +6,7 @@
 	
 	<property name="package.name.prefix" value="jAPS2.0_entando" />
 	<property name="package.name.base.main" value="src" />
-	<property name="package.name.separator" value="-" />
+	<property name="package.name.separator" value="_" />
 	<property name="package.name.base.full" value="${package.name.prefix}${package.name.separator}${version.jAPS}${package.name.separator}${package.name.base.main}${package.name.separator}${version.package}" />
 
 	<available file="dist/${package.name.base.full}" type="dir" property="dir.temp.present" />
