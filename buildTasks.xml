@@ -44,11 +44,6 @@
 		<copy todir="${build.path}/${webappname}">
 			<fileset dir="${workdir.path}" />
 		</copy>
-		<!-- <copy todir="${build.path}/${webappname}/WEB-INF/lib">
-			<fileset dir="${workdir.path}/WEB-INF/lib" />
-		</copy> 
-		<mkdir dir="${build.path}/${webappname}/WEB-INF/classes" />
-		<mkdir dir="${build.path}/${webappname}/META-INF" /> -->
 	</target>
 
 	<!-- 
